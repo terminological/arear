@@ -1,0 +1,172 @@
+###source: "maps ----"
+WD11:
+  source: "https://geoportal.statistics.gov.uk/datasets/wards-december-2011-boundaries-ew-bgc"
+  url: "https://opendata.arcgis.com/datasets/bc0c7a7e865643cb90eae44bc4f15df0_0.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D"
+  mapName: "Wards__December_2011__Boundaries_EW_BGC"
+  codeCol: "wd11cd"
+  nameCol: "wd11nm"
+  altCodeCol: "wd11cdo"
+  simplify: FALSE
+  license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+WD19:
+  source: "https://geoportal.statistics.gov.uk/datasets/wards-december-2019-boundaries-ew-bgc"
+  url: "https://opendata.arcgis.com/datasets/bf1a23cfe83f4da9844e7f34e4824d03_0.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D"
+  mapName: "Wards__December_2019__Boundaries_EW_BGC"
+  codeCol: "wd19cd"
+  nameCol: "wd19nm"
+  altCodeCol: ~
+  simplify: FALSE
+  license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+LSOA11:
+  source: "https://geoportal.statistics.gov.uk/datasets/lower-layer-super-output-areas-december-2011-boundaries-ew-bgc"
+  url: "https://opendata.arcgis.com/datasets/8bbadffa6ddc493a94078c195a1e293b_0.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D"
+  mapName: "Lower_Layer_Super_Output_Areas_(December_2011)_Boundaries_Generalised_Clipped_(BGC)_EW_V3"
+  codeCol: "LSOA11CD"
+  nameCol: "LSOA11NM"
+  altCodeCol: ~
+  simplify: FALSE
+  license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+MSOA11:
+  source: "https://geoportal.statistics.gov.uk/datasets/middle-layer-super-output-areas-december-2011-boundaries-generalised-clipped-bgc-ew-v3"
+  url: "https://opendata.arcgis.com/datasets/abfccdf1071c43dd981a49eb7da13d2b_0.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D"
+  mapName: "Middle_Layer_Super_Output_Areas_(December_2011)_Boundaries_Generalised_Clipped_(BGC)_EW_V3"
+  codeCol: "MSOA11CD"
+  nameCol: "MSOA11NM"
+  altCodeCol: ~
+  simplify: FALSE
+  license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+DZ11:
+  source: "https://data.gov.uk/dataset/ab9f1f20-3b7f-4efa-9bd2-239acf63b540/data-zone-boundaries-2011"
+  url: "http://sedsh127.sedsh.gov.uk/Atom_data/ScotGov/ZippedShapefiles/SG_DataZoneBdry_2011.zip"
+  mapName: "SG_DataZone_Bdry_2011"
+  codeCol: "DataZone"
+  nameCol: "Name"
+  altCodeCol: ~
+  simplify: FALSE
+  license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+CA19:
+  source: "https://www.spatialdata.gov.scot/geonetwork/srv/eng/catalog.search#/metadata/1cd57ea6-8d6e-412b-a9dd-d1c89a80ad62"
+  url: "https://geo.spatialhub.scot/geoserver/sh_las/wfs?service=WFS&request=GetFeature&typeName=pub_las&format_options=filename:Local-Authority-Boundaries&outputFormat=shape-zip&authkey=b85aa063-d598-4582-8e45-e7e6048718fc"
+  mapName: "pub_las"
+  codeCol: "code"
+  nameCol: "local_auth"
+  altCodeCol: ~
+  simplify: FALSE
+  license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+HB19:
+  source: "https://www.spatialdata.gov.scot/geonetwork/srv/api/records/f12c3826-4b4b-40e6-bf4f-77b9ed01dc14"
+  url: "http://sedsh127.sedsh.gov.uk/Atom_data/ScotGov/ZippedShapefiles/SG_NHS_HealthBoards_2019.zip"
+  mapName: "SG_NHS_HealthBoards_2019"
+  codeCol: "HBCode"
+  nameCol: "HBName"
+  altCodeCol: ~
+  simplify: FALSE
+  license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+LHB19:
+  source: "https://geoportal.statistics.gov.uk/datasets/local-health-boards-april-2019-boundaries-wa-buc"
+  url: "https://opendata.arcgis.com/datasets/def40bdc98a9457aa108eb3a5fb052b1_0.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D"
+  mapName: "Local_Health_Boards__April_2019__Boundaries_WA_BUC"
+  codeCol: "lhb19cd"
+  nameCol: "lhb19nm"
+  altCodeCol: ~
+  simplify: FALSE
+  license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+CTYUA19:
+  source: "https://geoportal.statistics.gov.uk/datasets/counties-and-unitary-authorities-april-2019-boundaries-ew-buc-1"
+  url: "https://opendata.arcgis.com/datasets/a917c123e49d436f90660ef6a9ceb5cc_0.zip?outSR=%7B%22latestWkid%22%3A3857%2C%22wkid%22%3A102100%7D"
+  mapName: "Counties_and_Unitary_Authorities__April_2019__Boundaries_EW_BUC"
+  codeCol: "ctyua19cd"
+  nameCol: "ctyua19nm"
+  altCodeCol: ~
+  simplify: FALSE
+  license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+LAD19:
+  source: "https://geoportal.statistics.gov.uk/datasets/local-authority-districts-december-2019-boundaries-uk-buc"
+  url: "https://opendata.arcgis.com/datasets/3a4fa2ce68f642e399b4de07643eeed3_0.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D"
+  mapName: "Local_Authority_Districts__December_2019__Boundaries_UK_BUC"
+  codeCol: "lad19cd"
+  nameCol: "lad19nm"
+  altCodeCol: ~
+  simplify: FALSE
+  license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+LAD20:
+  source: "https://geoportal.statistics.gov.uk/datasets/local-authority-districts-may-2020-boundaries-uk-buc"
+  url: "https://opendata.arcgis.com/datasets/910f48f3c4b3400aa9eb0af9f8989bbe_0.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D"
+  mapName: "Local_Authority_Districts__May_2020__UK_BUC"
+  codeCol: "LAD20CD"
+  nameCol: "LAD20NM"
+  altCodeCol: ~
+  simplify: FALSE
+  license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+CCG20:
+  source: "https://geoportal.statistics.gov.uk/datasets/clinical-commissioning-groups-april-2020-generalised-clipped-boundaries-en"
+  url: "https://opendata.arcgis.com/datasets/e33a6b14379f4d0b9890f9dfa26f8a1f_1.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D"
+  mapName: "Clinical_Commissioning_Groups__April_2020__EN_BGC"
+  codeCol: "ccg20cd"
+  nameCol: "ccg20nm"
+  altCodeCol: ~
+  simplify: FALSE
+  license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+NHSER20:
+  source: "https://geoportal.statistics.gov.uk/datasets/nhs-england-regions-april-2020-boundaries-en-bgc"
+  url: "https://opendata.arcgis.com/datasets/87511f3ae00a40208741c685f827c1d3_0.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D"
+  mapName: "NHS_England_Regions__April_2020__Boundaries_EN_BGC"
+  codeCol: "nhser20cd"
+  nameCol: "nhser20nm"
+  altCodeCol: ~
+  simplify: FALSE
+  license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+PHEC16:
+  source: "https://geoportal.statistics.gov.uk/datasets/public-health-england-centres-december-2016-generalised-clipped-boundaries-in-england"
+  url: "https://opendata.arcgis.com/datasets/91d15139a82e47fc8167a11c0e4e86de_2.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D"
+  mapName: "Public_Health_England_Centres__December_2016__Boundaries"
+  codeCol: "phec16cd"
+  nameCol: "phec16nm"
+  altCodeCol: ~
+  simplify: FALSE
+  license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+CTRY19:
+  source: "https://geoportal.statistics.gov.uk/datasets/countries-december-2019-boundaries-uk-bgc/data"
+  url: "https://opendata.arcgis.com/datasets/b789ba2f70fe45eb92402cee87092730_0.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D"
+  mapName: "Countries__December_2019__Boundaries_UK_BGC"
+  codeCol: "ctry19cd"
+  nameCol: "ctry19nm"
+  altCodeCol: ~
+  simplify: FALSE
+  license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+LGD12:
+  source: "https://data.gov.uk/dataset/05f72866-b72b-476a-b6f3-57bd4a768674/osni-open-data-largescale-boundaries-local-government-districts-2012"
+  url: "http://osni-spatialni.opendata.arcgis.com/datasets/eaa08860c50045deb8c4fdc7fa3dac87_2.zip"
+  mapName: "OSNI_Open_Data_-_Largescale_Boundaries_-_Local_Government_Districts__2012_"
+  codeCol: "LGDCode"
+  nameCol: "LGDNAME"
+  altCodeCol: ~
+  simplify: FALSE
+  license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+OUTCODE:
+  source: "https://www.opendoorlogistics.com/downloads/"
+  url: "https://www.opendoorlogistics.com/wp-content/uploads/Data/UK-postcode-boundaries-Jan-2015.zip"
+  mapName: "Districts"
+  codeCol: "name"
+  nameCol: ~
+  altCodeCol: ~
+  simplify: FALSE
+  license: "https://www.opendoorlogistics.com/data/"
+GBR_ISO3166_2:
+  source: "https://gadm.org/download_country_v3.html"
+  url: "https://biogeo.ucdavis.edu/data/gadm3.6/shp/gadm36_GBR_shp.zip"
+  mapName: "gadm36_GBR_2"
+  codeCol: "GID_2"
+  nameCol: "NAME_2"
+  altCodeCol: "HASC_2"
+  simplify: FALSE
+  license: "https://gadm.org/license.html"
+GBR_ISO3166_3:
+  source: "https://gadm.org/download_country_v3.html"
+  url: "https://biogeo.ucdavis.edu/data/gadm3.6/shp/gadm36_GBR_shp.zip"
+  mapName: "gadm36_GBR_3"
+  codeCol: "GID_3"
+  nameCol: "NAME_3"
+  altCodeCol: "HASC_3"
+  simplify: FALSE
+  license: "https://gadm.org/license.html"
