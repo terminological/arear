@@ -13,13 +13,12 @@
 #' \dontrun{
 #' map = getMap("NHSER20")
 #' }
-getMap = function(mapId, sources = arear::mapsources, codeType = mapId, wd = tempdir()) {
+getMap = function(mapId, sources = arear::mapsources, codeType = mapId, wd = getOption("arear.cache.dir",default=tempdir())) {
   if (!(mapId %in% names(sources))) stop("Unknown map: ",mapId)
   loader = sources[[mapId]]
   codeCol = as.symbol(loader$codeCol)
   nameCol = tryCatch(as.symbol(loader$nameCol), error = function(e) NULL)
   altCodeCol = tryCatch(as.symbol(loader$altCodeCol), error = function(e) NULL)
-
   map = downloadMap(zipUrl = loader$url, mapName = loader$mapName, codeCol = !!codeCol, nameCol = !!nameCol, altCodeCol = !!altCodeCol, codeType=codeType, id=mapId, wd = wd)
   return(map)
 }
@@ -65,6 +64,7 @@ downloadMap = function(zipUrl, mapName=NULL, codeCol="code", nameCol="name", alt
   nameCol = tryCatch(rlang::ensym(nameCol), error = function(e) NULL)
   altCodeCol = tryCatch(rlang::ensym(altCodeCol), error = function(e) NULL)
 
+
   pattern = paste0(ifelse(is.null(mapName),"",mapName),"\\.shp$")
 
   if(is.null(id)) {
@@ -75,27 +75,32 @@ downloadMap = function(zipUrl, mapName=NULL, codeCol="code", nameCol="name", alt
     }
   }
 
-  onsZip = paste0(wd,"/",id,".zip")
-  unzipDir = paste0(wd,"/",id)
-  if(!file.exists(onsZip)) {
-    status = download.file(zipUrl, destfile = onsZip)
-    if (status != 0) stop("Problem downloading map: ",zipUrl)
-  }
-  suppressWarnings(dir.create(unzipDir,recursive = TRUE))
+  .cached({
 
-  paths = unzip(onsZip, exdir=unzipDir, junkpaths = TRUE)
-  if(length(paths) < 1) stop("Could not extract files from shapefile zip: ",onsZip)
+    onsZip = paste0(wd,"/",id,".zip")
+    unzipDir = paste0(wd,"/",id)
+    if(!file.exists(onsZip)) {
+      status = download.file(zipUrl, destfile = onsZip)
+      if (status != 0) stop("Problem downloading map: ",zipUrl)
+    }
+    suppressWarnings(dir.create(unzipDir,recursive = TRUE))
 
-  mapFile = paste0(unzipDir,"/",list.files(unzipDir,recursive = TRUE,pattern = pattern))
-  if(length(mapFile)!=1) stop("More than one matching map has been found: ",mapFile)
+    paths = unzip(onsZip, exdir=unzipDir, junkpaths = TRUE)
+    if(length(paths) < 1) stop("Could not extract files from shapefile zip: ",onsZip)
+
+    mapFile = paste0(unzipDir,"/",list.files(unzipDir,recursive = TRUE,pattern = pattern))
+    if(length(mapFile)!=1) stop("More than one matching map has been found: ",mapFile)
 
 
-  map = sf::st_read(mapFile) %>% sf::st_transform(crs=4326)
+    map = sf::st_read(mapFile) %>% sf::st_transform(crs=4326)
 
-  map = standardiseMap(map, !!codeCol, !!nameCol, !!altCodeCol, codeType)
-  if(simplify) map = suppressWarnings(map %>% rmapshaper::ms_simplify(keep=0.1))
+    map = standardiseMap(map, !!codeCol, !!nameCol, !!altCodeCol, codeType)
+    if(simplify) map = suppressWarnings(map %>% rmapshaper::ms_simplify(keep=0.1))
 
-  return(map %>% dplyr::ungroup() %>% sf::st_as_sf())
+    map %>% dplyr::ungroup() %>% sf::st_as_sf()
+
+  }, name=id, hash=list(zipUrl,mapName,codeCol,nameCol,altCodeCol,codeType,simplify))
+
 }
 
 

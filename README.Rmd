@@ -11,6 +11,7 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+library(tidyverse)
 ```
 
 # arear
@@ -38,25 +39,25 @@ devtools::install_github("terminological/arear")
 ```
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+There are a set of maps bundled:
 
 ```{r example}
-library(arear)
+devtools::load_all()
+# library(arear)
 ## basic example code
+arear::listStandardMaps()
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+Getting and plotting a map for the UK is simple:
 
-```{r cars}
-summary(cars)
+```{r}
+map = arear::getMap("CTRY19")
+nhshospitals = arear::surgecapacity %>% dplyr::filter(sector == "NHS Sector")
+ggplot()+
+  geom_sf(data=map)+
+  geom_sf(data=nhshospitals,aes(colour=tier1))
 ```
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date.
+But the main thing is creating a catchment area:
 
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub!
+TODO:

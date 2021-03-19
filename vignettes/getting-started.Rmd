@@ -18,14 +18,16 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 devtools::load_all()
+library(tidyverse)
 library(patchwork)
-arear::listStandardMaps()
+
+options("arear.cache.dir"=NULL)
 #library(arear)
 ```
 
 ```{r}
 # https://api.coronavirus.data.gov.uk/v2/data?areaType=nhsTrust&metric=newAdmissions&format=csv
-
+arear::listStandardMaps()
 map = arear::getMap("CTRY19")
 nhshospitals = arear::surgecapacity %>% dplyr::filter(sector == "NHS Sector")
 

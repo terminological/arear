@@ -4,14 +4,19 @@
 \alias{createNeighbourNetwork}
 \title{create a neighbourhood network from a shapefile}
 \usage{
-createNeighbourNetwork(shape, idVar = "code", bridges = tibble::tibble(), ...)
+createNeighbourNetwork(
+  shape,
+  idVar = "code",
+  bridges = arear::ukconnections,
+  ...
+)
 }
 \arguments{
 \item{shape}{- a sf object, if not present will be loaded from cache}
 
-\item{idVar}{- the varable containing the coded identifier of the map}
+\item{idVar}{- the column containing the coded identifier of the map}
 
-\item{bridges}{-}
+\item{bridges}{- a df with the following columns: name start.lat start.long end.lat end.long defining connections between non touching shapes (e.g. bridges / ferries / etc.)}
 }
 \value{
 an edge list of ids with from and to columns

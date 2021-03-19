@@ -24,6 +24,10 @@
 vignettes/*.html
 vignettes/*.pdf
 
+# non public data
+vignettes/non-public-data/*
+
+
 # OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
 .httr-oauth
 

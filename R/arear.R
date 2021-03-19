@@ -7,32 +7,36 @@
 #'
 #' @export
 #' @return a sf object representing the intersection of the input and output shapes.
-getIntersection = function( inputShape, outputShape, suffix=c(".x",".y"), recalcArea=TRUE ) {
-  message("calculating intersection ....")
+getIntersection = function( inputShape, outputShape, suffix=c(".x",".y"), recalcArea=TRUE,... ) {
 
-  #ggplot(lad %>% mutate(.id = row_number()) %>% sf::st_cast(to="POLYGON") %>% group_by(.id) %>% slice(1) %>% ungroup()) + geom_sf()
+  .cached({
+    message("calculating intersection ....")
+    #ggplot(lad %>% mutate(.id = row_number()) %>% sf::st_cast(to="POLYGON") %>% group_by(.id) %>% slice(1) %>% ungroup()) + geom_sf()
 
-  #inputShape = inputShape %>% sfheaders::sf_remove_holes() #sf::st_cast(to="POLYGON") %>% dplyr::slice(1)
-  if(recalcArea) inputShape$area = inputShape %>% sf::st_area() %>% as.numeric()
-  inputShape = inputShape %>%
-    dplyr::rename_with(.cols=-geometry,.fn=function(x) paste0(x,suffix[1])) #%>%
-    #mutate(.input_row = row_number())
+    #inputShape = inputShape %>% sfheaders::sf_remove_holes() #sf::st_cast(to="POLYGON") %>% dplyr::slice(1)
+    if(recalcArea) inputShape$area = inputShape %>% sf::st_area() %>% as.numeric()
+    inputShape = inputShape %>%
+      dplyr::rename_with(.cols=-geometry,.fn=function(x) paste0(x,suffix[1])) #%>%
+      #mutate(.input_row = row_number())
 
-  #outputShape = outputShape %>% sfheaders::sf_remove_holes() #sf::st_cast(to="POLYGON") %>% dplyr::slice(1)
-  if(recalcArea) outputShape$area = outputShape %>% sf::st_area() %>% as.numeric()
-  outputShape = outputShape %>%
-    dplyr::rename_with(.cols=-geometry,.fn=function(x) paste0(x,suffix[2])) #%>%
-    #mutate(.output_row = row_number())
+    #outputShape = outputShape %>% sfheaders::sf_remove_holes() #sf::st_cast(to="POLYGON") %>% dplyr::slice(1)
+    if(recalcArea) outputShape$area = outputShape %>% sf::st_area() %>% as.numeric()
+    outputShape = outputShape %>%
+      dplyr::rename_with(.cols=-geometry,.fn=function(x) paste0(x,suffix[2])) #%>%
+      #mutate(.output_row = row_number())
 
-  tmp = suppressWarnings(suppressMessages(
-    inputShape %>% #select(.input_row) %>%
-      sf::st_intersection(outputShape))) # %>% select(.output_row)))
-  tmp$intersectionArea = tmp %>% sf::st_area() %>% as.numeric()
-  # tmp = tmp %>%
-  #   left_join(inputShape %>% as_tibble() %>% select(-geometry), by=".input_row", suffix=c("",suffix[1])) %>%
-  #   left_join(outputShape %>% as_tibble() %>% select(-geometry), by=".output_row", suffix=suffix) %>%
-  #   select(-.input_row,-.output_row)
-  return(tmp)
+    tmp = suppressWarnings(suppressMessages(
+      inputShape %>% #select(.input_row) %>%
+        sf::st_intersection(outputShape))) # %>% select(.output_row)))
+    tmp$intersectionArea = tmp %>% sf::st_area() %>% as.numeric()
+    # tmp = tmp %>%
+    #   left_join(inputShape %>% as_tibble() %>% select(-geometry), by=".input_row", suffix=c("",suffix[1])) %>%
+    #   left_join(outputShape %>% as_tibble() %>% select(-geometry), by=".output_row", suffix=suffix) %>%
+    #   select(-.input_row,-.output_row)
+    tmp
+
+  },hash = list(inputShape,outputShape,suffix,recalcArea),name = "intersection", ...)
+
 }
 
 
@@ -89,8 +93,8 @@ getContainedIn = function( inputShape,  outputShape,  inputVars = inputShape %>%
 #' @return a dataframe containing the grouping columns, the outputIdVar and the interpolated value of interpolateVar
 interpolateByArea = function(
   inputDf,
-  by,
   inputShape,
+  by,
   interpolateVar,
   outputShape,
   inputVars = inputDf %>% dplyr::groups(),
@@ -98,34 +102,58 @@ interpolateByArea = function(
   aggregateFn = sum
 ) {
 
-  #TODO: use sf::st_interpolate_aw
-
-  if (identical(outputVars,NULL)) stop("outputVars must be defined, or outputShape must be grouped to define the unique rows wnaterd in the output")
-
   interpolateVar = ensym(interpolateVar)
+
+  if (identical(outputVars,NULL) | length(outputVars) == 0) stop("outputVars must be defined, or outputShape must be grouped to define the unique rows wanted in the output")
+  # browser()
+  # TODO: use sf::st_interpolate_aw
+  if (is.null(names(by))) {
+    lhsCol = by
+  } else {
+    lhsCol= ifelse(names(by)=="",by,names(by))
+  }
+  lhsCol = sapply(lhsCol,as.symbol)
+  rhsCol = sapply(by,as.symbol)
+
   if (!as_label(interpolateVar) %in% colnames(inputDf)) stop("inputDf must contain column defined by interpolateVar: ",interpolateVar)
-  outputShape = outputShape %>% dplyr::ungroup()
+
+  inputDf = inputDf %>% select(!!!lhsCol,!!interpolateVar,!!!inputVars)
+  inputShape = inputShape %>% select(!!!rhsCol,geometry)
+  # suffix the join columns
+  inputShape = inputShape %>% rename_with(function(x) paste0(x,".in"), .cols=-geometry)
+  inputShape = inputShape %>% dplyr::ungroup() %>% sf::st_as_sf()
+
+  # flip order of join and add the suffix
+  by = sapply(rhsCol, as_label)
+  names(by) =  paste0(sapply(lhsCol, as_label),".in")
+
+  if(any(sapply(outputVars,as_label) %in% sapply(c(inputVars,interpolateVar),as_label))) stop("inputs and outputs have the same name: in:",
+      paste(sapply(c(inputVars,interpolateVar),as_label),collapse=",")," and out:",
+      paste(sapply(outputVars,as_label),collapse=","), " try renaming them")
+
+  outputShape = outputShape %>% dplyr::ungroup() %>% sf::st_as_sf() %>% select(!!!outputVars,geometry)
   outputShape$area = outputShape %>% sf::st_area() %>% as.numeric()
 
-  inputShape = inputShape %>% dplyr::ungroup()
-  inputShape$area = inputShape %>% sf::st_area() %>% as.numeric()
+  inputShape$area.in = inputShape %>% sf::st_area() %>% as.numeric()
 
   intersection = getIntersection(
     inputShape,
     outputShape,
-    suffix=c("",".out"),
+    suffix=c("",""),
     recalcArea = FALSE
   )
 
   inputMismatch = sum(intersection$intersectionArea)/sum(inputShape$area)
-  if(inputMismatch < 0.99) warning("Input does not match intersection: ",sprintf("%1.2f%%",(1-inputMismatch)*100)," missing from output")
+  if(inputMismatch < 0.99) warning("Input does not match intersection: ",sprintf("%1.2f%%",(1-inputMismatch)*100)," of input not captured by outputShape")
 
   outputMismatch = sum(intersection$intersectionArea)/sum(outputShape$area)
-  if(outputMismatch < 0.99) warning("Output does not match intersection: ",sprintf("%1.2f%%",(1-outputMismatch)*100)," not represented in input")
+  if(outputMismatch < 0.99) warning("Output does not match intersection: ",sprintf("%1.2f%%",(1-outputMismatch)*100)," of output not represented in inputShape")
 
   intersection = intersection %>% tibble::as_tibble() %>% dplyr::mutate(
-    fracInput = intersectionArea/area
-  ) %>% inner_join(inputDf, by=by, suffix = c(".int",""))
+    fracInput = intersectionArea/area.in
+  )
+
+  intersection = intersection %>% inner_join(inputDf, by=by, suffix = c("",".in"))
 
   mapping = intersection %>% tibble::as_tibble() %>% dplyr::select(!!interpolateVar, fracInput, !!!inputVars, !!!outputVars)
   mapping = mapping %>% dplyr::mutate(intersectionValue = !!interpolateVar * fracInput)
@@ -146,35 +174,41 @@ interpolateByArea = function(
 #' @param idVar - the column containing the coded identifier of the map
 #' @param bridges - a df with the following columns: name start.lat start.long end.lat end.long defining connections between non touching shapes (e.g. bridges / ferries / etc.)
 #' @return an edge list of ids with from and to columns
-createNeighbourNetwork = function(shape, idVar="code", bridges = arear::ukconnections, ...) {
+createNeighbourNetwork = function(shape, idVar="code", bridges = arear::ukconnections,...) {
   idVar = ensym(idVar)
 
-  shape = shape %>% dplyr::mutate(tmp_id = row_number(), .id = !!idVar)
-  bridgeStart = bridges %>% sf::st_as_sf(coords=c("start.long","start.lat"), crs=4326) %>% arear::getContainedIn(shape,inputVars = vars(name), outputVars = list(idVar))
-  bridgeEnd = bridges %>% sf::st_as_sf(coords=c("end.long","end.lat"), crs=4326) %>% arear::getContainedIn(shape,inputVars = vars(name), outputVars = list(idVar))
-  bridges = bridgeStart %>% rename(start = !!idVar) %>% inner_join(bridgeEnd  %>% rename(end = !!idVar),by="name") %>% filter(start != end) %>% select(-name)
 
-  graph = spdep::poly2nb(shape %>% sf::as_Spatial(),queen=FALSE)
-    #shape %>% sf::st_intersects()
-  #browser()
+  .cached({
 
-  if(graph %>% purrr::flatten() %>% length() == 0) {
-    edges = tibble::tibble(from_tmp_id=integer(),to_tmp_id=integer())
-  } else {
-    edges = tibble::tibble(
-      from_tmp_id = rep(1:length(graph),sapply(graph, length)),
-      to_tmp_id = unlist(graph %>% purrr::flatten())
-    )
-  }
+    shape = shape %>% dplyr::mutate(tmp_id = row_number(), .id = !!idVar)
+    bridgeStart = bridges %>% sf::st_as_sf(coords=c("start.long","start.lat"), crs=4326) %>% arear::getContainedIn(shape,inputVars = vars(name), outputVars = list(idVar))
+    bridgeEnd = bridges %>% sf::st_as_sf(coords=c("end.long","end.lat"), crs=4326) %>% arear::getContainedIn(shape,inputVars = vars(name), outputVars = list(idVar))
+    bridges = bridgeStart %>% rename(start = !!idVar) %>% inner_join(bridgeEnd  %>% rename(end = !!idVar),by="name") %>% filter(start != end) %>% select(-name)
 
-  edges = edges %>%
-    dplyr::left_join(shape %>% tibble::as_tibble() %>% dplyr::select(from_tmp_id = tmp_id, from = .id), by="from_tmp_id") %>%
-    dplyr::left_join(shape %>% tibble::as_tibble() %>% dplyr::select(to_tmp_id = tmp_id, to = .id), by="to_tmp_id") %>%
-    dplyr::filter(from != to) %>%
-    dplyr::select(-from_tmp_id, -to_tmp_id) %>%
-    dplyr::bind_rows(bridges %>% rename(from = start, to=end)) %>%
-    dplyr::bind_rows(bridges %>% rename(from = end, to=start))
-  return(edges)
+    graph = spdep::poly2nb(shape %>% sf::as_Spatial(),queen=FALSE)
+      #shape %>% sf::st_intersects()
+    #browser()
+
+    if(graph %>% purrr::flatten() %>% length() == 0) {
+      edges = tibble::tibble(from_tmp_id=integer(),to_tmp_id=integer())
+    } else {
+      edges = tibble::tibble(
+        from_tmp_id = rep(1:length(graph),sapply(graph, length)),
+        to_tmp_id = unlist(graph %>% purrr::flatten())
+      )
+    }
+
+    edges = edges %>%
+      dplyr::left_join(shape %>% tibble::as_tibble() %>% dplyr::select(from_tmp_id = tmp_id, from = .id), by="from_tmp_id") %>%
+      dplyr::left_join(shape %>% tibble::as_tibble() %>% dplyr::select(to_tmp_id = tmp_id, to = .id), by="to_tmp_id") %>%
+      dplyr::filter(from != to) %>%
+      dplyr::select(-from_tmp_id, -to_tmp_id) %>%
+      dplyr::bind_rows(bridges %>% rename(from = start, to=end)) %>%
+      dplyr::bind_rows(bridges %>% rename(from = end, to=start))
+
+    edges
+
+  }, hash = list(shape,idVar,bridges),name = "neighbourhood", ...)
 }
 
 #' Preview a map with POI using leaflet

@@ -4,7 +4,7 @@
 \name{uk2019retiredpopulation}
 \alias{uk2019retiredpopulation}
 \title{Mid year 2019 small area estimates for adult population of England, Wales, Scotland, and Northern Ireland}
-\format{A 41740 line data frame:
+\format{A 41730 line data frame:
 \describe{
   \item{code}{the ONS code for the ares}
   \item{name}{The name for the area}

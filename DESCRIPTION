@@ -28,7 +28,8 @@ Imports:
     fs,
     stringr,
     here,
-    spdep
+    spdep,
+    xfun
 RoxygenNote: 7.0.2
 Depends: 
     R (>= 2.10)

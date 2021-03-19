@@ -9,7 +9,7 @@
   \item{nation}{England, Wales, etc...}
   \item{hospitalId}{An id for the hospital}
   \item{sector}{NHS or independent}
-  \item{name}{the hospital name}
+  \item{hospitalName}{the hospital name}
   \item{pcds}{the UK postcode of the hospital}
   \item{trustId}{the NHS trust or local health board of the hospital}
   \item{trustName}{the NHS trust or local health board name}

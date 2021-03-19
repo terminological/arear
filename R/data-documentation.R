@@ -146,7 +146,7 @@
 #'
 #' @format A 335 line data frame:
 #' \describe{
-#'   \item{code}{the ONS code for the ares}
+#'   \item{code}{the ONS code for the area}
 #'   \item{name}{The name for the area}
 #'   \item{codeType}{the type of area (LAD19, LHB, HB, LGD)}
 #'   \item{altCode}{NA}
@@ -160,4 +160,21 @@
 "uklegacycovidmap"
 
 
-
+#' An administrative classification of hospital catchment areas by postcode in the Devon region
+#'
+#' @format A 52157 line data frame:
+#' \describe{
+#'   \item{pcds}{The postcode of an area}
+#'   \item{locality}{the administrative NHS Devon locality}
+#'   \item{trustId}{the id of the main NHS trust in the locality}
+#'   \item{trustame}{the name of the main NHS trust in the locality}
+#'   \item{code}{the LSOA11 geographical code}
+#'   \item{codeType}{the type of area - always LSOA11}
+#'   \item{altCode}{NA}
+#' }
+#' @source
+#' \describe{
+#'   \item{Locality Postcodes.xlsx}{personal communication}
+#'   \item{Post codes to LSOA11 codes, ONSPD}{https://www.ons.gov.uk/methodology/geography/geographicalproducts/postcodeproducts}
+#' }
+"devonlocality"

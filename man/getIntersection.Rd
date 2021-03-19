@@ -2,9 +2,23 @@
 % Please edit documentation in R/arear.R
 \name{getIntersection}
 \alias{getIntersection}
-\title{get the intersection between to maps with ids. Caches the result in the working directory.}
+\title{Intersection of 2 shapes}
 \usage{
-getIntersection(inputShape, outputShape, ...)
+getIntersection(
+  inputShape,
+  outputShape,
+  suffix = c(".x", ".y"),
+  recalcArea = TRUE,
+  ...
+)
+}
+\arguments{
+\item{inputShape}{- the input sf}
+
+\item{outputShape}{- the output sf}
+}
+\value{
+a sf object representing the intersection of the input and output shapes.
 }
 \description{
 get the intersection between to maps with ids. Caches the result in the working directory.
