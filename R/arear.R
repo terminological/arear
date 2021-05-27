@@ -173,10 +173,10 @@ interpolateByArea = function(
 #' @param shape - a sf object, if not present will be loaded from cache
 #' @param idVar - the column containing the coded identifier of the map
 #' @param bridges - a df with the following columns: name start.lat start.long end.lat end.long defining connections between non touching shapes (e.g. bridges / ferries / etc.)
+#' @param queen - include neighbouring areas that touch at corners
 #' @return an edge list of ids with from and to columns
-createNeighbourNetwork = function(shape, idVar="code", bridges = arear::ukconnections,...) {
+createNeighbourNetwork = function(shape, idVar="code", bridges = arear::ukconnections, queen=FALSE, ...) {
   idVar = ensym(idVar)
-
 
   .cached({
 
@@ -185,7 +185,7 @@ createNeighbourNetwork = function(shape, idVar="code", bridges = arear::ukconnec
     bridgeEnd = bridges %>% sf::st_as_sf(coords=c("end.long","end.lat"), crs=4326) %>% arear::getContainedIn(shape,inputVars = vars(name), outputVars = list(idVar))
     bridges = bridgeStart %>% rename(start = !!idVar) %>% inner_join(bridgeEnd  %>% rename(end = !!idVar),by="name") %>% filter(start != end) %>% select(-name)
 
-    graph = spdep::poly2nb(shape %>% sf::as_Spatial(),queen=FALSE)
+    graph = spdep::poly2nb(shape %>% sf::as_Spatial(),queen=queen)
       #shape %>% sf::st_intersects()
     #browser()
 

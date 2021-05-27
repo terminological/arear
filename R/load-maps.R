@@ -42,7 +42,7 @@ listStandardMaps = function() {
 #' @param nameCol - the name of the column containing the label (optional - defaults to the same as codeCol)
 #' @param altCodeCol - an optional column name containing another code type
 #' @param codeType - the "type" of the code - optional. defaults to NA
-#' @param simplify - do you want to implify the map
+#' @param simplify - do you want to simplify the map
 #' @param wd - an optional working directory (defaults to tempdir)
 #' @param id - an optional id for the map - defaults to either the mapName or if not present the name of the zip file.
 #'
@@ -153,14 +153,15 @@ standardiseMap = function(sf, codeCol, nameCol, altCodeCol, codeType) {
 #' @return a the filename of the zipped shapefile
 #' @export
 saveShapefile = function(shape, mapId, dir=getwd(), overwrite=FALSE) {
-  zipDir = paste0(dir,"/",mapId)
+  if (!dir %>% stringr::str_ends("/")) dir = paste0(dir,"/")
+  zipDir = paste0(dir,mapId)
   if (dir.exists(zipDir) & !overwrite & length(list.files(zipDir))>0) stop("Directory ",zipDir," exists and is not empty. use overwrite=TRUE to force update")
   if (dir.exists(zipDir)) unlink(zipDir, recursive=TRUE)
   dir.create(zipDir, recursive = TRUE)
   suppressWarnings(sf::st_write(shape, paste0(zipDir,"/",mapId, ".shp"), driver="ESRI Shapefile"))
   wd = getwd()
-  setwd(zipDir)
-  zip(zipfile = paste0(zipDir,".zip"),files=mapId)
+  setwd(dir) # the parent directory
+  zip(zipfile = paste0(zipDir,".zip"),files=mapId) #zip the directory
   setwd(wd)
   unlink(zipDir, recursive=TRUE)
   return(paste0(zipDir,".zip"))

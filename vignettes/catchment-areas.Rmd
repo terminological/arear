@@ -234,6 +234,8 @@ We use outcodes of admitted ICU patients, and the data on the NHS trust they wer
 
 The detail of the original data sources we used in presented in the supplementary material, not all of which are publicly available. The algorithm is implemented as an R package [@rcoreteamLanguageEnvironmentStatistical2017] and this contains both the manually curated hospital capacity and data pertaining derived demographics data described here.
 
+<!-- TODO: https://github.com/epiforecasts/covid19.nhs.data -->
+
 # Results
 
 ```{r}
