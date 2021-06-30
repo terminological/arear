@@ -56,7 +56,7 @@ createCatchment = function(
   P_M = supplyShape %>% #P
     dplyr::rename(supplyCode = !!supplyIdVar, S_P_m = !!supplyVar) %>%
     dplyr::group_by(supplyCode) %>%
-    dplyr::mutate(m = dplyr::group_indices()) %>%
+    dplyr::mutate(m = dplyr::cur_group_id()) %>%
     dplyr::ungroup()
 
 

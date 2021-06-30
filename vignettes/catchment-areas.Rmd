@@ -61,7 +61,8 @@ here::i_am("vignettes/catchment-areas.Rmd")
 devtools::load_all("~/Git/standard-print-output/")
 devtools::load_all("~/Git/arear/")
 library(patchwork)
-options("arear.cache.dir"="~/Dropbox/covid19/catchment-areas/cache/")
+
+options("arear.cache.dir"=here::here("data-raw/cache"))
 
 
 library(tidyverse)

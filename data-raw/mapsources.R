@@ -3,6 +3,8 @@ library(tidyverse)
 
 
 here::i_am("data-raw/mapsources.R")
+devtools::load_all()
+options("arear.cache.dir"=here::here("data-raw/cache"))
 
 ## Map sources ----
 mapsources = yaml::read_yaml(here::here("data-raw/mapsources.yaml"))
@@ -25,8 +27,8 @@ usethis::use_data(surgecapacity, overwrite = TRUE)
 pheDashboardMap = rbind(
   arear::getMap("LAD19") %>% dplyr::filter(code %>% stringr::str_starts("E")),
   #arear::getMap("CA19"),
-  arear::getMap("LHB19") %>% rmapshaper::ms_simplify(keep=0.1),
-  arear::getMap("LGD12") %>% rmapshaper::ms_simplify(keep=0.1)
+  arear::getMap("LHB19") %>% rmapshaper::ms_simplify(keep=0.1, keep_shapes=TRUE),
+  arear::getMap("LGD12") %>% rmapshaper::ms_simplify(keep=0.1, keep_shapes=TRUE)
 ) %>% dplyr::ungroup() #group_by(code,name))
 uklegacycovidmap = pheDashboardMap
 usethis::use_data(uklegacycovidmap, overwrite = TRUE)
@@ -44,12 +46,12 @@ demographicsMap = rbind(
   arear::getMap("DZ11"),
   arear::getMap("LGD12")
 )
-uk2019demographicsmap = demographicsMap %>% rmapshaper::ms_simplify(keep=0.1)
+uk2019demographicsmap = demographicsMap %>% rmapshaper::ms_simplify(keep=0.1, keep_shapes=TRUE)
 usethis::use_data(uk2019demographicsmap, overwrite = TRUE)
 
 ## UK Demographics estimates ----
 
-wd = tempdir()
+wd = here::here("data-raw/cache")
 # England and wales:
 # https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/lowersuperoutputareamidyearpopulationestimates
 # https://www.ons.gov.uk/file?uri=%2fpeoplepopulationandcommunity%2fpopulationandmigration%2fpopulationestimates%2fdatasets%2flowersuperoutputareamidyearpopulationestimates%2fmid2018sape21dt1a/sape21dt2mid2018lsoasyoaestimatesunformatted.zip

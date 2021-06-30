@@ -21,7 +21,9 @@ devtools::load_all()
 library(tidyverse)
 library(patchwork)
 
-options("arear.cache.dir"=NULL)
+here::i_am("vignettes/getting-started.Rmd")
+options("arear.cache.dir"=here::here("data-raw/cache"))
+
 #library(arear)
 ```
 
@@ -111,6 +113,30 @@ arear::preview(lad,
       poi=nhshospitals, 
       poiLabelGlue = "{hospitalName}",
       poiPopupGlue = "<b>{hospitalName}</b><ul><li>{trustName}</li><li>hdu: {hduBeds}</li><li>acute: {acuteBeds}</li></ul>"
+)
+
+```
+
+```{r}
+apiTrusts = readr::read_csv("https://api.coronavirus.data.gov.uk/v2/data?areaType=nhsTrust&metric=hospitalCases&format=csv")
+
+# There are quite a few mental health, and childrens trusts that we do not as yet have good capacity data for
+# apiTrusts %>% select(areaCode,areaName) %>% distinct() %>% anti_join(arear::surgecapacity, by = c("areaCode"="trustId")) %>% View()
+
+# there are however no extra trusts that never appear in the API.
+# arear::surgecapacity %>% anti_join(apiTrusts, by = c("trustId"="areaCode"))
+
+sup = arear::surgecapacity %>% semi_join(apiTrusts, by = c("trustId"="areaCode"))
+dem = arear::uk2019demographicsmap %>% filter(!code %>% stringr::str_starts("N")) %>% left_join(arear::uk2019adultpopulation %>% select(-name,-codeType), by="code")
+
+catchment = arear::createCatchment(
+  supplyShape = sup, 
+  supplyIdVar = trustId, 
+  supplyVar = hduBeds,
+  demandShape = dem,
+  demandIdVar = code, 
+  demandVar = population,
+  outputMap = TRUE
 )
 
 ```
