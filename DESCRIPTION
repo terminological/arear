@@ -24,7 +24,8 @@ Suggests:
     readr,
     tidygraph,
     devtools,
-    markdown
+    markdown,
+    webshot
 VignetteBuilder: knitr
 Imports: 
     rmapshaper,
