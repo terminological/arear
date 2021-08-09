@@ -23,7 +23,8 @@ Suggests:
     ggraph,
     readr,
     tidygraph,
-    devtools
+    devtools,
+    markdown
 VignetteBuilder: knitr
 Imports: 
     rmapshaper,
