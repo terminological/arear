@@ -13,13 +13,15 @@ getContainedIn(
 )
 }
 \arguments{
+\item{inputShape}{- a sf containing points of interest (or shapes)}
+
 \item{outputShape}{- a sf containing polygons to locate the input in}
 
-\item{inputSf}{- a sf containing points of interest (or shapes)}
+\item{inputVars}{- defines the columns of the input that you want to retain (as a dplyr::vars(...) list). This grouping should uniquely identify the row. If not present will use the current grouping of inputShape.}
 
-\item{inputVar}{- defines the columns of the input that you want to retain (as a vars(...) list). This grouping should uniquely identify the row. If not present will use the grouping.}
+\item{outputVars}{- defines the columns of the output that you want to retain (as a dplyr::vars(...) list). This grouping should uniquely identify the row. If not present will use the current grouping of outputShape.}
 
-\item{outputIdVar}{- defines the columns of the input that you want to retain (as a vars(...) list). This grouping should uniquely identify the row. If not present will use the grouping.}
+\item{suffix}{- the suffix of any duplicated columns as per dplyr::inner_join()}
 }
 \value{
 - a mapping as a dataframe relating the input id column and output id columns
@@ -29,5 +31,10 @@ This assumes an id column in input and output shapes and
 }
 \examples{
 # find the hospitals in a given area.
-mapping = getContainedIn(inputSf = arear::surgecapacity, outputShape = arear::ukcovidmap, inputIdVar = hospitalId, outputIdVar = code)
+mapping = getContainedIn(
+inputShape = arear::surgecapacity,
+outputShape = arear::ukcovidmap,
+inputVars = dplyr::vars(hospitalId),
+outputVars = dplyr::vars(code)
+)
 }

@@ -178,3 +178,20 @@
 #'   \item{Post codes to LSOA11 codes, ONSPD}{https://www.ons.gov.uk/methodology/geography/geographicalproducts/postcodeproducts}
 #' }
 "devonlocality"
+
+
+#' A list of regular lattice SF polygons used for testing purposes
+#'
+#' @format A list with:
+#' \describe{
+#'   \item{grid5x5}{5x5 grid centred on 0,0}
+#'   \item{grid11x11}{11x11 grid centred on 0,0}
+#'   \item{diamond5x5}{5x5 diagonal grid centred on 0,0}
+#'   \item{diamond11x11}{11x11 diagonal grid centred on 0,0}
+#'   \item{gridDemand}{an 11x11 grid with a demand parameter}
+#'   \item{gridSupply}{a 3 point supply}
+#'   \item{gridSupply2}{another 3 point supply with only 2 ids}
+#'   \item{gridSupplyViolateConstraint}{a 4 point supply with 2 points in the same grid square}
+#'   \item{gridSupplyDegenerate}{a 5 point supply with 2 points in the same grid square amd a different 2 points with the same id}
+#' }
+"testdata"

@@ -52,7 +52,7 @@ listStandardMaps = function() {
 #' @examples
 #' \dontrun{
 #' downloadMap(
-#'   zipUrl="https://opendata.arcgis.com/datasets/87511f3ae00a40208741c685f827c1d3_0.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D",
+#'   zipUrl="https://bit.ly/3A9TnR1",
 #'   mapName="NHS_England_Regions__April_2020__Boundaries_EN_BGC",
 #'   codeCol="nhser20cd",
 #'   nameCol="nhser20nm"
@@ -80,12 +80,12 @@ downloadMap = function(zipUrl, mapName=NULL, codeCol="code", nameCol="name", alt
     onsZip = paste0(wd,"/",id,".zip")
     unzipDir = paste0(wd,"/",id)
     if(!file.exists(onsZip)) {
-      status = download.file(zipUrl, destfile = onsZip)
+      status = utils::download.file(zipUrl, destfile = onsZip)
       if (status != 0) stop("Problem downloading map: ",zipUrl)
     }
     suppressWarnings(dir.create(unzipDir,recursive = TRUE))
 
-    paths = unzip(onsZip, exdir=unzipDir, junkpaths = TRUE)
+    paths = utils::unzip(onsZip, exdir=unzipDir, junkpaths = TRUE)
     if(length(paths) < 1) stop("Could not extract files from shapefile zip: ",onsZip)
 
     mapFile = paste0(unzipDir,"/",list.files(unzipDir,recursive = TRUE,pattern = pattern))
@@ -161,7 +161,7 @@ saveShapefile = function(shape, mapId, dir=getwd(), overwrite=FALSE) {
   suppressWarnings(sf::st_write(shape, paste0(zipDir,"/",mapId, ".shp"), driver="ESRI Shapefile"))
   wd = getwd()
   setwd(dir) # the parent directory
-  zip(zipfile = paste0(zipDir,".zip"),files=mapId) #zip the directory
+  utils::zip(zipfile = paste0(zipDir,".zip"),files=mapId) #zip the directory
   setwd(wd)
   unlink(zipDir, recursive=TRUE)
   return(paste0(zipDir,".zip"))

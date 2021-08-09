@@ -26,9 +26,9 @@ interpolateByArea(
 
 \item{outputShape}{- an output map which may be grouped by the desired output,}
 
-\item{inputVars}{- a list of columns from the inputDf (as a vars(...) list) that define the stratification of inputDf and are desired in the output. Defaults to the grouping of inputDf}
+\item{inputVars}{- a list of columns from the inputDf (as a dplyr::vars(...) list) that define the stratification of inputDf and are desired in the output. Defaults to the grouping of inputDf}
 
-\item{outputVars}{- a list of columns from the outputShape (as a vars(...) list) that we want preserved in output, or defined as a grouping of outputShape}
+\item{outputVars}{- a list of columns from the outputShape (as a dplyr::vars(...) list) that we want preserved in output, or defined as a grouping of outputShape}
 
 \item{aggregateFn}{- a function that will be applied to area weighted components of interpolateVar - defaults to sum}
 }

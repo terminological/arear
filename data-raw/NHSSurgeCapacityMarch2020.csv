@@ -94,7 +94,7 @@ Scotland,D102H,NHS Sector,Golden Jubilee National Hospital,G81 4DY,55.9059659,-4
 England,NMM01,Independent Sector,Hospital of St John & St Elizabeth,NW8 9NH,51.53347,-0.17546,NMM01,Hospital of St John & St Elizabeth,FALSE,0,28
 England,NN801,Independent Sector,Spencer Private Hospitals,CT9 4BG,51.37719727,1.390478611,NN8,East Kent Medical Services Ltd,FALSE,0,44
 England,NN802,Independent Sector,SPH Ashford,KT16 0PZ,51.3773496,-0.5276927,NN802,Spencer Private Hospitals,FALSE,0,8
-England,NNFA7,NHS Sector,Goole & District Hospital,DN14 6RX,53.71546555,-0.8749167919,NNF,City Health Care Partnership Cic,FALSE,0,15
+England,NNFA7,NHS Sector,Goole & District Hospital,DN14 6RX,53.71546555,-0.8749167919,RJL,Northern Lincolnshire and Goole NHS Foundation Trust,FALSE,0,15
 England,NT202,Independent Sector,"Nuffield Health, Bournemouth Hospital",BH1 1RW,50.73041916,-1.870926738,NT2,Nuffield Health,FALSE,0,82
 England,NT204,Independent Sector,"Nuffield Health, Brentwood Hospital",CM15 8EH,51.62333298,0.3128353059,NT2,Nuffield Health,FALSE,0,80
 England,NT205,Independent Sector,"Nuffield Health, Brighton Hospital",BN2 6DX,50.83451843,-0.0819105133,NT2,Nuffield Health,FALSE,0,80
@@ -246,7 +246,7 @@ England,NYW04,Independent Sector,Claremont Private Hospital,S10 5UB,53.37545776,
 England,R0A05,NHS Sector,St Mary's Hospital,M13 9WL,53.4611702,-2.223896503,R0A,Manchester University NHS Foundation Trust,FALSE,0,32
 England,R0A09,NHS Sector,Trafford General Hospital,M41 5SL,53.45406723,-2.370682955,R0A,Manchester University NHS Foundation Trust,FALSE,0,181
 England,R1K02,NHS Sector,Central Middlesex Hospital,NW10 7NS,51.53093719,-0.2691462934,R1K,London North West University Healthcare NHS Trust,FALSE,0,42
-England,RA707,NHS Sector,St Michael's Hospital,BS2 8EG,51.45913696,-2.599376917,RA7,University Hospitals Bristol NHS Foundation Trust,FALSE,0,49
+England,RA707,NHS Sector,St Michael's Hospital,BS2 8EG,51.45913696,-2.599376917,RA7,University Hospitals Bristol and Weston NHS Foundation Trust,FALSE,0,49
 England,RALC7,NHS Sector,Chase Farm Hospital,EN2 8JL,51.66680527,-0.1028811112,RAL,Royal Free London NHS Foundation Trust,FALSE,0,255
 England,RBL02,NHS Sector,Victoria Central Hospital,CH44 5UF,53.41566086,-3.045850515,RBL,Wirral University Teaching Hospital NHS Foundation Trust,TRUE,0,642
 England,RBL20,NHS Sector,Clatterbridge Hospital,CH63 4JY,53.33288956,-3.024122,RBL,Wirral University Teaching Hospital NHS Foundation Trust,TRUE,0,108
@@ -254,7 +254,6 @@ England,RBN02,NHS Sector,St Helens Hospital,WA9 3DA,53.43953323,-2.718886852,RBN
 England,NNF16,NHS Sector,Bridlington And District Hospital,YO16 4QP,54.08653259,-0.2157250047,RCB,York Teaching Hospital NHS Foundation Trust,FALSE,0,35
 England,REF01,NHS Sector,West Cornwall Hospital (Penzance),TR18 2PF,50.1220665,-5.542964458,REF,Royal Cornwall Hospitals NHS Trust,FALSE,0,53
 England,REF02,NHS Sector,St Michael's Hospital,TR27 4JA,50.1803627,-5.42441082,REF,Royal Cornwall Hospitals NHS Trust,FALSE,0,49
-England,RGD17,NHS Sector,St Mary's Hospital,LS12 3QE,53.79990768,-1.612384319,RGD,Leeds and York Partnership NHS Foundation Trust,FALSE,0,32
 England,RH853,NHS Sector,Tiverton and District Hospital,EX16 6NT,50.90941238,-3.492953062,RH8,Royal Devon and Exeter NHS Foundation Trust,FALSE,0,36
 England,RH858,NHS Sector,Exmouth Hospital,EX8 2JN,50.62055206,-3.401594639,RH8,Royal Devon and Exeter NHS Foundation Trust,FALSE,0,16
 England,RH859,NHS Sector,Victoria Hospital (Sidmouth),EX10 8EW,50.68161392,-3.239641666,RH8,Royal Devon and Exeter NHS Foundation Trust,FALSE,0,25
@@ -264,12 +263,10 @@ England,RK5BL,NHS Sector,Mansfield Community Hospital,NG18 5QJ,53.14136124,-1.20
 England,RK5HP,NHS Sector,Newark Hospital,NG24 4DE,53.0675087,-0.8061459064,RK5,Sherwood Forest Hospitals NHS Foundation Trust,FALSE,0,56
 England,RKB03,NHS Sector,Hospital Of St Cross,CV22 5PX,52.36527634,-1.259016037,RKB,University Hospitals Coventry and Warwickshire NHS Trust,TRUE,0,110
 England,RN542,NHS Sector,Andover War Memorial Hospital,SP10 3LB,51.2157402,-1.494678259,RN5,Hampshire Hospitals NHS Foundation Trust,FALSE,0,38
-England,RP1A1,NHS Sector,St Mary's Hospital,NN15 7PW,52.39410019,-0.7221850157,RP1,Northamptonshire Healthcare NHS Foundation Trust,FALSE,0,32
 England,RP5MM,NHS Sector,Montagu Hospital,S64 0AZ,53.49981689,-1.284931421,RP5,Doncaster and Bassetlaw Teaching Hospitals NHS Foundation Trust,FALSE,0,50
-England,RQ8LF,NHS Sector,St Michael's Hospital,CM7 2QU,51.87958527,0.5411448479,RQ8,Mid Essex Hospital Services NHS Trust,FALSE,0,49
+England,RQ8LF,NHS Sector,St Michael's Hospital,CM7 2QU,51.87958527,0.5411448479,RAJ,Mid and South Essex NHS Foundation Trust,FALSE,0,49
 England,RR807,NHS Sector,Wharfedale Hospital,LS21 2LY,53.91436005,-1.700584412,RR8,Leeds Teaching Hospitals NHS Trust,FALSE,0,52
 England,RR819,NHS Sector,Chapel Allerton Hospital,LS7 4SA,53.82263947,-1.529794812,RR8,Leeds Teaching Hospitals NHS Trust,FALSE,0,71
-England,RRE4U,NHS Sector,St Michael's Hospital,WS13 6EF,52.68593979,-1.815455794,RRE,Midlands Partnership NHS Foundation Trust,FALSE,0,49
 England,RRK99,NHS Sector,Solihull Hospital,B91 2JL,52.4171257,-1.774350882,RRK,University Hospitals Birmingham NHS Foundation Trust,FALSE,0,222
 England,RTFED,NHS Sector,Wansbeck Hospital,NE63 9JJ,55.18431091,-1.546586394,RTF,Northumbria Healthcare NHS Foundation Trust,TRUE,0,202
 England,RTFDH,NHS Sector,Berwick Infirmary,TD15 1LT,55.77328873,-2.004963875,RTF,Northumbria Healthcare NHS Foundation Trust,FALSE,0,24
@@ -288,7 +285,6 @@ England,RW604,NHS Sector,Rochdale Infirmary,OL12 0NB,53.62428665,-2.160136938,RW
 England,RWE10,NHS Sector,St Mary's Hospital,LE13 1SJ,52.76593781,-0.877281189,RWE,University Hospitals Of Leicester NHS Trust,FALSE,0,32
 England,RWG08,NHS Sector,Hemel Hempstead Hospital,HP2 4AD,51.75083923,-0.468585968,RWG,West Hertfordshire Hospitals NHS Trust,FALSE,0,21
 England,RWW10,NHS Sector,St Mary's Hospital,WA2 8DB,53.40608597,-2.592434645,RWW,Warrington and Halton Hospitals NHS Foundation Trust,FALSE,0,32
-England,RX38Q,NHS Sector,Redcar Primary Care Hospital,TS10 4NW,54.59928894,-1.068776608,RX3,"Tees, Esk and Wear Valleys NHS Foundation Trust",FALSE,0,13
 England,RXF03,NHS Sector,Pontefract General Infirmary,WF8 1PL,53.69047928,-1.308131099,RXF,Mid Yorkshire Hospitals NHS Trust,FALSE,0,49
 England,RXF10,NHS Sector,Dewsbury & District Hospital,WF13 4HS,53.70225525,-1.651861906,RXF,Mid Yorkshire Hospitals NHS Trust,TRUE,0,159
 England,RXN01,NHS Sector,Chorley & South Ribble Hospital,PR7 1PP,53.66609192,-2.636446476,RXN,Lancashire Teaching Hospitals NHS Foundation Trust,TRUE,0,170
@@ -299,7 +295,6 @@ England,RXR50,NHS Sector,Pendle Community Hospital,BB9 9SZ,53.83698654,-2.213982
 England,RXR60,NHS Sector,Accrington Victoria Hospital,BB5 6AS,53.75958633,-2.366906404,RXR,East Lancashire Hospitals NHS Trust,FALSE,0,18
 England,RXR70,NHS Sector,Clitheroe Community Hospital,BB7 4JX,53.88528824,-2.365998745,RXR,East Lancashire Hospitals NHS Trust,FALSE,0,32
 England,RXR10,NHS Sector,Burnley General Hospital,BB10 2PQ,53.81042862,-2.227864027,RXR,East Lancashire Hospitals NHS Trust,TRUE,0,113
-England,RYG79,NHS Sector,St Michael's Hospital,CV34 5QW,52.28853607,-1.59409225,RYG,Coventry and Warwickshire Partnership NHS Trust,FALSE,0,49
 England,RTH02,NHS Sector,Churchill Hospital,OX3 7LE,51.75033569,-1.214694381,RTH,Oxford University Hospitals NHS Foundation Trust,TRUE,4,201
 England,RLQ01,NHS Sector,Hereford County Hospital,HR1 2BN,52.05873489,-2.707180262,RLQ,Wye Valley NHS Trust,TRUE,6,242
 England,RWDLP,NHS Sector,Grantham & District Hospital,NG31 8DG,52.92108917,-0.6406991482,RWD,United Lincolnshire Hospitals NHS Trust,TRUE,6,108
@@ -349,8 +344,8 @@ England,RKEQ4,NHS Sector,The Whittington Hospital,N19 5NF,51.56631088,-0.1386230
 England,RYR16,NHS Sector,St Richard's Hospital,PO19 6SE,50.84355545,-0.7680127621,RYR,Western Sussex Hospitals NHS Foundation Trust,TRUE,27,385
 England,RYR18,NHS Sector,Worthing Hospital,BN11 2DH,50.81669235,-0.3634150624,RYR,Western Sussex Hospitals NHS Foundation Trust,TRUE,27,489
 England,RAS01,NHS Sector,Hillingdon Hospital,UB8 3NN,51.52607727,-0.4611603618,RAS,The Hillingdon Hospitals NHS Foundation Trust,TRUE,28,345
-England,RC110,NHS Sector,Bedford Hospital South Wing,MK42 9DJ,52.12826538,-0.4724805057,RC1,Bedford Hospital NHS Trust,TRUE,28,374
-England,RA301,NHS Sector,Weston General Hospital,BS23 4TQ,51.32234192,-2.971384764,RA3,Weston Area Health NHS Trust,TRUE,29,261
+England,RC110,NHS Sector,Bedford Hospital,MK42 9DJ,52.12826538,-0.4724805057,RC9,Bedfordshire Hospitals NHS Foundation Trust,TRUE,28,374
+England,RA301,NHS Sector,Weston General Hospital,BS23 4TQ,51.32234192,-2.971384764,RA7,University Hospitals Bristol and Weston NHS Foundation Trust,TRUE,29,261
 England,RRF02,NHS Sector,Royal Albert Edward Infirmary,WN1 2NN,53.55774307,-2.629076481,RRF,"Wrightington, Wigan and Leigh NHS Foundation Trust",TRUE,29,432
 England,RQXM1,NHS Sector,Homerton University Hospital,E9 6SR,51.55063248,-0.0460843556,RQX,Homerton University Hospital NHS Foundation Trust,TRUE,30,253
 England,RD304,NHS Sector,Poole General Hospital,BH15 2JB,50.72199249,-1.973102927,R0D,University Hosptials Dorset NHS Foundation Trust,TRUE,31,470
@@ -377,9 +372,8 @@ England,RYJ03,NHS Sector,Hammersmith Hospital,W12 0HS,51.51742172,-0.2347068191,
 England,RMC01,NHS Sector,Royal Bolton Hospital,BL4 0JR,53.55396271,-2.429878712,RMC,Bolton NHS Foundation Trust,TRUE,38,517
 England,RBZ12,NHS Sector,North Devon District Hospital,EX31 4JB,51.09217453,-4.0504179,RBZ,Northern Devon Healthcare NHS Trust,TRUE,39,250
 England,RVWAE,NHS Sector,University Hospital Of North Tees,TS19 8PE,54.58285904,-1.347565413,RVW,North Tees and Hartlepool NHS Foundation Trust,TRUE,39,421
-England,RC971,NHS Sector,Luton & Dunstable Hospital,LU4 0DZ,51.89414597,-0.4744154513,RC9,Luton and Dunstable University Hospital NHS Foundation Trust,TRUE,40,595
+England,RC971,NHS Sector,Luton & Dunstable Hospital,LU4 0DZ,51.89414597,-0.4744154513,RC9,Bedfordshire Hospitals NHS Foundation Trust,TRUE,40,595
 England,RN541,NHS Sector,Royal Hampshire County Hospital,SO22 5DG,51.06171036,-1.329156041,RN5,Hampshire Hospitals NHS Foundation Trust,TRUE,40,365
-England,RQ8LJ,NHS Sector,St Peter's Hospital,CM9 6EG,51.73000336,0.6719799042,RQ8,Mid Essex Hospital Services NHS Trust,TRUE,40,491
 England,RQWG0,NHS Sector,Princess Alexandra Hospital,CM20 1QX,51.77153015,0.0854712948,RQW,The Princess Alexandra Hospital NHS Trust,TRUE,40,414
 England,RTG02,NHS Sector,Burton Hospital,DE13 0RB,52.81777954,-1.65636909,RTG,University Hospital of Derby and Burton NHS Foundation Trust,FALSE,40,358
 England,RTK01,NHS Sector,St Peter's Hospital,KT16 0PZ,51.37783432,-0.5270460248,RTK,Ashford and St Peter's Hospitals NHS Foundation Trust,TRUE,40,491
@@ -417,7 +411,7 @@ England,RJ231,NHS Sector,Queen Elizabeth Hospital,SE18 4QH,51.47819138,0.0500571
 England,RA901,NHS Sector,Torbay Hospital,TQ2 7AA,50.48232269,-3.553790569,RA9,Torbay and South Devon NHS Foundation Trust,TRUE,52,433
 England,RXR20,NHS Sector,Royal Blackburn Hospital,BB2 3HH,53.73556519,-2.462701321,RXR,East Lancashire Hospitals NHS Trust,TRUE,52,942
 England,RXN02,NHS Sector,Royal Preston Hospital,PR2 9HT,53.79151154,-2.706829548,RXN,Lancashire Teaching Hospitals NHS Foundation Trust,TRUE,53,578
-England,RAJ01,NHS Sector,Southend Hospital,SS0 0RY,51.55383682,0.688631773,RAJ,Southend University Hospital NHS Foundation Trust,TRUE,54,532
+England,RAJ01,NHS Sector,Southend Hospital,SS0 0RY,51.55383682,0.688631773,RAJ,Mid and South Essex NHS Foundation Trust,TRUE,54,532
 England,RWG02,NHS Sector,Watford General Hospital,WD18 0HB,51.64859009,-0.4052779377,RWG,West Hertfordshire Hospitals NHS Trust,TRUE,54,562
 England,RWH01,NHS Sector,Lister Hospital,SG1 4AB,51.92461014,-0.2127115428,RWH,East and North Hertfordshire NHS Trust,TRUE,54,558
 England,RD130,NHS Sector,Royal United Hospital,BA1 3NG,51.39167023,-2.39120388,RD1,Royal United Hospitals Bath NHS Foundation Trust,TRUE,55,507
@@ -446,7 +440,7 @@ England,RRK97,NHS Sector,Heartlands Hospital,B9 5SS,52.48022079,-1.829951048,RRK
 England,RRK98,NHS Sector,Good Hope Hospital,B75 7RR,52.56736755,-1.812028766,RRK,University Hospitals Birmingham NHS Foundation Trust,FALSE,75,507
 England,R0A02,NHS Sector,Manchester Royal Infirmary,M13 9WL,53.46167374,-2.224890709,R0A,Manchester University NHS Foundation Trust,TRUE,76,645
 England,RTRAT,NHS Sector,The James Cook University Hospital,TS4 3BW,54.55175781,-1.214789987,RTR,South Tees Hospitals NHS Foundation Trust,TRUE,76,590
-England,RDDH0,NHS Sector,Basildon Hospital,SS16 5NL,51.55767441,0.4505711794,RDD,Basildon and Thurrock University Hospitals NHS Foundation Trust,TRUE,77,674
+England,RDDH0,NHS Sector,Basildon Hospital,SS16 5NL,51.55767441,0.4505711794,RAJ,Mid and South Essex NHS Foundation Trust,TRUE,77,674
 England,RTE01,NHS Sector,Cheltenham General Hospital,GL53 7AN,51.89212418,-2.07186842,RTE,Gloucestershire Hospitals NHS Foundation Trust,TRUE,77,326
 England,RVV01,NHS Sector,William Harvey Hospital (Ashford),TN24 0LZ,51.14148712,0.9162230492,RVV,East Kent Hospitals University NHS Foundation Trust,TRUE,79,433
 England,RXF05,NHS Sector,Pinderfields General Hospital,WF1 4DG,53.69242096,-1.488540292,RXF,Mid Yorkshire Hospitals NHS Trust,TRUE,79,611
@@ -476,7 +470,7 @@ England,RJ701,NHS Sector,St George's Hospital,SW17 0QT,51.42668152,-0.1757045537
 England,RJE01,NHS Sector,Royal Stoke University Hospital,ST4 6QG,53.00315857,-2.212051868,RJE,University Hospitals of North Midlands,TRUE,156,1155
 England,RJ121,NHS Sector,Guy's And St Thomas' NHS Trust,SE1 9RT,51.50346375,-0.0868055597,RJ1,Guy's and St Thomas' NHS Foundation Trust,TRUE,159,760
 England,RRK15,NHS Sector,Queen Elizabeth Hospital Birmingham,B15 2WB,52.45014954,-1.941761851,RRK,University Hospitals Birmingham NHS Foundation Trust,TRUE,167,1075
-England,RA701,NHS Sector,Bristol Royal Infirmary,BS2 8HW,51.45918655,-2.596124649,RA7,University Hospitals Bristol NHS Foundation Trust,TRUE,174,754
+England,RA701,NHS Sector,Bristol Royal Infirmary,BS2 8HW,51.45918655,-2.596124649,RA7,University Hospitals Bristol and Weston NHS Foundation Trust,TRUE,174,754
 England,RJZ01,NHS Sector,King's College Hospital,SE5 9RS,51.46807861,-0.0939013884,RJZ,King's College Hospital NHS Foundation Trust,TRUE,154,789
 England,RWJ09,NHS Sector,Stepping Hill Hospital,SK2 7JE,53.38378143,-2.132004976,RWJ,Stockport NHS Foundation Trust,TRUE,34,461
 England,RVY01,NHS Sector,Southport & Formby District General Hospital,PR8 6PN,53.63356018,-2.978807688,RVY,Southport and Ormskirk Hospital NHS Trust,TRUE,18,361

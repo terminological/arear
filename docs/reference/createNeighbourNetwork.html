@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -131,6 +131,7 @@
   <span class='va'>shape</span>,
   idVar <span class='op'>=</span> <span class='st'>"code"</span>,
   bridges <span class='op'>=</span> <span class='fu'>arear</span><span class='fu'>::</span><span class='va'><a href='ukconnections.html'>ukconnections</a></span>,
+  queen <span class='op'>=</span> <span class='cn'>FALSE</span>,
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
@@ -149,6 +150,14 @@
       <th>bridges</th>
       <td><p>- a df with the following columns: name start.lat start.long end.lat end.long defining connections between non touching shapes (e.g. bridges / ferries / etc.)</p></td>
     </tr>
+    <tr>
+      <th>queen</th>
+      <td><p>- include neighbouring areas that touch at corners</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>- passed on to .cached() (cache control)</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -166,7 +175,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by First Last.</p>
+  <p>Developed by Robert Challen.</p>
 </div>
 
 <div class="pkgdown">

@@ -1,6 +1,6 @@
-test_that("multiplication works", {
+test_that("interpolate test 1", {
 
-  devtools::load_all()
+  # devtools::load_all()
   out = arear::interpolateByArea(
     inputDf = arear::testdata$demand11x11 %>% group_by(type),
     by="id",

@@ -29,7 +29,7 @@ downloadMap(
 
 \item{codeType}{- the "type" of the code - optional. defaults to NA}
 
-\item{simplify}{- do you want to implify the map}
+\item{simplify}{- do you want to simplify the map}
 
 \item{wd}{- an optional working directory (defaults to tempdir)}
 
@@ -44,7 +44,7 @@ to standard code, name, altCode and codeType columns
 \examples{
 \dontrun{
 downloadMap(
-  zipUrl="https://opendata.arcgis.com/datasets/87511f3ae00a40208741c685f827c1d3_0.zip?outSR=\%7B\%22latestWkid\%22\%3A27700\%2C\%22wkid\%22\%3A27700\%7D",
+  zipUrl="https://bit.ly/3A9TnR1",
   mapName="NHS_England_Regions__April_2020__Boundaries_EN_BGC",
   codeCol="nhser20cd",
   nameCol="nhser20nm"

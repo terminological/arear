@@ -1,12 +1,12 @@
 Package: arear
-Title: What the Package Does (One Line, Title Case)
+Title: Arear: Supply demand catchment area
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Robert",
+           family = "Challen",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+           email = "rc538@exeter.ac.uk",
+           comment = c(ORCID = "0000-0002-5504-7768"))
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -18,18 +18,29 @@ Suggests:
     ggplot2,
     ggspatial,
     patchwork,
-    covr
+    covr,
+    tidyverse,
+    ggraph,
+    readr,
+    tidygraph,
+    devtools
 VignetteBuilder: knitr
 Imports: 
     rmapshaper,
     sf,
     dplyr,
     magrittr,
+    rlang,
     fs,
     stringr,
     here,
     spdep,
-    xfun
+    xfun,
+    glue,
+    leaflet,
+    openssl,
+    purrr,
+    tibble
 RoxygenNote: 7.0.2
 Depends: 
     R (>= 2.10)

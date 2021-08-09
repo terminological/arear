@@ -1,11 +1,11 @@
 #' Create a catchment area map
 #'
-#' This implements the label propagation alogrithm described in our upcoming paper.
+#' This implements the label propagation algorithm described in our upcoming paper.
 #'
 #' @param supplyShape - a sf object containing a list of the locations of supply points, with a column containing supply capacity, for example NHS hospital sites, with a bed
 #' @param supplyIdVar - the variable name of the identifier of the supplier or group of suppliers. For example this could be an NHS trust (multiple sites)
 #' @param supplyVar - the column name of the supply parameter. This could be number of beds in a hospital.
-#' @param supplyOutputVars - (optional - defaults to gropuing) the columns from the input that are to be retained in the output
+#' @param supplyOutputVars - (optional - defaults to grouping) the columns from the input that are to be retained in the output
 #' @param demandShape - the sf object with the geographical map of the demand surface. For example the geographical distribution of the population served,
 #' @param demandIdVar - the column name of the unique identifier of the areas,
 #' @param demandVar - the column name of the demand parameter. This could be the population in each region
@@ -13,6 +13,8 @@
 #' @param bridges - a named list containing extra linkages beyond those inferred by the demandShape topology. These are used to add in bridges
 #' @param outputMap - should we export a shapefile or just the mapping file
 #' @return a dataframe containing the grouping columns, the outputIdVar and the interpolated value of interpolateVar
+#' @importFrom rlang .data
+#' @export
 createCatchment = function(
   supplyShape,
   supplyIdVar = "code",
@@ -28,16 +30,16 @@ createCatchment = function(
 ) {
 
   # set up column aliases so that supply and demand can be specified in a flexible manner
-  supplyIdVar = ensym(supplyIdVar)
-  supplyVar = ensym(supplyVar)
-  demandIdVar = ensym(demandIdVar)
-  demandVar = ensym(demandVar)
+  supplyIdVar = rlang::ensym(supplyIdVar)
+  supplyVar = rlang::ensym(supplyVar)
+  demandIdVar = rlang::ensym(demandIdVar)
+  demandVar = rlang::ensym(demandVar)
 
   # rename key columns from demand shape and define $n$, $V_N$ and $D_V_n$ to follow terminology as per catchment areas paper
   V_N = demandShape %>% #V_N
     dplyr::ungroup() %>%
     dplyr::rename(demandCode = !!demandIdVar, D_V_n = !!demandVar) %>%
-    dplyr::mutate(n = row_number())
+    dplyr::mutate(n = dplyr::row_number())
 
   # renaming for consistency with published algorithm
   if (growthConstant <= 1) stop("growthConstant must be > 1")
@@ -69,8 +71,8 @@ createCatchment = function(
   # getContainedIn constructs a mapping from $P_m$ to $V_n$ retaining inputVars and outputVars
   V_M = P_M %>% arear::getContainedIn(
     V_N,
-    inputVars = vars(supplyCode,m,S_P_m),
-    outputVars = vars(demandCode,n,D_V_n)
+    inputVars = dplyr::vars(supplyCode,m,S_P_m),
+    outputVars = dplyr::vars(demandCode,n,D_V_n)
   )
 
   # No more than one P_M can be found in a given V_M. This constraint is sometimes violated in real life
@@ -84,7 +86,7 @@ createCatchment = function(
     dplyr::select(demandCode, D_V_n, n, supplyCode, S_P_m, m)
 
   V_M_merged = NULL
-  if(any(V_M %>% dplyr::group_by(demandCode,n) %>% dplyr::summarise(count=n()) %>% dplyr::pull(count)>1)) {
+  if(any(V_M %>% dplyr::group_by(demandCode,n) %>% dplyr::summarise(count=dplyr::n()) %>% dplyr::pull(count)>1)) {
     warning("More than one supplier was found in a single region. These the first value will be picked, and the total capacity combined, but as a result the catchment map will be missing some values from the supplier list.")
     V_M_merged = V_M %>% dplyr::group_by(demandCode,n) %>% dplyr::filter(dplyr::n()>1)
   }
@@ -92,7 +94,7 @@ createCatchment = function(
   V_M = V_M %>%
     dplyr::group_by(demandCode,n,D_V_n) %>%
     dplyr::summarise(
-      m = first(m),
+      m = dplyr::first(m),
       S_P_m = sum(S_P_m),
       supplyCode = paste0(unique(supplyCode),collapse="|") # for tracking purposes we keep the original ids for merged areas.
     ) %>% dplyr::ungroup()
@@ -111,7 +113,7 @@ createCatchment = function(
   k_count = 0
   Vnew_M_k = V_M %>% dplyr::mutate(k=k_count)
   G_M_k_minus_1 = tibble::tibble()
-  G_M_k = Vnew_M_k # %>% select(n,k) %>% left_join(V_N, by="n")
+  G_M_k = Vnew_M_k # %>% dplyr::select(n,k) %>% dplyr::left_join(V_N, by="n")
 
   # define the initial unlabelled set of vertices when k=0:
   U_k = V_N %>% dplyr::anti_join(V_M, by="n") %>% dplyr::mutate(k = k_count, S_P_m = 0) # unlsuppied areas contribute zero 0 supply)
@@ -190,15 +192,15 @@ createCatchment = function(
     # accumulated growth score increases in all areas:
     R_M_k = R_M %>%
       dplyr::semi_join(
-        U_M_k %>% select(m) %>% distinct(), by="m"
+        U_M_k %>% dplyr::select(m) %>% dplyr::distinct(), by="m"
       ) %>%
       dplyr::mutate(
-        delta_A_U_m_k = C_growth * rank(R)/n()
+        delta_A_U_m_k = C_growth * rank(R)/dplyr::n()
       )
 
     U_M_k = U_M_k %>% dplyr::left_join(R_M_k, by="m") %>%
       dplyr::mutate(A_U_m_k = A_U_m_k + delta_A_U_m_k) %>%
-      select(-R,-delta_A_U_m_k)
+      dplyr::select(-R,-delta_A_U_m_k)
 
     #  for all the un-labelled vertices, select the label M , with the highest score, and
     # if the accumulated score has reached the threshold of 1, incorporate it into the
@@ -206,8 +208,8 @@ createCatchment = function(
     Vnew_M_k = U_M_k %>%
       dplyr::filter(A_U_m_k > 1) %>%
       dplyr::group_by(n) %>%
-      dplyr::arrange(desc(A_U_m_k)) %>%
-      dplyr::filter(row_number()==1) %>%
+      dplyr::arrange(dplyr::desc(A_U_m_k)) %>%
+      dplyr::filter(dplyr::row_number()==1) %>%
       dplyr::ungroup() %>%
       dplyr::select(-A_U_m_k)
 
@@ -233,8 +235,8 @@ createCatchment = function(
   }
   crossMapping = G_M_k %>% dplyr::ungroup() %>% dplyr::select(!!demandIdVar2 := demandCode, !!demandVar := D_V_n, !!supplyIdVar2 := supplyCode, !!supplyVar := S_P_m, k)
 
-  suppliedArea = demandShape %>% dplyr::inner_join(crossMapping %>% select(!!demandIdVar:=!!demandIdVar2, !!supplyIdVar2, !!supplyVar, k), by=as_label(demandIdVar))
-  notSuppliedArea = demandShape %>% dplyr::anti_join(crossMapping %>% select(!!demandIdVar:=!!demandIdVar2), by=as_label(demandIdVar))
+  suppliedArea = demandShape %>% dplyr::inner_join(crossMapping %>% dplyr::select(!!demandIdVar:=!!demandIdVar2, !!supplyIdVar2, !!supplyVar, k), by=dplyr::as_label(demandIdVar))
+  notSuppliedArea = demandShape %>% dplyr::anti_join(crossMapping %>% dplyr::select(!!demandIdVar:=!!demandIdVar2), by=dplyr::as_label(demandIdVar))
   if(identical(V_M_merged,NULL)) {
     mergedSuppliers = tibble::tibble()
   } else {
@@ -252,15 +254,57 @@ createCatchment = function(
   if (outputMap) {
     # reassemble features preserved from original supply dataframe
     message("assembling catchment area map...")
-    tmp = demandShape %>% inner_join(
-      crossMapping %>% select(!!demandIdVar:=!!demandIdVar2,!!supplyIdVar2),
+    tmp = demandShape %>% dplyr::inner_join(
+      crossMapping %>% dplyr::select(!!demandIdVar:=!!demandIdVar2,!!supplyIdVar2),
       by = dplyr::as_label(demandIdVar)
     )
-    tmp2 = tmp %>% rmapshaper::ms_dissolve(field = dplyr::as_label(supplyIdVar2), sum_fields = dplyr::as_label(demandVar))
-    tmp2 = tmp2 %>% rename(!!supplyIdVar:=!!supplyIdVar2) %>% left_join(supplyFeatures, by=dplyr::as_label(supplyIdVar))
+    tmp2 = suppressWarnings({tmp %>% rmapshaper::ms_dissolve(field = dplyr::as_label(supplyIdVar2), sum_fields = dplyr::as_label(demandVar))})
+    tmp2 = tmp2 %>% dplyr::rename(!!supplyIdVar:=!!supplyIdVar2) %>% dplyr::left_join(supplyFeatures, by=dplyr::as_label(supplyIdVar))
     out$map = tmp2
   }
 
   return(out)
 
+}
+
+
+#' Create a catchment area map and cache the result
+#'
+#' This implements the label propagation algorithm described in our upcoming paper.
+#'
+#' @param supplyShape - a sf object containing a list of the locations of supply points, with a column containing supply capacity, for example NHS hospital sites, with a bed
+#' @param supplyIdVar - the variable name of the identifier of the supplier or group of suppliers. For example this could be an NHS trust (multiple sites)
+#' @param supplyVar - the column name of the supply parameter. This could be number of beds in a hospital.
+#' @param supplyOutputVars - (optional - defaults to grouping) the columns from the input that are to be retained in the output
+#' @param demandShape - the sf object with the geographical map of the demand surface. For example the geographical distribution of the population served,
+#' @param demandIdVar - the column name of the unique identifier of the areas,
+#' @param demandVar - the column name of the demand parameter. This could be the population in each region
+#' @param growthConstant - a growth parameter which defines how quickly each label propagates
+#' @param bridges - a named list containing extra linkages beyond those inferred by the demandShape topology. These are used to add in bridges
+#' @param outputMap - should we export a shapefile or just the mapping file
+#' @param ... - cache control parameters
+#' @return a dataframe containing the grouping columns, the outputIdVar and the interpolated value of interpolateVar
+#' @importFrom rlang .data
+#' @export
+catchment = function(
+  supplyShape,
+  supplyIdVar = "code",
+  supplyVar,
+  supplyOutputVars = supplyShape %>% dplyr::groups(),
+  demandShape,
+  demandIdVar = "code",
+  demandVar,
+  growthConstant = 1.2,
+  #distanceModifier = function(distanceToSupply) {return(2/(1+distanceToSupply/min(0.1,mean(distanceToSupply))))},
+  bridges = arear::ukconnections,
+  outputMap = TRUE,
+  ...
+) {
+  supplyIdVar = rlang::ensym(supplyIdVar)
+  supplyVar = rlang::ensym(supplyVar)
+  demandIdVar = rlang::ensym(demandIdVar)
+  demandVar = rlang::ensym(demandVar)
+  .cached({
+    arear::createCatchment(supplyShape, !!supplyIdVar, !!supplyVar, supplyOutputVars, demandShape, !!demandIdVar, !!demandVar, growthConstant, bridges, outputMap)
+  }, hash = list(supplyShape, supplyIdVar, supplyVar, supplyOutputVars, demandShape, demandIdVar, demandVar, growthConstant, bridges, outputMap),name = "catchment", ...)
 }

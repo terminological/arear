@@ -6,3 +6,9 @@
 ^LICENSE\.md$
 ^\.github$
 ^codecov\.yml$
+^vignettes/old/.*$
+^vignettes/old/metawards-trust-data\.Rmd$
+^vignettes/catchment-areas\.Rmd$
+^docs$
+^_pkgdown\.yml$
+^pkgdown$

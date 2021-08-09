@@ -4,12 +4,12 @@
 \name{arear-package}
 \alias{arear}
 \alias{arear-package}
-\title{arear: What the Package Does (One Line, Title Case)}
+\title{arear: Arear: Supply demand catchment area}
 \description{
 What the package does (one paragraph).
 }
 \author{
-\strong{Maintainer}: First Last \email{first.last@example.com} (\href{https://orcid.org/YOUR-ORCID-ID}{ORCID})
+\strong{Maintainer}: Robert Challen \email{rc538@exeter.ac.uk} (\href{https://orcid.org/0000-0002-5504-7768}{ORCID})
 
 }
 \keyword{internal}

@@ -8,6 +8,7 @@ createNeighbourNetwork(
   shape,
   idVar = "code",
   bridges = arear::ukconnections,
+  queen = FALSE,
   ...
 )
 }
@@ -17,6 +18,10 @@ createNeighbourNetwork(
 \item{idVar}{- the column containing the coded identifier of the map}
 
 \item{bridges}{- a df with the following columns: name start.lat start.long end.lat end.long defining connections between non touching shapes (e.g. bridges / ferries / etc.)}
+
+\item{queen}{- include neighbouring areas that touch at corners}
+
+\item{...}{- passed on to .cached() (cache control)}
 }
 \value{
 an edge list of ids with from and to columns

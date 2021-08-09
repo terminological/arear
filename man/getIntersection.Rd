@@ -16,6 +16,12 @@ getIntersection(
 \item{inputShape}{- the input sf}
 
 \item{outputShape}{- the output sf}
+
+\item{suffix}{- the suffix of any duplicated columns as per dplyr::inner_join()}
+
+\item{recalcArea}{- do you need the area of the intersected shape (e.g. for areal interpolation)}
+
+\item{...}{- passed on to .cached() (cache control)}
 }
 \value{
 a sf object representing the intersection of the input and output shapes.

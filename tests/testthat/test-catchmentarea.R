@@ -1,6 +1,10 @@
-test_that("multiplication works", {
 
-  devtools::load_all()
+test_that("grid test 1", {
+
+
+  #devtools::load_all()
+  library(tidyverse)
+  library(sf)
 
   catchment = arear::createCatchment(
     supplyShape = testdata$gridSupply2,
@@ -19,9 +23,11 @@ test_that("multiplication works", {
 
 })
 
-test_that("multiplication works", {
+test_that("grid test 2", {
 
-  devtools::load_all()
+  # devtools::load_all()
+  library(tidyverse)
+  library(sf)
 
   catchment = arear::createCatchment(
     supplyShape = testdata$gridSupply,
@@ -40,19 +46,23 @@ test_that("multiplication works", {
 
 })
 
-test_that("multiplication works", {
+test_that("grid test 3", {
 
-  devtools::load_all()
+  # devtools::load_all()
+  library(tidyverse)
+  library(sf)
 
-  catchment = arear::createCatchment(
-    supplyShape = testdata$gridSupplyViolateConstraint,
-    supplyIdVar = id,
-    supplyVar = supply,
-    demandShape = testdata$gridDemand,
-    demandIdVar = id,
-    demandVar = demand,
-    growthConstant = 1.2
-  )
+  testthat::expect_warning({
+    catchment = arear::createCatchment(
+      supplyShape = testdata$gridSupplyViolateConstraint,
+      supplyIdVar = id,
+      supplyVar = supply,
+      demandShape = testdata$gridDemand,
+      demandIdVar = id,
+      demandVar = demand,
+      growthConstant = 1.2
+    )
+  })
 
   ggplot()+
     geom_sf(data=catchment$suppliedArea, aes(fill=id.supply, alpha=k))+
@@ -61,19 +71,23 @@ test_that("multiplication works", {
 
 })
 
-test_that("multiplication works", {
+test_that("grid test 4", {
 
-  devtools::load_all()
+  # devtools::load_all()
+  library(tidyverse)
+  library(sf)
 
-  catchment = arear::createCatchment(
-    supplyShape = testdata$gridSupplyDegenerate,
-    supplyIdVar = id,
-    supplyVar = supply,
-    demandShape = testdata$gridDemand,
-    demandIdVar = id,
-    demandVar = demand,
-    growthConstant = 1.2
-  )
+  testthat::expect_warning({
+    catchment = arear::createCatchment(
+      supplyShape = testdata$gridSupplyDegenerate,
+      supplyIdVar = id,
+      supplyVar = supply,
+      demandShape = testdata$gridDemand,
+      demandIdVar = id,
+      demandVar = demand,
+      growthConstant = 1.2
+    )
+  })
 
   ggplot()+
     geom_sf(data=catchment$suppliedArea, aes(fill=id.supply, alpha=k))+
