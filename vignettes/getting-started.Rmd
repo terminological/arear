@@ -113,11 +113,14 @@ ggraph::ggraph(graph, layout="kk")+
 
 ```{r}
 
-arear::preview(lad,
-      poi=nhshospitals, 
-      poiLabelGlue = "{hospitalName}",
-      poiPopupGlue = "<b>{hospitalName}</b><ul><li>{trustName}</li><li>hdu: {hduBeds}</li><li>acute: {acuteBeds}</li></ul>"
-)
+if (pkgdown::in_pkgdown()) {
+  # Suppress this for CRAN checks
+  arear::preview(lad,
+        poi=nhshospitals, 
+        poiLabelGlue = "{hospitalName}",
+        poiPopupGlue = "<b>{hospitalName}</b><ul><li>{trustName}</li><li>hdu: {hduBeds}</li><li>acute: {acuteBeds}</li></ul>"
+  )
+}
 
 ```
 
