@@ -25,7 +25,8 @@ Suggests:
     tidygraph,
     devtools,
     markdown,
-    webshot
+    webshot,
+    pkgdown
 VignetteBuilder: knitr
 Imports: 
     rmapshaper,
