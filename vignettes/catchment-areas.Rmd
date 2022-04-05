@@ -1,6 +1,5 @@
 ---
 title: "Algorithmic hospital catchment area estimation using label propagation"
-author: "Rob Challen"
 output:
   pdf_document:
     fig_caption: yes
@@ -12,20 +11,23 @@ knit: (function(inputFile, encoding,...) {
     output_dir = "~/Dropbox/covid19/catchment-areas", output_file=paste0('catchment-areas-',Sys.Date(),'.pdf'))
   })
 # output:
-#   word_document :
+#   odt_document :
 #     fig_caption: yes
 #     fig_width: 7
 # knit: (function(inputFile, encoding,...) {
+#   options("spo.hidefigures"=TRUE);
 #   rmarkdown::render(
 #     inputFile,
 #     encoding = encoding,
-#     output_dir = "~/Dropbox/covid19/catchment-areas", output_file=paste0('catchment-areas-',Sys.Date(),'.docx'))
+#     output_dir = "~/Dropbox/covid19/catchment-areas", output_file=paste0('catchment-areas-',Sys.Date(),'.odt'))
 #   })
 # TODO: https://www.reed.edu/data-at-reed/software/R/markdown_multiple_reports.html
 header-includes:
   \usepackage{float}
   \usepackage{setspace}
   \doublespacing
+  \usepackage{lineno}
+  \linenumbers
   \floatplacement{figure}{H}
   \usepackage[ruled,vlined]{algorithm2e}
 fig_width: 7
@@ -38,15 +40,16 @@ pkgdown:
   extension: pdf
 ---
 
-Robert Challen^1,2^; Gareth Griffith^3^; Lucas Lacasa^4,5^; Krasimira Tsaneva-Atanasova^1,6,7^; 
+Robert Challen (corresponding author - rc538@exeter.ac.uk)^1,2^; Gareth Griffith^3,4^; Lucas Lacasa^5,6^; Krasimira Tsaneva-Atanasova^1,7,8^; 
 
 1)  EPSRC Hub for Quantitative Modelling in Healthcare, University of Exeter, Exeter, Devon, UK.
 2)  Somerset NHS Foundation Trust, Taunton, Somerset, UK.
-3)  Bristol Medical School, Population Health Sciences, University of Bristol, Bristol, UK
-4)  School of Mathematical Sciences, Queen Mary University of London, London E1 4NS, UK
-5)  Instituto de Física Interdisciplinar y Sistemas Complejos (IFISC) (CSIC-UIB), Campus UIB, 07122, Palma de Mallorca, Spain
-6)  The Alan Turing Institute, British Library, 96 Euston Rd, London NW1 2DB, UK.
-7)  Data Science Institute, College of Engineering, Mathematics and Physical Sciences, University of Exeter, Exeter, UK.
+3)  Bristol Medical School, Population Health Sciences, University of Bristol, Bristol, BS8 2BN, UK
+4)  Medical Research Council Integrative Epidemiology Unit, University of Bristol, Bristol, BS8 2BN, UK
+5)  School of Mathematical Sciences, Queen Mary University of London, London E1 4NS, UK
+6)  Instituto de Física Interdisciplinar y Sistemas Complejos (IFISC) (CSIC-UIB), Campus UIB, 07122, Palma de Mallorca, Spain
+7)  The Alan Turing Institute, British Library, 96 Euston Rd, London NW1 2DB, UK.
+8)  Data Science Institute, College of Engineering, Mathematics and Physical Sciences, University of Exeter, Exeter, UK.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
@@ -108,11 +111,11 @@ The catchment area or population of a hospital is a broad concept which serves a
 * Calculation (and visualisation) of incidence and prevalence of disease from hospital reported statistics (identifying the denominator) [@gilmourIdentificationHospitalCatchment2010] and hence admission rates per head of population.
 * Preferred routing of patients to hospitals for optimizing specific services.
 
-There are two general approaches to modelling catchment areas which we will discuss in detail - activity based or algorithmic approaches. Algorithmic approaches are based solely on population level information about regional demographics and hospital capacity. Activity based approaches minimally require data on hospital activity across all the region at an individual level, such as individual patient admission records. 
+There are two general approaches to modelling catchment areas which we will discuss in detail - activity based or algorithmic approaches. Algorithmic approaches are based solely on regional population counts and hospital capacity. Activity based approaches minimally require data on hospital activity across all the region at an individual level, such as individual patient admission records. 
 
 Either of these individual modelling approaches result in a hospital catchment area that is either overlapping or non-overlapping. An overlapping output may reflect the fact that patients may have a choice in the use of the services, and that a range of individually varying predictors influence individuals' capacity and willingness to adhere to arbitrarily imposed boundaries. It may also reflect a fundamental organization of the service, for example the networks of critical care [@pettCriticalCareTransfers2020], in which some activity of a hospital caters directly for the local population, but other activity is conducted supporting other regional hospitals. As such overlapping approaches may better reflect reality, but non-overlapping outputs are often a necessary simplification for secondary analyses, where cross-classification is not specifiable [@jonesEthnicResidentialSegregation2015]. It is often desirable for secondary analysis that boundaries align with geographical and organizational boundaries, but non-overlapping outputs may result in real world cases being incorrectly assigned to a hospital based on the catchment area, and this will tend to be spatially uneven, clustering at the fringes of the imposed boundaries [@arcayaAreaVariationsHealth2012].
 
-The simplest algorithmic approaches involve straight line distance weighted to a measure of the size of a hospital [@reillyLawRetailGravitation1931]. This can be extended by models which use an analogy to gravity to calculate the potential field of every hospital, based on both capacity (e.g. beds) and demand (e.g. patients) [@huffDefiningEstimatingTrading1964; @reillyLawRetailGravitation1931; @stewartInverseDistanceVariation1941]. The resulting potentials may be cut off at a specified value, or where they are exceeded by another hospitals potential, to produce either overlapping or non-overlapping fields. Such algorithmic approaches may not respect geographical or existing organizational boundaries, but they can be used to model hypothetical scenarios, such as the impact of creating a new hospital. Further details of the range of different models that have been proposed have been previously published [@jonesModellingCatchmentAreas2011;@gilmourIdentificationHospitalCatchment2010]. 
+The simplest algorithmic approaches involve a measure of the size of a hospital inversely weighted by straight line distance [@reillyLawRetailGravitation1931]. This can be extended by models which use an analogy to gravity to calculate the potential field of every hospital, based on both capacity (e.g. beds) and demand (e.g. patients) [@huffDefiningEstimatingTrading1964; @reillyLawRetailGravitation1931; @stewartInverseDistanceVariation1941]. The resulting potentials may be cut off at a specified value, or where they are exceeded by another hospitals potential, to produce either overlapping or non-overlapping fields. Such algorithmic approaches may not respect geographical or existing organizational boundaries, but they can be used to model hypothetical scenarios, such as the impact of creating a new hospital. Further details of the range of different models that have been proposed have been previously published [@jonesModellingCatchmentAreas2011;@gilmourIdentificationHospitalCatchment2010]. 
 
 Activity based models began with the proportional flow, or Norris-Bailey, model [@baileyStatisticsHospitalPlanning1956; @norrisRoleStatisticsRegional1952] which examines the proportion of patients from an area visiting a particular hospital versus the proportion of patients in an area who visit any health care provider. An extension of this was recently used to define catchment areas for major injury following acute trauma [@alexandrescuProposedApproachDefining2008]. More recently modern statistical approaches have been applied to the same basic activity data including k-Means classification [@gilmourIdentificationHospitalCatchment2010], Bayesian regression modelling. [@wangCatchmentAreaAnalysis2015] or Markov Multiscale Community Detection [@clarkeDefiningHospitalCatchment2019; @clarkeIdentifyingNaturallyOccurring2020]. Whilst arguably providing a more accurate reflection of reality, activity based models are predicated on the availability and recency of activity data, which may exhibit historical or cultural biases. Depending on the purpose of the catchment area such historical bias may or may not be desirable [@gilmourIdentificationHospitalCatchment2010].
 
@@ -122,7 +125,7 @@ In the early phase of the COVID-19 pandemic, a rapid estimate was needed of the 
 
 * Allow a clean one way mapping from fine grained geographic regions (e.g. from regional demographic estimates or epidemiological models) to the coarse grained administrative hospital region.
 * Provide contiguous and realistic subdivisions of geographies relating to a single hospital or to a hospital group.
-* Provide areas that are determined by the capacity of hospital at different levels of care provision, and the density of local population, or anticipated size of outbreak in the local population.
+* Provide areas that are determined by the capacity of hospital at different levels of care provision, and the size of the local population, or anticipated size of outbreak in the local population.
 * Create regions of approximately equal local supply (e.g. beds) and demand (e.g. patients) at boundaries.
 * Respect crude physical geographical boundaries, such as large rivers.
 * Flexible in that it can be recomputed rapidly if the background parameters change, for example, a regional outbreak or provision of additional hospitals, in a way that is not dependant on individual level activity data.
@@ -139,77 +142,27 @@ The algorithm is inspired by label propagation network clustering, where labels 
 
 To connect supply and demand, or hospital beds to population size, the algorithm propagates a number of labels, each representing the source of supply (e.g. the hospital), through the geographical network, at a rate defined by both the size of the supply (e.g. beds in each hospital), and the demand for the service (e.g. the population) within the areas the label has already propagated to. Thus as demand outstrips supply from a particular source the rate of label propagation associated with that source decreases.
 
-We assume the whole geographical region under consideration can be represented as a mathematical graph, $G$ and is divided into $N$ smaller regions, represented by the vertices $V$ (where $V=V_n, n = 1,2, \dots, N$) each with known population of size $D(V_n)$.
+We assume the whole geographical region under consideration can be represented as a mathematical graph, $G$ and is divided into $N$ smaller regions (parameterisation discussed below), represented by the vertices $V$ (where $V=V_n, n = 1,2, \dots, N$) each with known population of size $D(V_n)$.
 
-We define $M$ hospitals located at the geographical points $P$ (where $P = P_m, m = 1,2,3 \dots M$), and with capacity to supply $S(P_m)$ beds. Typically there are fewer hospitals than regions ($M<<N$). We constrain $P_m$ such that no more than one $P_m$ is found within any given $V$, i.e. each small region hosts no more than one hospital. In practice the assumption that a maximum of one hospital is found in each region is occasionally not true. When this does happen, we preprocess the data to combine hospitals that are located together into a single entity. 
+We define $M$ hospitals located at the geographical points $P$ (where $P = P_m, m = 1,2,3 \dots M$), and with capacity to supply $S(P_m)$ beds. Typically there are fewer hospitals than regions ($M<<N$). We constrain $P_m$ such that no more than one $P_m$ is found within any given $V$, i.e. each small region hosts no more than one hospital. In practice the assumption that a maximum of one hospital is found in each small region is occasionally not true. When this does happen, we preprocess the data to combine hospitals that are located together into a single entity. 
 
 The connections of neighbouring regions of any area $V_x$ are defined by $E_x = \nu(V_x)$, and likewise the set of neighbouring vertices of any subgraph $G_y$ are defined by $E_y = \nu(G_y)$. These quantities are readily calculated using the geographical intersection of different areas and various algorithms exist to calculate these from geo-spatial data [@bivandRgeosInterfaceGeometry2020; @pebesmaSimpleFeaturesStandardized2018].
 
-![](example.png)
+![](FIG1_example.png)
 `r fig("diagram","Schematic illustration of the proposed label propagation algorithm. The association of a hospital with a region propagates from the hospital location (P) into the different regions (V) at a rate depending on the hospital capacity S(P) and the population of the region, D(V), at each round of the iteration (k) until there are no more neighbours to propagate a label to. The direction of spread is determined by the geographical neighbourhood of each region V")`
 
-Our goal is to divide the graph $G$ into $M$ labelled sub-graphs $G_m$ such that the sub-graphs are connected, and that neighbouring sub-graphs have similar bed availability per unit population ($\frac{\sum S_m}{\sum D_m}$). We do this by assigning a score for each combination of region and hospital, which is initially zero. For every iteration of the algorithm this score is incremented in any unlabelled region that neighbours a region that has been labelled (i.e. assigned to a specific hospital). The score is increased by a small amount determined by the ratio of supply (hospital beds) available, and demand (population to be served) in the regions assigned to that hospital. Thus labels propagate more quickly from points with a high capacity, through regions with a low population density than vice-versa. The first label to propagate to a given area, and for which the score is above a threshold is defined as the "supplier" for that area, which is labelled as such. This ensures that each region is served by only one hospital. 
+Our goal is to divide the graph $G$ into $M$ labelled sub-graphs $G_m$ such that the sub-graphs are connected, and that neighbouring sub-graphs have similar bed availability per unit population ($\frac{\sum S_m}{\sum D_m}$). We do this by assigning a score for each combination of region and hospital, which is initially zero. For every iteration of the algorithm this score is incremented in any unlabelled region that neighbours a region that has been labelled (i.e. assigned to a specific hospital). The score is increased by a small amount determined by the ratio of supply (hospital beds) available, and demand (population to be served) in the regions assigned to that hospital. Thus labels propagate more quickly from points with a high capacity, through regions with a low population than vice-versa. The first label to propagate to a given area, and for which the score is above a threshold is defined as the "supplier" for that area, which is labelled as such. This ensures that each region is served by only one hospital. 
 
-```{=latex}
-\begin{algorithm}[H]
-\setstretch{1.0}
-\SetAlgoLined
-\SetKwInOut{Input}{Input}
-\SetKwInOut{Output}{Output}
-\SetKwComment{Comment}{\--- }{}
-\Input{$V_N$ - the $N$ regions of demand as a set of geographical polygons}
-\Input{$D(V_n)$ - the density of demand in any given region as a function of the region $V_n$}
-\Input{$P_M$ - a set of $M$ labelled suppliers as a set of geographical points}
-\Input{$S(P_m)$ - the capacity of supply at any given supply point as a function of the supplier $P_m$}
-\Input{$C_{growth}$ - a rate constant defining rate of label propagation}
-\Output{$G_M$ - $M$ labelled subgraphs of graph $G$, relating to the catchment areas of suppliers $P_M$}
-\BlankLine
-\Comment{define $G$ as the graph consisting of geographical regions $V_N$, connected by edges, $E_N$, given by their geographical neighbours $\nu(V_N)$:}
-$E_N \gets \nu(V_N)$\;
-$G \gets (V_N, E_N)$\;
-\Comment{define $V_M$ and $V^{new}_{M,0}$ as the geographic regions of $G$ serviced by points $P_M$, and $G_{M,0}$ as a set of labelled sub-graphs (also initially consisting solely of the vertices $V_M$):}
-$V_M \gets G \cap P_M$\;
-$V^{new}_{M,0} \gets V_M$;
-$G_{M,0} \gets V_M$\;
-\Comment{define the initial unlabelled set of vertices:}
-$U_0 \gets \neg V_{M}$\;
-\Comment{define the initial un-labelled neighbours of labelled sub-graphs, $G_M$:}
-$U_{M,0} \gets \nu(V_M)$\;
-\Comment{define an accumulated growth score for each un-labelled neighbour $U_{M,0}$ of each $G_{M,0}$:}
-$A_{U_{M,0}} \gets 0$\;
-\BlankLine
-$k \gets 0$\;
-\Comment{execute the loop while there are still unlabelled vertices and there exist some unlabelled neighbours of labelled vertices}
-\While{$|U_k| > 0$ and $|U_{M,k}| > 0$} {
-  $k \gets k+1$\;
-  \BlankLine
-  \Comment{define the un-labelled vertices as the set of $V$ not contained in any of $G_{M,k-1}$:}
-  $U_k \gets \neg G_{M,k-1}$\;
-  \Comment{define the un-labelled neighbours of $G_{M,k-1}$ as $U_{M,k}$ as the previously unlabelled neighbours and the neighbours of the most recently labelled neighbours $V^{new}_{M,k-1}$:}
-  $U_{M,k} \gets U_{M,k-1} \cup (U_k \cap \nu(V^{new}_{M,k-1}))$\;
-  \Comment{define the reserve capacity, $R_M$, to supply existing labelled, $G_{M,k-1}$,  and un-labelled neighbours $U_{M,k}$, as:}
-  $R_M \gets \frac{S(P_M)}{D(U_{M,k} \cup G_{M,k-1})}$\;
-  \Comment{for unlabelled areas only, update the accumulated growth score, $A_{U_{M,k}}$, with the normalised rank of the reserve capacity and multiplied by a constant $C_{growth} > 1$ representing the speed at which the accumulated growth score increases in all areas:}
-  $R_{M,k} \gets R_m \{m \in U_{M,k}\}$\;
-  $A_{U_{M,k}} \gets A_{U_{M,k-1}} + C_{growth} \times \text{rank}(R_{M,k})/|R_{M,k}|$\;
-  \Comment{for all the un-labelled vertices, select the label $M$, with the highest score, and if the accumulated score has reached the threshold of 1, incorporate it into the labelled sub-graph, $G_{M,k-1}$:}
-  $A^{max}_{U_k} = \text{max}(A_{U_{m,k}},m \in M)$\;
-  $V^{new}_{M,k} \gets U_{M,k} \in \{A^{max}_{U_k} > 1\}$\;
-  $G_{M,k} \gets G_{M,k-1} \cup V^{new}_{M,k}$\;
-  $U_{M,k+1} \gets U_{M,k} \cap \neg V^{new}_{M,k}$\;
-}
-\Return{$G_{M,k}$}
-\caption{A weighted label propagation algorithm for matching geographical supply to demand}
-\end{algorithm} 
+```{r child = '_catchment-areas-algorithm.Rmd'}
 ```
 
 ## Qualitative testing data
 
 The algorithm requires firstly an estimate of demand, for this we used population counts, secondly a geographical network and thirdly an estimate of supply, in this case hospital capacity data. 
 
-For the UK there are detailed estimates of the population at granular geographic detail (lower super output area - LSOA) available from the Office of National Statistics (ONS) for England and Wales, and the National Records Service (NRS) in Scotland [@PopulationEstimatesOffice; @teamNationalRecordsScotland2013]. These population estimates are available by single year of age for each area. These are combined to create a single figure for the adult population of each small geographic area. 
+For Great Britain there are detailed estimates of the population at granular geographic detail (lower super output area - LSOA) available from the Office of National Statistics (ONS) for England and Wales, and population estimates by Data Zone (DZ) are provided by the National Records Service (NRS) in Scotland [@PopulationEstimatesOffice; @teamNationalRecordsScotland2013]. These population estimates are available by single year of age for each area. These are combined to create a single figure for the adult population of each small geographic area. 
 
-Each geographical area is associated with a boundary file also provided by the ONS and NRS [@OpenGeographyPortal; @spatialdata.gov.scotDataZoneBoundaries2020].
+Each geographical area is associated with a boundary files for lower super output areas and data zone from the 2011 census, which are provided by the ONS and NRS [@OpenGeographyPortal; @spatialdata.gov.scotDataZoneBoundaries2020].
 
 To estimate the capacity of hospitals we used a range of primary sources (described in the supplementary materials) to manually compile a list of NHS and independent hospital sites. When not provided in the primary sources, we identified their geographical locations from their postcode, and we estimated bed numbers from both a combination of published NHS statistics and from daily COVID-19 situation reports from early April 2020, provided by the NHS. The situation reports detailed both available beds at this point in time but also gave an indication of maximum surge capacity for high dependency beds. These data were manually curated and are indicative of the state of the NHS at maximal readiness. Bed state estimates for independent hospital providers were also available through the situation reports.
 
@@ -233,7 +186,7 @@ The detail of the original data sources we used is presented in the supplementar
 
 There is no ground truth for the catchment areas for hospitals in the NHS during the COVID-19 pandemic. The rationale for original development of this algorithm was to make an estimate in absence of any activity data, in the early stages of the pandemic. Since then activity data has become available and this allows us to validate the label propagation approach to the activity based approach.
 
-The activity based mapping takes the form of a many-to-many probabilistic mapping between lower tier local authority districts (LTLA) and NHS Acute Trusts in England derived from Secondary Uses Service (SUS) health-care data for England [@meakinNHSTrustLevel2021]. We create equivalent probabilistic associations between the coarse grained LTLA and NHS trusts by generating a fine grained lower super output area (LSOA) catchment area for NHS trusts using the label propagation algorithm, and the demographic and bed capacity estimates described above. This is aggregated to coarse grained local authority districts using mapping files provided by the ONS [@officeofnationalstatisticsLowerLayerSuper], weighted by LSOA population size [@PopulationEstimatesOffice] (Source: Office for National Statistics licensed under the Open Government Licence v.3.0). This equivalent mapping based on the label propagation algorithm is compared to the activity based mapping graphically. The expected number of admissions to each NHS trust from each LTLA, based on LTLA population size, and estimated using each method compared with the intra-class correlation coefficient [@bartkoIntraclassCorrelationCoefficient1966; @fisherStatisticalMethodsResearch1992] using a mean-of-raters, absolute-agreement, two-way random-effects model[@kooGuidelineSelectingReporting2016], as implemented in the R package `irr`[@gamer2012package]. 
+The activity based mapping takes the form of a many-to-many probabilistic mapping between lower tier local authority districts (LTLA) and NHS Acute Trusts in England derived from Secondary Uses Service (SUS) health-care data for England [@meakinNHSTrustLevel2021]. We create equivalent probabilistic associations between the coarse grained LTLA and NHS trusts by generating a fine grained lower super output area (LSOA) catchment area for NHS trusts using the label propagation algorithm, and the demographic and bed capacity estimates described above. This is aggregated to coarse grained local authority districts using mapping files provided by the ONS [@officeofnationalstatisticsLowerLayerSuper], weighted by LSOA population size [@PopulationEstimatesOffice] (Source: Office for National Statistics licensed under the Open Government Licence v.3.0). This equivalent mapping based on the label propagation algorithm is compared to the activity based mapping graphically. To determine the degree of agreement between approaches the expected number of admissions to each NHS trust from each LTLA was estimated using each method. These were compared to each other using the intra-class correlation coefficient [@bartkoIntraclassCorrelationCoefficient1966; @fisherStatisticalMethodsResearch1992] using a mean-of-raters, absolute-agreement, two-way random-effects model [@kooGuidelineSelectingReporting2016], as implemented in the R package `irr`[@gamer2012package]. 
 
 Secondly we obtain the coarse location (partial UK postcode, also known as outcode) from a list of intensive care patients admitted between 20th October 2000 and 16th March 2021 from the CHESS data set [@SGSSCHESSData], which is an anonymised patient level hospital admission data set. We use outcode boundary shapes [@OpenDoorLogistics], LSOA demographic estimates, and an areal interpolation [@prenerArealArealWeighted2020] to generate an estimate of demographics for each outcode. Using this outcode based regional population estimate, outcode boundary shapes, and the manually curated high dependency unit capacity estimates we calculate an outcode based catchment area estimate from which we are able to predict the NHS trust each patient was admitted to based on their outcode, which we compare to the observed NHS trust from the CHESS data. For this comparison we calculate both the multinomial accuracy, and for each NHS trust, the one-versus-all binomial accuracy as follows:
 
@@ -274,7 +227,7 @@ catch1 = arear::catchment(
 
 ## Qualitative testing results
 
-The results presented in this section qualitatively test the algorithm to determine whether it is producing catchment area regions that are geographically contiguous, aligned with existing demographic boundaries, respect coarse geographical boundaries such as large rivers. The catchment areas should also produce estimates that minimise differences in the level of service provision from area to area, and we expect the overall regional variation of supply versus demand to be locally smooth. `r fig("one")` shows a catchment area based on individual hospitals that offered high dependency beds during April 2020, and a regional demand based on population estimates of adults in lower super output areas. The resulting set of catchment areas presented in panel A and C behave as desired in terms of the geographical properties. They also produce a fairly uniform density of high dependency bed provision per capita population, from region to region, as seen in panel B. In areas where there are high densities of hospitals such as London where the algorithm, by design, cannot propagate from centrally located hospitals past more peripheral hospitals, leading to small numbers of areas with high provision per head of population. This is discussed further below.
+The results presented in this section qualitatively test the algorithm to determine whether it is producing catchment area regions that are geographically contiguous, aligned with existing demographic boundaries, and respect coarse geographical boundaries such as large rivers. The catchment areas should also produce estimates that minimise differences in the level of service provision from area to area, and we expect the overall regional variation of supply versus demand to be locally smooth. `r fig("one")` shows a catchment area based on individual hospitals that offered high dependency beds during April 2020, and a regional demand based on population estimates of adults in lower super output areas. The resulting set of catchment areas presented in panel A and C behave as desired in terms of the geographical properties. They also produce a fairly uniform density of high dependency bed provision per capita population, from region to region, as seen in panel B. In areas where there are high densities of hospitals such as London where the algorithm, by design, cannot propagate from centrally located hospitals past more peripheral hospitals, leading to small numbers of areas with high provision per head of population. This is discussed further below.
 
 ```{r}
 p1a = ggplot(catch1$map)+geom_sf(aes(fill=hduBeds/population*100000), colour="white",size=0.1)+
@@ -289,16 +242,16 @@ p2b = ggplot(catch1$map %>% mutate(supVdem = hduBeds/population*100000),aes(x=su
 
 p3a = ((p2a/p2b)|p1a) + patchwork::plot_annotation(tag_levels = "A")
 
-p3a %>% standardPrintOutput::saveHalfPageFigure("~/Dropbox/covid19/catchment-areas/HDU_UK_example")
+p3a %>% standardPrintOutput::saveHalfPageFigure("~/Dropbox/covid19/catchment-areas/FIG2_HDU_UK_example")
 
 
 ```
 
-`r fig("one","Panels A and C show a LSOA based catchment area map estimated from the high dependency bed state in the UK in early April 2020, with catchment area boundaries shown in white. Red circles are NHS hospital sites with high dependency capacity. Map source: Office for National Statistics licensed under the Open Government Licence v.3.0, Contains OS data © Crown copyright and database right 2020. Panel B shows the distribution of high dependency beds per 100K population for each of the catchment areas defined by the algorithm.")`
+`r fig("one","Panels A and C show a LSOA based catchment area map estimated from the high dependency bed state in Great Britain in early April 2020, with catchment area boundaries shown in white. Red circles are NHS hospital sites with size scaled to high dependency bed capacity. Map source: Office for National Statistics licensed under the Open Government Licence v.3.0, Contains OS data © Crown copyright and database right 2020. Panel B shows the distribution of high dependency beds per 100K population for each of the catchment areas defined by the algorithm.")`
 
 Further qualitative investigation of the properties of the algorithm are shown in `r fig("two")` where we see more regional detail of the same algorithm applied this time to general hospital beds rather than high dependency beds. Panel A shows the boundaries of the estimated catchment areas in white against the population density of a small area of the South West of England containing three hospitals (Plymouth, Torbay and the Royal Devon and Exeter hospitals). We can see in this example the extent of the catchment area to the South of Torbay is defined by the Dart river estuary, thus respecting such geographical boundaries. 
 
-`r fig("two")` panel B shows details about the progression of the algorithm from one iteration to the next, as labels propagate from each of the hospitals into the surrounding areas until encountering another catchment area. As we expect from the design the algorithm is seen to spread from hospital sites quickly through areas of low population density (panel A), such as the countryside surrounding Plymouth in the bottom left, and more slowly through areas of higher population density such as the areas surrounding Torbay in the middle right. 
+`r fig("two")` panel B shows details about the progression of the algorithm from one iteration to the next, as labels propagate from each of the hospitals into the surrounding areas until encountering another catchment area. As we expect from the design the algorithm is seen to spread from hospital sites quickly through areas of low population (panel A), such as the countryside surrounding Plymouth in the bottom left, and more slowly through areas of higher population such as the areas surrounding Torbay in the middle right. 
 
 ```{r}
 # catch2a = dpc$capac$getNHSTrustIcuCatchment()
@@ -376,17 +329,19 @@ p4 =
     scale_fill_distiller(palette="Greys", limit = c(0,25))+labs(fill = "iteration",x=NULL,y=NULL,size="beds")+
     geom_curve(data=lines,aes(x=x.from,y=y.from,xend=x.to,yend=y.to,colour=trustId.to),curvature=0.1,show.legend = FALSE)+ #,arrow = arrow(angle = 15, ends = "last", type = "open",length=unit(0.1,"inches")))+
     geom_sf(data=catch2b$suppliers, mapping=aes(size=acuteBeds), colour="red",stroke=1,fill=NA,shape=1)+
-    coord_sf(xlim=c(-4.25,-3.4),ylim=c(50.2,50.8))
+    coord_sf(xlim=c(-4.25,-3.4),ylim=c(50.2,50.8))+
+  standardPrintOutput::smallLegend(spaceLegend = 0.8)
 
 
 # p5 = p1+p2+p3+p4+patchwork::plot_annotation(tag_levels = "A")+patchwork::plot_layout(ncol=2,guides = "collect")
 
 p5 = p2+p4+patchwork::plot_annotation(tag_levels = "A")+patchwork::plot_layout(ncol=2)
 
-p5 %>% standardPrintOutput::saveHalfPageFigure("~/Dropbox/covid19/catchment-areas/HDU_Acute_SW_example")
+p5 %>% standardPrintOutput::saveHalfPageFigure("~/Dropbox/covid19/catchment-areas/FIG3_HDU_Acute_SW_example")
 
 ```
-`r fig("two","Detail LSOA based catchment area map for NHS trusts estimated from the general hospital bed states in the UK in early April 2020. Red circles are NHS hospital sites. In panel A the fill represents a relative measure of regional population density, with yellow areas being high density in and around cities. In Panel B the same areas are shown but this time the fill shows the iteration number at which the algorithm labelled a specific area, and the propagation of the algorithm by arrows. Map source: Office for National Statistics licensed under the Open Government Licence v.3.0, Contains OS data © Crown copyright and database right 2020")`
+
+`r fig("two","Detail LSOA based catchment area map for NHS trusts estimated from the general hospital bed states in Great Britain in early April 2020. Red circles are NHS hospital sites. In panel A the fill represents a relative measure of regional population density, with yellow areas being high density in and around cities. In Panel B the same areas are shown but this time the fill shows the iteration number at which the algorithm labelled a specific area, and the propagation of the algorithm by arrows. Map source: Office for National Statistics licensed under the Open Government Licence v.3.0, Contains OS data © Crown copyright and database right 2020")`
 
 ## Validation
 
@@ -534,7 +489,7 @@ In comparing the label propagation mapping to the activity based mapping we see 
 
 ```{r}
 #(p1+p2+p3+patchwork::plot_layout(nrow=1)) %>% standardPrintOutput::saveThirdPageFigure("~/Dropbox/covid19/catchment-areas/prob_comparison_agreement")
-(p1a+p1b+patchwork::plot_annotation(tag_levels="A")) %>% standardPrintOutput::saveThirdPageFigure("~/Dropbox/covid19/catchment-areas/prob_comparison_agreement")
+(p1a+p1b+patchwork::plot_annotation(tag_levels="A")) %>% standardPrintOutput::saveThirdPageFigure("~/Dropbox/covid19/catchment-areas/FIG4_prob_comparison_agreement")
 
 ```
 
@@ -739,7 +694,7 @@ layout = c(
 )
 #plot(layout)
 
-(p2+p1b+patchwork::plot_layout(design = layout)) %>% standardPrintOutput::saveThirdPageFigure("~/Dropbox/covid19/catchment-areas/sari_accuracy_comparison")
+(p2+p1b+patchwork::plot_layout(design = layout)) %>% standardPrintOutput::saveThirdPageFigure("~/Dropbox/covid19/catchment-areas/FIG5_sari_accuracy_comparison")
 
 ```
 
@@ -768,12 +723,12 @@ top10misclass = sum(misclass$`Classification errors`)
 #   group_by(trustName.obs,trustName.pred) %>% count() %>% View()
 ```
 
-In `r tab("one")` we qualitatively examine the ten NHS Trusts that have the highest number of ITU patients that the label propagation algorithm predicted to be admitted elsewhere, and mis-classified them. These represent `r top10misclass` (`r sprintf("%1.1f%%",top10misclass/(res1$total-res1$correct)*100)`) of the total mis-classifications. The majority of these 10 hospitals are major tertiary referral intensive care units, or specialist centres, as demonstrated by them being in the top 10 centile of NHS trusts by ITU bed capacity. This result is consistent with both the possibilities that severely ill patients may end up in specialist centres rather than their closest hospital for treatment, or that in the event of a large surge in cases, patients may overflow from smaller to larger intensive care units. Both of these could lead to mis-classification of these patients by the label propagation algorithm, as we see here.
+In `r tab("one")` we qualitatively examine the ten NHS Trusts that have the highest number of ITU patients that the label propagation algorithm predicted to be admitted elsewhere, and mis-classified them. These represent `r top10misclass` (`r sprintf("%1.1f%%",top10misclass/(res1$total-res1$correct)*100)`) of the total mis-classifications. The majority of these 10 hospitals are major tertiary referral intensive care units, or specialist centres, as demonstrated by them being in the top quintile of NHS trusts by ITU bed capacity. This result is consistent with both the possibilities that severely ill patients may end up in specialist centres rather than their closest hospital for treatment, or that in the event of a large surge in cases, patients may overflow from smaller to larger intensive care units. Both of these could lead to mis-classification of these patients by the label propagation algorithm, as we see here.
 
 `r tab("one","The NHS trusts with the ten most misclassified covid ITU cases as assigned by the label propagation algorithm")`
 
 ```{r}
-misclass %>% standardPrintOutput::saveTable("~/Dropbox/covid19/catchment-areas/Non_matching_trusts",defaultFontSize = 8)
+misclass %>% standardPrintOutput::saveTable("~/Dropbox/covid19/catchment-areas/TAB1_Non_matching_trusts",defaultFontSize = 8)
 ```
 
 
@@ -791,7 +746,7 @@ There are opportunities to extend our algorithm. The general approach of label p
 
 # Conclusions
 
-This label propagation algorithm for estimating hospital catchment areas is a pragmatic solution to determining geographical and demographic subsets of the population when there is no previous activity data available. It suits situations where the level of service provision and demand on the hospital system is dynamic, as has been the case in the COVID-19 pandemic. The algorithm is simple and satisfies the major criteria we set out in the introduction, in that it provides a mapping from low level geographic regions which provide contiguous and realistic subdivisions of geographies relating to a single hospital or to a group of hospitals. The areas are determined by the capacity of the hospital and the density of local population, and are approximately equal in terms of local supply (e.g. beds) and demand (e.g. patients) at boundaries.
+This label propagation algorithm for estimating hospital catchment areas is a pragmatic solution to determining geographical and demographic subsets of the population when there is no previous activity data available. It suits situations where the level of service provision and demand on the hospital system is dynamic, as has been the case in the COVID-19 pandemic. The algorithm is simple and satisfies the major criteria we set out in the introduction, in that it provides a mapping from low level geographic regions which provide contiguous and realistic subdivisions of geographies relating to a single hospital or to a group of hospitals. The areas are determined by the capacity of the hospital and the size of local population, and are approximately equal in terms of local supply (e.g. beds) and demand (e.g. patients) at boundaries.
 
 The algorithm depends solely on data reflecting supply and geographical demand for a service, and as such is quite generic and potentially more widely applicable outside of healthcare. Although we have discussed catchment areas in terms of the capacity of hospital beds, and demand of local populations, there is nothing to prevent us defining capacity in any other way - a heuristic on staffing levels may be appropriate, or in different contexts, availability of medical imaging devices. Likewise, demand may be refined to reflect sub-populations at risk of disease, or may even be the output of a predictive model. As such our approach is applicable to a wide variety of problems.
 
@@ -801,7 +756,7 @@ The algorithm depends solely on data reflecting supply and geographical demand f
 
 # Declarations
 
-*Funding:* RC and KTA gratefully acknowledge the financial support of the EPSRC via grants EP/N014391/1, EP/T017856/1. KTA gratefully acknowledge the financial support of The Alan Turing Institute under the EPSRC grant EP/N510129/1 and EP/T017856/1. RC is supported by NHS England, Global Digital Exemplar programme and the MRC (MC/PC/19067). LL acknowledges the financial support of the EPSRC via Early Career Fellowship EP/P01660X/1. GJG is supported by an ESRC postdoctoral fellowship [ES/T009101/1].
+*Funding:* RC and KTA gratefully acknowledge the financial support of the EPSRC via grant EP/N014391/1. KTA gratefully acknowledge the financial support of The Alan Turing Institute under the EPSRC grant EP/N510129/1 and EP/T017856/1. RC is supported by NHS England, Global Digital Exemplar programme and the MRC (MC/PC/19067). LL acknowledges the financial support of the EPSRC via Early Career Fellowship EP/P01660X/1. GJG is supported by an ESRC postdoctoral fellowship ES/T009101/1.
 
 *Authors contributions:* All authors discussed the concept of the article and RC wrote the initial draft. KTA, LL, GG commented and made revisions. All authors read and approved the final manuscript. RC is the guarantor.
 
@@ -813,7 +768,7 @@ The algorithm depends solely on data reflecting supply and geographical demand f
 
 *Consent for publication:* Not applicable
 
-*Acknowledgments:* Not applicable
+*Acknowledgments:* Many thanks to TJ McKinley at the University of Exeter, for feedback on an early draft of the paper and testing of the implementation of the algorithm.
 
 \pagebreak
 

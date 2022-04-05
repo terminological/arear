@@ -1,0 +1,81 @@
+---
+output:
+  pdf_document:
+    fig_caption: yes
+documentclass: standalone
+classoption:
+  
+knit: (function(inputFile, encoding,...) {
+  rmarkdown::render(
+    inputFile,
+    encoding = encoding,
+    output_dir = "~/Dropbox/covid19/catchment-areas", output_file=paste0('catchment-areas-algorithm-',Sys.Date(),'.pdf'))
+  })
+# TODO: https://www.reed.edu/data-at-reed/software/R/markdown_multiple_reports.html
+header-includes:
+  \usepackage{float}
+  \usepackage{standalone}
+  \usepackage{setspace}
+  \setlength{\textwidth}{495pt}
+  \fontsize{10}{12}\selectfont
+  \floatplacement{figure}{H}
+  \usepackage[ruled,vlined]{algorithm2e}
+fig_width: 7
+fig_height: 5
+out.width: "100%"
+---
+
+
+```{=latex}
+\begin{algorithm}[H]
+\setstretch{1.0}
+\SetAlgoLined
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\SetKwComment{Comment}{\--- }{}
+\Input{$V_N$ - the $N$ regions of demand as a set of geographical polygons}
+\Input{$D(V_n)$ - the density of demand in any given region as a function of the region $V_n$}
+\Input{$P_M$ - a set of $M$ labelled suppliers as a set of geographical points}
+\Input{$S(P_m)$ - the capacity of supply at any given supply point as a function of the supplier $P_m$}
+\Input{$C_{growth}$ - a rate constant defining rate of label propagation}
+\Output{$G_M$ - $M$ labelled subgraphs of graph $G$, relating to the catchment areas of suppliers $P_M$}
+\BlankLine
+\Comment{define $G$ as the graph consisting of geographical regions $V_N$, connected by edges, $E_N$, given by their geographical neighbours $\nu(V_N)$:}
+$E_N \gets \nu(V_N)$\;
+$G \gets (V_N, E_N)$\;
+\Comment{define $V_M$ and $V^{new}_{M,0}$ as the geographic regions of $G$ serviced by points $P_M$, and $G_{M,0}$ as a set of labelled sub-graphs (also initially consisting solely of the vertices $V_M$):}
+$V_M \gets G \cap P_M$\;
+$V^{new}_{M,0} \gets V_M$;
+$G_{M,0} \gets V_M$\;
+\Comment{define the initial unlabelled set of vertices:}
+$U_0 \gets \neg V_{M}$\;
+\Comment{define the initial un-labelled neighbours of labelled sub-graphs, $G_M$:}
+$U_{M,0} \gets \nu(V_M)$\;
+\Comment{define an accumulated growth score for each un-labelled neighbour $U_{M,0}$ of each $G_{M,0}$:}
+$A_{U_{M,0}} \gets 0$\;
+\BlankLine
+$k \gets 0$\;
+\Comment{execute the loop while there are still unlabelled vertices and there exist some unlabelled neighbours of labelled vertices}
+\While{$|U_k| > 0$ and $|U_{M,k}| > 0$} {
+  $k \gets k+1$\;
+  \BlankLine
+  \Comment{define the un-labelled vertices as the set of $V$ not contained in any of $G_{M,k-1}$:}
+  $U_k \gets \neg G_{M,k-1}$\;
+  \Comment{define the un-labelled neighbours of $G_{M,k-1}$ as $U_{M,k}$ as the previously unlabelled neighbours and the neighbours of the most recently labelled neighbours $V^{new}_{M,k-1}$:}
+  $U_{M,k} \gets U_{M,k-1} \cup (U_k \cap \nu(V^{new}_{M,k-1}))$\;
+  \Comment{define the reserve capacity, $R_M$, to supply existing labelled, $G_{M,k-1}$,  and un-labelled neighbours $U_{M,k}$, as:}
+  $R_M \gets \frac{S(P_M)}{D(U_{M,k} \cup G_{M,k-1})}$\;
+  \Comment{for unlabelled areas only, update the accumulated growth score, $A_{U_{M,k}}$, with the normalised rank of the reserve capacity and multiplied by a constant $C_{growth} > 1$ representing the speed at which the accumulated growth score increases in all areas:}
+  $R_{M,k} \gets R_m \{m \in U_{M,k}\}$\;
+  $A_{U_{M,k}} \gets A_{U_{M,k-1}} + C_{growth} \times \text{rank}(R_{M,k})/|R_{M,k}|$\;
+  \Comment{for all the un-labelled vertices, select the label $M$, with the highest score, and if the accumulated score has reached the threshold of 1, incorporate it into the labelled sub-graph, $G_{M,k-1}$:}
+  $A^{max}_{U_k} = \text{max}(A_{U_{m,k}},m \in M)$\;
+  $V^{new}_{M,k} \gets U_{M,k} \in \{A^{max}_{U_k} > 1\}$\;
+  $G_{M,k} \gets G_{M,k-1} \cup V^{new}_{M,k}$\;
+  $U_{M,k+1} \gets U_{M,k} \cap \neg V^{new}_{M,k}$\;
+}
+\Return{$G_{M,k}$}
+\caption{A weighted label propagation algorithm for matching geographical supply to demand}
+\end{algorithm} 
+```
+

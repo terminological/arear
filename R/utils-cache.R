@@ -1,6 +1,6 @@
 #
 .md5obj = function(obj) {
-  as.character(openssl::md5(serialize(obj, connection = NULL)))
+  as.character(digest::digest(obj, algo="md5"))
 }
 
 #.arear.cache <- new.env(parent=emptyenv())

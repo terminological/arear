@@ -17,10 +17,9 @@ knitr::opts_chunk$set(
 # Maps and capacity data
 
 ```{r setup}
-# devtools::load_all()
+devtools::load_all()
 library(tidyverse)
 library(patchwork)
-library(sf)
 
 here::i_am("vignettes/getting-started.Rmd")
 options("arear.cache.dir"=here::here("data-raw/cache"))
@@ -112,20 +111,14 @@ ggraph::ggraph(graph, layout="kk")+
 # Preview a map with points of interest overlaid
 
 ```{r}
-
-if (pkgdown::in_pkgdown()) {
-  # Suppress this for CRAN checks
-  arear::preview(lad,
-        poi=nhshospitals, 
-        poiLabelGlue = "{hospitalName}",
-        poiPopupGlue = "<b>{hospitalName}</b><ul><li>{trustName}</li><li>hdu: {hduBeds}</li><li>acute: {acuteBeds}</li></ul>"
-  )
-}
+devtools::load_all()
+arear::preview(lad,
+      poi=nhshospitals, 
+      poiLabelGlue = "{hospitalName}",
+      poiPopupGlue = "<b>{hospitalName}</b><ul><li>{trustName}</li><li>hdu: {hduBeds}</li><li>acute: {acuteBeds}</li></ul>"
+)
 
 ```
-
-
-# Create a catchment area
 
 ```{r}
 

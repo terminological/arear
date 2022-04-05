@@ -41,9 +41,9 @@ Imports:
     xfun,
     glue,
     leaflet,
-    openssl,
     purrr,
-    tibble
+    tibble,
+    digest
 RoxygenNote: 7.0.2
 Depends: 
     R (>= 2.10)
