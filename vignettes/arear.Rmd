@@ -23,11 +23,11 @@ This library is a collection of functions that I created when working on the COV
 library(tidyverse)
 library(patchwork)
 
-here::i_am("vignettes/arear.Rmd")
+# here::i_am("vignettes/arear.Rmd") this does not work when run in github actions.
 options("arear.download.dir"=rappdirs::user_cache_dir("arear-download"))
 options("arear.cache.dir"=rappdirs::user_cache_dir("arear-vignette"))
 
-devtools::load_all("~/Git/arear")
+# devtools::load_all("~/Git/arear")
 # arear::cache_clear()
 
 # library(arear)
