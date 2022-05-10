@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Gets maps for which the metadata is known — getMap • arear</title>
+<title>Gets maps for which the metadata is known. — getMap • arear</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Gets maps for which the metadata is known — getMap" />
-<meta property="og:description" content="Gets maps for which the metadata is known" />
+<meta property="og:title" content="Gets maps for which the metadata is known. — getMap" />
+<meta property="og:description" content="If a map needs to be downloaded as a shapefile then it is stored temporarily. The location of this download directory can be set as option(&quot;arear.download.dir&quot; = &quot;~/.)" />
 
 
 
@@ -85,22 +85,10 @@
   </a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/arear.html">Get started</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/catchment-areas.pdf">Algorithmic hospital catchment area estimation using label propagation (PDF)</a>
-    </li>
-    <li>
-      <a href="../articles/getting-started.html">Getting Started</a>
-    </li>
-  </ul>
+<li>
+  <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -118,21 +106,16 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Gets maps for which the metadata is known</h1>
+    <h1>Gets maps for which the metadata is known.</h1>
     
     <div class="hidden name"><code>getMap.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Gets maps for which the metadata is known</p>
+    <p>If a map needs to be downloaded as a shapefile then it is stored temporarily. The location of this download directory can be set as option("arear.download.dir" = "~/.)</p>
     </div>
 
-    <pre class="usage"><span class='fu'>getMap</span><span class='op'>(</span>
-  <span class='va'>mapId</span>,
-  sources <span class='op'>=</span> <span class='fu'>arear</span><span class='fu'>::</span><span class='va'><a href='mapsources.html'>mapsources</a></span>,
-  codeType <span class='op'>=</span> <span class='va'>mapId</span>,
-  wd <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"arear.cache.dir"</span>, default <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>getMap</span><span class='op'>(</span><span class='va'>mapId</span>, sources <span class='op'>=</span> <span class='fu'>arear</span><span class='fu'>::</span><span class='va'><a href='mapsources.html'>mapsources</a></span>, codeType <span class='op'>=</span> <span class='va'>mapId</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -148,10 +131,6 @@
     <tr>
       <th>codeType</th>
       <td><p>- defaults to mapId, the codeType of the map</p></td>
-    </tr>
-    <tr>
-      <th>wd</th>
-      <td><p>- optional working directory</p></td>
     </tr>
     </table>
 

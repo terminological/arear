@@ -2,7 +2,6 @@ pandoc: 2.7.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
-  catchment-areas: catchment-areas.pdf
-  getting-started: getting-started.html
-last_built: 2021-08-09T14:23Z
+  arear: arear.html
+last_built: 2022-05-10T18:36Z
 

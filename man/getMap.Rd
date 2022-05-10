@@ -2,14 +2,9 @@
 % Please edit documentation in R/load-maps.R
 \name{getMap}
 \alias{getMap}
-\title{Gets maps for which the metadata is known}
+\title{Gets maps for which the metadata is known.}
 \usage{
-getMap(
-  mapId,
-  sources = arear::mapsources,
-  codeType = mapId,
-  wd = getOption("arear.cache.dir", default = tempdir())
-)
+getMap(mapId, sources = arear::mapsources, codeType = mapId)
 }
 \arguments{
 \item{mapId}{- a name of a map}
@@ -17,14 +12,12 @@ getMap(
 \item{sources}{- a list of map sources - see arear::mapsources}
 
 \item{codeType}{- defaults to mapId, the codeType of the map}
-
-\item{wd}{- optional working directory}
 }
 \value{
 a standard sf map
 }
 \description{
-Gets maps for which the metadata is known
+If a map needs to be downloaded as a shapefile then it is stored temporarily. The location of this download directory can be set as option("arear.download.dir" = "~/.)
 }
 \examples{
 \dontrun{

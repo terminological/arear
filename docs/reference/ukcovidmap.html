@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Shape file related to the detailed level for PHE coronavirus statistical reporting in England, Wales, Scotland, and Northern Ireland. — ukcovidmap • arear</title>
+<title>Shape file related to the detailed level for PHE coronavirus statistical reporting in England, Wales, Scotland, and Northern Ireland on the coronavirus.gov.uk tracker.
+The legacy is the level at which detailed data was reported in the first wave, prior to the API and was aggregated by https://github.com/tomwhite/covid-19-uk-data — ukcovidmap • arear</title>
 
 
 <!-- jquery -->
@@ -39,7 +40,8 @@
 
 
 
-<meta property="og:title" content="Shape file related to the detailed level for PHE coronavirus statistical reporting in England, Wales, Scotland, and Northern Ireland. — ukcovidmap" />
+<meta property="og:title" content="Shape file related to the detailed level for PHE coronavirus statistical reporting in England, Wales, Scotland, and Northern Ireland on the coronavirus.gov.uk tracker.
+The legacy is the level at which detailed data was reported in the first wave, prior to the API and was aggregated by https://github.com/tomwhite/covid-19-uk-data — ukcovidmap" />
 <meta property="og:description" content="This map matches the data reported by the PHE coronavirus api when it is downloading lower tier local authority regions e.g. via
 https://api.coronavirus.data.gov.uk/v2/data?areaType=ltla&amp;amp;metric=newCasesBySpecimenDate&amp;amp;format=csv
 There are 2 regions here for which no data is reported in this API - the city of London &amp;amp; the isles of scilly." />
@@ -87,22 +89,10 @@ There are 2 regions here for which no data is reported in this API - the city of
   </a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/arear.html">Get started</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/catchment-areas.pdf">Algorithmic hospital catchment area estimation using label propagation (PDF)</a>
-    </li>
-    <li>
-      <a href="../articles/getting-started.html">Getting Started</a>
-    </li>
-  </ul>
+<li>
+  <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -120,7 +110,8 @@ There are 2 regions here for which no data is reported in this API - the city of
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Shape file related to the detailed level for PHE coronavirus statistical reporting in England, Wales, Scotland, and Northern Ireland.</h1>
+    <h1>Shape file related to the detailed level for PHE coronavirus statistical reporting in England, Wales, Scotland, and Northern Ireland on the coronavirus.gov.uk tracker.
+The legacy is the level at which detailed data was reported in the first wave, prior to the API and was aggregated by https://github.com/tomwhite/covid-19-uk-data</h1>
     
     <div class="hidden name"><code>ukcovidmap.Rd</code></div>
     </div>
@@ -131,23 +122,35 @@ https://api.coronavirus.data.gov.uk/v2/data?areaType=ltla&amp;metric=newCasesByS
 There are 2 regions here for which no data is reported in this API - the city of London &amp; the isles of scilly.</p>
     </div>
 
-    <pre class="usage"><span class='va'>ukcovidmap</span></pre>
+    <pre class="usage"><span class='fu'>ukcovidmap</span><span class='op'>(</span>legacy <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>legacy</th>
+      <td><p>use the legacy version of the map from pre coronavirus api times.</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
-
-    <p>A 382 line data frame:</p><dl>
-  <dt>code</dt><dd><p>the ONS code for the ares</p></dd>
-  <dt>name</dt><dd><p>The name for the area</p></dd>
-  <dt>codeType</dt><dd><p>the type of area (LAD19)</p></dd>
-  <dt>altCode</dt><dd><p>NA</p></dd>
-
-</dl>
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
     
 <dl>
   <dt>England, Wales, Scotland &amp; NI - LAD19</dt><dd><p>https://geoportal.statistics.gov.uk/datasets/local-authority-districts-december-2019-boundaries-uk-buc</p></dd>
+  <dt>England &amp; Wales - LAD19</dt><dd><p>https://geoportal.statistics.gov.uk/datasets/local-authority-districts-december-2019-boundaries-uk-buc</p></dd>
+  <dt>Scotland - CA19</dt><dd><p>https://www.spatialdata.gov.scot/geonetwork/srv/eng/catalog.search#/metadata/1cd57ea6-8d6e-412b-a9dd-d1c89a80ad62</p></dd>
+  <dt>Northern Ireland  -LGD12</dt><dd><p>https://data.gov.uk/dataset/05f72866-b72b-476a-b6f3-57bd4a768674/osni-open-data-largescale-boundaries-local-government-districts-2012</p></dd>
+
+</dl>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A 382 line data frame (or a 335 line data frame for legacy):</p><dl>
+  <dt>code</dt><dd><p>the ONS code for the ares</p></dd>
+  <dt>name</dt><dd><p>The name for the area</p></dd>
+  <dt>codeType</dt><dd><p>the type of area (LAD19)</p></dd>
+  <dt>altCode</dt><dd><p>NA</p></dd>
 
 </dl>
 

@@ -1,5 +1,5 @@
 Package: arear
-Title: Arear: Supply demand catchment area
+Title: Geospatial convenience functions and a supply demand catchment area generator
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Robert",
@@ -7,7 +7,7 @@ Authors@R:
            role = c("aut", "cre"),
            email = "rc538@exeter.ac.uk",
            comment = c(ORCID = "0000-0002-5504-7768"))
-Description: What the package does (one paragraph).
+Description: Geospatial function collection from the COVID-19 pandemic. The main focus of this was integrating geospatial demographic, hospital capacity and COVID data from England, Scotland, Wales and Northern Ireland, all of which were available on different sites and methods. The UK has a wide range of administrative geographic boundaries for different purposes and moving from different scales and resolutions proved necessary. As the geospatial operations are quite time consuming but don't need to be repeated the ability to cache results of geospatial transformations is useful and embedded into these functions.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -15,9 +15,7 @@ Suggests:
     knitr,
     rmarkdown,
     testthat,
-    ggplot2,
     ggspatial,
-    patchwork,
     covr,
     tidyverse,
     ggraph,
@@ -25,8 +23,9 @@ Suggests:
     tidygraph,
     devtools,
     markdown,
-    webshot,
-    pkgdown
+    pkgdown,
+    scales,
+    tidyr
 VignetteBuilder: knitr
 Imports: 
     rmapshaper,
@@ -38,12 +37,20 @@ Imports:
     stringr,
     here,
     spdep,
-    xfun,
     glue,
     leaflet,
     purrr,
     tibble,
-    digest
-RoxygenNote: 7.0.2
+    digest,
+    rappdirs,
+    ggrepel,
+    ggplot2,
+    gtable,
+    grid,
+    gridExtra,
+    patchwork,
+    httr,
+    tidyselect
 Depends: 
     R (>= 2.10)
+RoxygenNote: 7.1.2

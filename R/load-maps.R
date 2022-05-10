@@ -1,10 +1,11 @@
 
-#' Gets maps for which the metadata is known
+#' Gets maps for which the metadata is known.
+#'
+#' If a map needs to be downloaded as a shapefile then it is stored temporarily. The location of this download directory can be set as option("arear.download.dir" = "~/.)
 #'
 #' @param mapId - a name of a map
 #' @param sources - a list of map sources - see arear::mapsources
 #' @param codeType - defaults to mapId, the codeType of the map
-#' @param wd - optional working directory
 #'
 #' @return a standard sf map
 #' @export
@@ -13,13 +14,17 @@
 #' \dontrun{
 #' map = getMap("NHSER20")
 #' }
-getMap = function(mapId, sources = arear::mapsources, codeType = mapId, wd = getOption("arear.cache.dir",default=tempdir())) {
+getMap = function(mapId, sources = arear::mapsources, codeType = mapId) {
   if (!(mapId %in% names(sources))) stop("Unknown map: ",mapId)
   loader = sources[[mapId]]
   codeCol = as.symbol(loader$codeCol)
   nameCol = tryCatch(as.symbol(loader$nameCol), error = function(e) NULL)
   altCodeCol = tryCatch(as.symbol(loader$altCodeCol), error = function(e) NULL)
-  map = downloadMap(zipUrl = loader$url, mapName = loader$mapName, codeCol = !!codeCol, nameCol = !!nameCol, altCodeCol = !!altCodeCol, codeType=codeType, id=mapId, wd = wd)
+  if(loader$mapName == "geojson") {
+    map = downloadGeojson(geojsonUrl = loader$url, codeCol = !!codeCol, nameCol = !!nameCol, altCodeCol = !!altCodeCol, codeType=codeType, id=mapId)
+  } else {
+    map = downloadMap(zipUrl = loader$url, mapName = loader$mapName, codeCol = !!codeCol, nameCol = !!nameCol, altCodeCol = !!altCodeCol, codeType=codeType, id=mapId)
+  }
   return(map)
 }
 
@@ -32,19 +37,49 @@ listStandardMaps = function() {
   names(arear::mapsources)
 }
 
-#' Download a map, unpack it, and rename columns
+#' Download a geojson url, standardise it and cache the result
 #'
-#' to standard code, name, altCode and codeType columns
-#'
-#' @param zipUrl - the URL of the zipped shapefile
-#' @param mapName - the layer name or map name - this is the "xyz" of a zip file containing "xyz.shp"
+#' @param geojsonUrl the URL of the geojson resource
 #' @param codeCol - the name of the column containing the id or code
 #' @param nameCol - the name of the column containing the label (optional - defaults to the same as codeCol)
 #' @param altCodeCol - an optional column name containing another code type
 #' @param codeType - the "type" of the code - optional. defaults to NA
 #' @param simplify - do you want to simplify the map
-#' @param wd - an optional working directory (defaults to tempdir)
-#' @param id - an optional id for the map - defaults to either the mapName or if not present the name of the zip file.
+#' @param id - an id for the map that can be used to retrieve it in the future (through getMap()).
+#'
+#' @return the sf object for this geoJson
+#' @export
+downloadGeojson = function(geojsonUrl, codeCol="code", nameCol="name", altCodeCol=NULL, codeType=NA_character_, simplify=FALSE, id) {
+
+  codeCol = rlang::ensym(codeCol)
+  nameCol = tryCatch(rlang::ensym(nameCol), error = function(e) NULL)
+  altCodeCol = tryCatch(rlang::ensym(altCodeCol), error = function(e) NULL)
+
+  .cached({
+
+    shape = httr::GET(geojsonUrl)
+    map = sf::read_sf(httr::content(shape,type='text',encoding='UTF-8')) %>% sf::st_transform(crs=4326)
+    map = standardiseMap(map, !!codeCol, !!nameCol, !!altCodeCol, codeType)
+    if(simplify) map = suppressWarnings(map %>% rmapshaper::ms_simplify(keep=0.1))
+    map = map %>% dplyr::ungroup() %>% sf::st_as_sf()
+
+
+  }, name=id, hash=list(geojsonUrl,codeCol,nameCol,altCodeCol,codeType,simplify))
+}
+
+#' Download a map, unpack it, and rename columns.
+#'
+#' to standard code, name, altCode and codeType columns
+#'
+#' @param zipUrl - the URL of the zipped shapefile
+#' @param mapName - the layer name or map name - this is the "xyz" of a zip file containing "xyz.shp". If you are getting multiple layers it is OK to repeatedly call this within the same session as the download is stored, see wd option.
+#' @param codeCol - the name of the column containing the id or code
+#' @param nameCol - the name of the column containing the label (optional - defaults to the same as codeCol)
+#' @param altCodeCol - an optional column name containing another code type
+#' @param codeType - the "type" of the code - optional. defaults to NA
+#' @param simplify - do you want to simplify the map
+#' @param wd - an optional working directory (defaults to `getOption("arear.download.dir", tempdir())`)
+#' @param id - an optional id for the map that can be used to retrieve it later (through getMap()) - defaults to either the mapName or if not present the name of the zip file.
 #'
 #' @return a sf object containing the map
 #' @export
@@ -58,12 +93,14 @@ listStandardMaps = function() {
 #'   nameCol="nhser20nm"
 #' )
 #' }
-downloadMap = function(zipUrl, mapName=NULL, codeCol="code", nameCol="name", altCodeCol=NULL, codeType=NA_character_, simplify=FALSE, wd = tempdir(), id=NULL) {
+downloadMap = function(zipUrl, mapName=NULL, codeCol="code", nameCol="name", altCodeCol=NULL, codeType=NA_character_, simplify=FALSE, wd = getOption("arear.download.dir", tempdir()), id=NULL) {
 
   codeCol = rlang::ensym(codeCol)
   nameCol = tryCatch(rlang::ensym(nameCol), error = function(e) NULL)
   altCodeCol = tryCatch(rlang::ensym(altCodeCol), error = function(e) NULL)
 
+  if(!stringr::str_ends(wd,"/")) wd = paste0(wd,"/")
+  try(fs::dir_create(wd))
 
   pattern = paste0(ifelse(is.null(mapName),"",mapName),"\\.shp$")
 
@@ -90,7 +127,6 @@ downloadMap = function(zipUrl, mapName=NULL, codeCol="code", nameCol="name", alt
 
     mapFile = paste0(unzipDir,"/",list.files(unzipDir,recursive = TRUE,pattern = pattern))
     if(length(mapFile)!=1) stop("More than one matching map has been found: ",mapFile)
-
 
     map = sf::st_read(mapFile) %>% sf::st_transform(crs=4326)
 
@@ -120,27 +156,31 @@ standardiseMap = function(sf, codeCol, nameCol, altCodeCol, codeType) {
   altCodeCol = tryCatch(rlang::ensym(altCodeCol), error = function(e) NULL)
   sf = sf %>% dplyr::mutate(tmp_code = as.character(!!codeCol))
 
-  #TODO: catch missing columns and throw helpful error
-  if(!as.character(codeCol) %in% colnames(sf)) stop("the codeCol column is not present in sf should be one of: ",paste(colnames(sf),collapse = ","))
+  .forceGeos({
+    #TODO: catch missing columns and throw helpful error
+    if(!as.character(codeCol) %in% colnames(sf)) stop("the codeCol column is not present in sf should be one of: ",paste(colnames(sf),collapse = ","))
 
-  if(!identical(nameCol,NULL)) {
-    if(!as.character(nameCol) %in% colnames(sf)) stop("the nameCol column is not present in sf should be one of: ",paste(colnames(sf),collapse = ","))
-    sf = sf %>% dplyr::mutate(tmp_name = as.character(!!nameCol))
-    sf = sf %>% dplyr::select(-!!nameCol)
-  } else {
-    sf = sf %>% dplyr::mutate(tmp_name = as.character(!!codeCol))
-  }
-  sf = sf %>% dplyr::select(-!!codeCol) %>% dplyr::rename(code = tmp_code,name = tmp_name)
+    if(!identical(nameCol,NULL)) {
+      if(!as.character(nameCol) %in% colnames(sf)) stop("the nameCol column is not present in sf should be one of: ",paste(colnames(sf),collapse = ","))
+      sf = sf %>% dplyr::mutate(tmp_name = as.character(!!nameCol))
+      sf = sf %>% dplyr::select(-!!nameCol)
+    } else {
+      sf = sf %>% dplyr::mutate(tmp_name = as.character(!!codeCol))
+    }
+    sf = sf %>% dplyr::select(-!!codeCol) %>% dplyr::rename(code = tmp_code,name = tmp_name)
 
-  if(!identical(altCodeCol,NULL)) {
-    if(!as.character(altCodeCol) %in% colnames(sf)) stop("the altCodeCol column is not present in sf should be one of: ",paste(colnames(sf),collapse = ","))
-    sf = sf %>% dplyr::rename(altCode = !!altCodeCol) %>% dplyr::mutate(altCode = as.character(altCode))
-  } else {
-    sf = sf %>% dplyr::mutate(altCode = as.character(NA))
-  }
-  sf = sf %>% dplyr::mutate(codeType = codeType) %>% dplyr::select(codeType, code, name, altCode)
-  sf$area = sf %>% sf::st_area() %>% as.numeric()
-  return(sf %>% sf::st_zm())
+    if(!identical(altCodeCol,NULL)) {
+      if(!as.character(altCodeCol) %in% colnames(sf)) stop("the altCodeCol column is not present in sf should be one of: ",paste(colnames(sf),collapse = ","))
+      sf = sf %>% dplyr::rename(altCode = !!altCodeCol) %>% dplyr::mutate(altCode = as.character(altCode))
+    } else {
+      sf = sf %>% dplyr::mutate(altCode = as.character(NA))
+    }
+    sf = sf %>% dplyr::mutate(codeType = codeType) %>% dplyr::select(codeType, code, name, altCode)
+
+    sf$area = sf %>% sf::st_area() %>% as.numeric()
+    return(sf %>% sf::st_zm())
+
+  })
 }
 
 #' save a shapefile to disk in the current working directory

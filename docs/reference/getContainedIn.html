@@ -85,22 +85,10 @@
   </a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/arear.html">Get started</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/catchment-areas.pdf">Algorithmic hospital catchment area estimation using label propagation (PDF)</a>
-    </li>
-    <li>
-      <a href="../articles/getting-started.html">Getting Started</a>
-    </li>
-  </ul>
+<li>
+  <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -168,11 +156,11 @@
     <pre class="examples"><div class='input'><span class='co'># find the hospitals in a given area.</span>
 <span class='va'>mapping</span> <span class='op'>=</span> <span class='fu'>getContainedIn</span><span class='op'>(</span>
 inputShape <span class='op'>=</span> <span class='fu'>arear</span><span class='fu'>::</span><span class='va'><a href='surgecapacity.html'>surgecapacity</a></span>,
-outputShape <span class='op'>=</span> <span class='fu'>arear</span><span class='fu'>::</span><span class='va'><a href='ukcovidmap.html'>ukcovidmap</a></span>,
+outputShape <span class='op'>=</span> <span class='fu'>arear</span><span class='fu'>::</span><span class='fu'><a href='ukcovidmap.html'>ukcovidmap</a></span><span class='op'>(</span><span class='op'>)</span>,
 inputVars <span class='op'>=</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/vars.html'>vars</a></span><span class='op'>(</span><span class='va'>hospitalId</span><span class='op'>)</span>,
 outputVars <span class='op'>=</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/vars.html'>vars</a></span><span class='op'>(</span><span class='va'>code</span><span class='op'>)</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_contains assumes that they are planar</span></div></pre>
+</div><div class='output co'>#&gt; <span class='message'>Spherical geometry (s2) switched off</span></div><div class='output co'>#&gt; <span class='message'>using cached item: ~/.cache/arear/LAD19-4c76523a56d19ec1a8fea7c3d89b0c97-04fdaf371558d7191e428f10054d21d7.rda</span></div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_contains assumes that they are planar</span></div><div class='output co'>#&gt; <span class='message'>Spherical geometry (s2) switched on</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

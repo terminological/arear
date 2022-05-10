@@ -1,0 +1,733 @@
+---
+title: "Supplementary material for Algorithmic hospital catchment area estimation using label propagation"
+output:
+  pdf_document:
+    fig_caption: yes
+    keep_tex: false
+knit: (function(inputFile, encoding,...) {
+  rmarkdown::render(
+    inputFile,
+    encoding = encoding,
+    output_dir = here::here("vignettes/latex"), output_file=paste0('S1-catchment-areas-',Sys.Date(),'.pdf'))
+  })
+header-includes:
+  \usepackage{float}
+fig_width: 7
+fig_height: 5
+out.width: "100%"
+---
+
+Robert Challen (corresponding author - rc538@exeter.ac.uk)^1,2^; Gareth Griffith^3,4^; Lucas Lacasa^5,6^; Krasimira Tsaneva-Atanasova^1,7,8^; 
+
+1)  EPSRC Hub for Quantitative Modelling in Healthcare, University of Exeter, Exeter, Devon, UK.
+2)  Somerset NHS Foundation Trust, Taunton, Somerset, UK.
+3)  Bristol Medical School, Population Health Sciences, University of Bristol, Bristol, BS8 2BN, UK
+4)  Medical Research Council Integrative Epidemiology Unit, University of Bristol, Bristol, BS8 2BN, UK
+5)  School of Mathematical Sciences, Queen Mary University of London, London E1 4NS, UK
+6)  Instituto de Física Interdisciplinar y Sistemas Complejos (IFISC) (CSIC-UIB), Campus UIB, 07122, Palma de Mallorca, Spain
+7)  The Alan Turing Institute, British Library, 96 Euston Rd, London NW1 2DB, UK.
+8)  Data Science Institute, College of Engineering, Mathematics and Physical Sciences, University of Exeter, Exeter, UK.
+
+```{r setup, include=FALSE}
+
+# This supplementary file actually generates all of the figures and analysis in the main paper.
+# This is the main reproducible part of the paper.
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  error = TRUE,
+  fig.align="center"
+)
+
+if (fs::dir_exists("~/Git/ggrrr")) {
+  devtools::load_all("~/Git/ggrrr")
+} else {
+  devtools::install_github("terminological/ggrrr")
+}
+
+library(ggrrr)
+
+ggrrr::cran(c("huxtable","openxlsx","fs","captioner","readr","here","patchwork","ggspatial","sf","tidyverse","tinytex"))
+
+
+```
+
+```{r}
+here::i_am("vignettes/_S1-catchment-areas.Rmd")
+
+devtools::load_all("~/Git/arear/")
+options("arear.cache.dir"=here::here("data-raw/cache"))
+
+library(tidyverse)
+library(patchwork)
+library(ggspatial)
+library(sf)
+
+baseSize = 8
+ggrrr::gg_pedantic()
+
+.figCap = captioner::captioner(prefix="Supplementary Figure")
+.tabCap = captioner::captioner(prefix="Supplementary Table")
+fig = function(id,caption="") .figCap(id,caption,display=ifelse(caption=="","c","f"))
+tab = function(id,caption="") .tabCap(id,caption,display=ifelse(caption=="","c","f"))
+
+
+saveHalfPageFigure = function(plot, filename) { 
+  ggrrr::gg_save_as(plot,filename,size = ggrrr::std_size$half,formats = "pdf") 
+  invisible(NULL)
+}
+saveThirdPageFigure = function(plot, filename) { 
+  ggrrr::gg_save_as(plot,filename,size = ggrrr::std_size$third,formats = "pdf") 
+  invisible(NULL)
+}
+
+
+# These are all latex fields defined
+inlineData = list(
+  dataInterRater = NA,
+  dataNumItus = NA,
+  dataOverallAccuracy = NA,
+  dataCorrect = NA,
+  dataTotal = NA,
+  dataMcc = NA,
+  dataTopMisclass = NA,
+  dataTopMisclassPercent = NA,
+  dataAcc = NA
+)
+
+
+inlineLatex = function(data = inlineData) {
+  lapply(names(data), function(s) {
+    paste0("\\newcommand{\\",s,"}{",utils::toLatex(as.character(data[[s]])),"}")
+  }) %>% paste0(collapse = "\n")
+}
+
+# cat(inlineLatex())
+
+```
+
+
+# Supplementary materials
+
+The algorithm requires firstly an estimate of demand, for this we used population counts, secondly a geographical network and thirdly an estimate of supply, in this case hospital capacity data. 
+
+## Estimating population density in the United Kingdom during the COVID-19 pandemic
+
+* https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/lowersuperoutputareamidyearpopulationestimates
+* https://www.nrscotland.gov.uk/statistics-and-data/statistics/statistics-by-theme/population/population-estimates/2011-based-special-area-population-estimates/small-area-population-estimates/time-series#2018
+* https://www.opendatani.gov.uk/dataset/3333626e-b96e-4b90-82fb-474c6c03b868/resource/64bd8dc4-935f-4bdd-9232-90ff33f24732/
+
+## Geographical network
+
+* LSOA11: https://geoportal.statistics.gov.uk/datasets/lower-layer-super-output-areas-december-2011-boundaries-ew-bgc
+* DZ11: https://data.gov.uk/dataset/ab9f1f20-3b7f-4efa-9bd2-239acf63b540/data-zone-boundaries-2011
+* LGD12: https://data.gov.uk/dataset/05f72866-b72b-476a-b6f3-57bd4a768674/osni-open-data-largescale-boundaries-local-government-districts-2012
+
+## Estimating surge hospital capacity in Britain during the COVID-19 pandemic
+
+Identifying a set of capacity data for the NHS proved complex. After several attempts to integrate data from various sources, we ultimately performed a manual curation of the sources listed below, with gaps or inconsistencies filled in by consultation with the relevant hospital's website. The resulting list is a snapshot in time of capacity and not representative of up to date practice. During the course of the COVID-19 pandemic a small number of NHS trusts merged which had to be manually adjusted for. There are also significant limitations due to the different ways the devolved administrations of the UK (England, Wales, Scotland and Northern Ireland) reported situation report of bed capacity during the pandemic, which meant only England and Wales hospitals has assessments of surge capacity, and we had no reliable information about Northern Ireland at all, and hence it was excluded. This does not significantly alter our conclusions here about the nature of the algorithm, but should be borne in mind, if the data set is to be used for other purposes.
+
+___NHS and Trust GIS locations (England):___
+
+* https://www.nhs.uk/about-us/nhs-website-datasets/
+* Lists of independent and NHS hospitals and trusts with location data
+* public
+
+___NHS Trusts (England)___
+
+* https://www.nhs.uk/ServiceDirectories/Pages/NHSTrustListing.aspx
+* Lists of NHS trusts and locations (as postcode) with information about services offered and hospital sites
+* public
+
+___Beds open - NHS England:___
+
+* https://www.england.nhs.uk/statistics/statistical-work-areas/bed-availability-and-occupancy/bed-data-overnight/
+* https://www.england.nhs.uk/statistics/statistical-work-areas/bed-availability-and-occupancy/bed-data-day-only/
+* Information at an NHS trusts level on hospital beds and icu beds available
+* public
+
+___Critical care capacity in England (pre-pandemic):___
+
+* https://www.england.nhs.uk/statistics/statistical-work-areas/critical-care-capacity/critical-care-bed-capacity-and-urgent-operations-cancelled-2019-20-data/
+* Prepandemic NHS trust bed and ICU capacity
+* public
+
+___Wales:___
+
+Average daily beds by site:
+
+* https://statswales.gov.wales/v/Hg4K
+* Prepandemic ICU and general bed availability
+* public
+
+___Scotland:___
+
+Annual trends in available beds:
+
+* https://www.isdscotland.org/Health-Topics/Hospital-Care/Publications/data-tables2017.asp?id=2494#2494
+* Prepandemic Hospital and ICU bed capacity
+* public
+
+___Sitrep (Situation reports) data:___
+
+__England:__
+
+* filename: Covid sitrep report incl CIC 20200408 FINAL.xlsx
+* Acute and ICU beds available in England at site level
+* ICU (SIT032) and HDU (SIT033) beds available - many data quality issues and missing trusts
+* restricted
+
+__Wales:__
+
+* filename: NHSWalesCovid19Sitrep-20200408.csv
+* Acute and ICU beds available in Wales
+* restricted
+
+N.B. No sitrep data for Scotland or for Northern Ireland
+
+
+# Supplementary results
+
+```{r}
+
+# Create a catchment area based on Scotland, Wales and England with Adult population and high dependency beds
+
+sup = arear::surgecapacity %>% dplyr::filter(hduBeds>0 & sector=="NHS Sector") %>% dplyr::group_by(hospitalId,hospitalName)
+dem = arear::uk2019demographicsmap() %>% dplyr::filter(!code %>% stringr::str_starts("N")) %>% dplyr::left_join(arear::uk2019adultpopulation %>% dplyr::select(-name,-codeType), by="code")
+
+catch1 = arear::catchment(
+  supplyShape = sup, 
+  supplyIdVar = hospitalId, 
+  supplyVar = hduBeds,
+  demandShape = dem,
+  demandIdVar = code, 
+  demandVar = population,
+  outputMap = TRUE
+)
+
+
+```
+
+```{r main-fig-2}
+
+p1a = ggplot2::ggplot(catch1$map)+ggplot2::geom_sf(aes(fill=hduBeds/population*100000), colour="white",size=0.1)+
+  ggplot2::geom_sf(data=catch1$suppliers, mapping=ggplot2::aes(size=hduBeds), colour="red",alpha=0.5,stroke=0.5,fill=NA,shape=1)+
+  arear::mapTheme()
+
+p2a = p1a+ggplot2::coord_sf(xlim=c(-0.5,0.2),ylim=c(51.3,51.7))+arear::mapTheme() 
+
+p1a = p1a+ggplot2::scale_fill_viridis_c(limit=c(0,75),oob=scales::squish)+ggplot2::theme(plot.margin = unit(c(0,0,0,0),"pt"))+ggplot2::guides(fill=ggplot2::guide_colourbar(title = "hdu beds/100K"), size=ggplot2::guide_bins("hdu beds"))
+p2a = p2a+ggplot2::scale_fill_viridis_c(limit=c(0,75),oob=scales::squish)+ggplot2::theme(plot.margin = unit(c(0,0,0,0),"pt"))+ggplot2::guides(fill="none", size="none")
+p2b = ggplot2::ggplot(catch1$map %>% dplyr::mutate(supVdem = hduBeds/population*100000),ggplot2::aes(x=supVdem)) + ggplot2::geom_histogram(binwidth = 1,fill="darkblue")+ggplot2::coord_cartesian(xlim=c(0,NA))+ggplot2::xlab("hdu beds/100K")
+
+p3a = ((p2a/p2b)|p1a) + patchwork::plot_annotation(tag_levels = "A")
+
+p3a %>% saveHalfPageFigure(here::here("vignettes/latex/FIG2_HDU_UK_example"))
+
+# Caption:
+# Panels A and C show a LSOA based catchment area map estimated from the high dependency bed state in Great Britain in early April 2020, with catchment area boundaries shown in white. Red circles are NHS hospital sites with size scaled to high dependency bed capacity. Map source: Office for National Statistics licensed under the Open Government Licence v.3.0, Contains OS data © Crown copyright and database right 2020. Panel B shows the distribution of high dependency beds per 100K population for each of the catchment areas defined by the algorithm.
+
+
+```
+
+
+```{r}
+
+# Create a catchment area based on Scotland, Wales and England with Adult population and general acute beds
+
+sup2 = arear::surgecapacity %>% dplyr::filter(acuteBeds>0 & sector=="NHS Sector") %>% dplyr::group_by(trustId,trustName)
+
+catch2b = arear::catchment(
+  supplyShape = sup2, 
+  supplyIdVar = trustId, 
+  supplyVar = acuteBeds,
+  demandShape = dem,
+  demandIdVar = code, 
+  demandVar = population,
+  outputMap = TRUE
+)
+
+```
+
+```{r main-fig-3}
+tmp = catch2b$suppliedArea 
+# sf::st_crs(tmp) <- 4326
+tmp = tmp %>% dplyr::mutate(fill = population/area*100000)
+
+sf::sf_use_s2(FALSE)
+
+p2 = ggplot2::ggplot()+
+  ggplot2::geom_sf(data=tmp,size=0.1,mapping = ggplot2::aes(fill=fill),colour="grey60")+
+  ggplot2::geom_sf(data=catch2b$map,size=0.2,colour="white",fill=NA)+
+  ggplot2::geom_sf(data=catch2b$suppliers, mapping=ggplot2::aes(size=acuteBeds), colour="red",stroke=1,fill=NA,shape=1)+
+  ggplot2::coord_sf(xlim=c(-4.25,-3.4),ylim=c(50.2,50.8))+
+  ggplot2::scale_size_continuous(guide="none")+
+  ggplot2::scale_fill_viridis_c(limit=c(NA,100),oob=scales::squish,guide = "none")+
+  arear::mapTheme()
+
+## create the centroid network to overlay onto figure.
+tmp2 = catch2b$suppliedArea %>% 
+  sf::st_centroid() %>% 
+  dplyr::filter(trustId %in% c("RBZ","RH8","RK9","RA9"))
+
+edges = arear::createNeighbourNetwork(catch2b$suppliedArea %>% dplyr::filter(trustId %in% c("RBZ","RH8","RK9","RA9")))
+
+tmp2 = tmp2 %>% dplyr::mutate(
+    x=as.vector((tmp2 %>% sf::st_coordinates())[,1]), 
+    y=as.vector((tmp2 %>% sf::st_coordinates())[,2])
+  ) %>% tibble::as_tibble()
+
+lines = edges %>% 
+  dplyr::inner_join(tmp2, by=c("from"="code")) %>% 
+  dplyr::inner_join(tmp2, by=c("to"="code"), suffix=c(".from",".to")) %>% 
+  dplyr::filter(k.from < k.to & trustId.from == trustId.to)
+
+# groupEdges = dplyr::bind_rows(
+#   edges %>% dplyr::inner_join(tmp %>% dplyr::select(code, trustId, fromk=k),by=c("from"="code")) %>% dplyr::mutate(tok=0),
+#   edges %>% dplyr::inner_join(tmp %>% dplyr::select(code, trustId, tok=k),by=c("to"="code")) %>% dplyr::mutate(fromk=0)
+# )
+# 
+# lines = groupEdges %>% sf::st_as_sf() %>% dplyr::group_by(from,to,trustId) %>% dplyr::filter(n() == 2) %>% dplyr::summarise(fromk = max(fromk), tok=max(tok)) %>% sf::st_cast("LINESTRING") %>% dplyr::filter(fromk>tok) %>% dplyr::ungroup()
+
+p4 = 
+  ggplot2::ggplot()+
+    ggplot2::geom_sf(data=catch2b$suppliedArea,size=0.1,mapping = ggplot2::aes(fill=k),colour="grey60")+
+    ggplot2::geom_sf(data=catch2b$map,size=0.3,colour="white",fill=NA)+
+    ggplot2::scale_fill_distiller(palette="Greys", limit = c(0,25))+ggplot2::labs(fill = "iteration",x=NULL,y=NULL,size="beds")+
+    ggplot2::geom_curve(data=lines,ggplot2::aes(x=x.from,y=y.from,xend=x.to,yend=y.to,colour=trustId.to),size=0.25,curvature=0.1,show.legend = FALSE)+ #,arrow = arrow(angle = 15, ends = "last", type = "open",length=unit(0.1,"inches")))+
+    ggplot2::geom_sf(data=catch2b$suppliers, mapping=ggplot2::aes(size=acuteBeds), colour="red",stroke=1,fill=NA,shape=1)+
+    ggplot2::coord_sf(xlim=c(-4.25,-3.4),ylim=c(50.2,50.8))+
+    arear::mapTheme()
+
+# p5 = p1+p2+p3+p4+patchwork::plot_annotation(tag_levels = "A")+patchwork::plot_layout(ncol=2,guides = "collect")
+
+p5 = p2+p4+patchwork::plot_annotation(tag_levels = "A")+patchwork::plot_layout(ncol=2)
+
+p5 %>% saveHalfPageFigure(here::here("vignettes/latex/FIG3_HDU_Acute_SW_example"))
+
+# Caption
+# Detail LSOA based catchment area map for NHS trusts estimated from the general hospital bed states in Great Britain in early April 2020. Red circles are NHS hospital sites. In panel A the fill represents a relative measure of regional population density, with yellow areas being high density in and around cities. In Panel B the same areas are shown but this time the fill shows the iteration number at which the algorithm labelled a specific area, and the propagation of the algorithm by arrows. Map source: Office for National Statistics licensed under the Open Government Licence v.3.0, Contains OS data © Crown copyright and database right 2020
+
+```
+
+```{r}
+
+## Validation agains LSHTM ----
+
+# Map population to higher level geography
+# LSOA11 to LAD19
+# from https://geoportal.statistics.gov.uk/datasets/ons::lower-layer-super-output-area-2011-to-ward-2019-lookup-in-england-and-wales/about
+# https://opendata.arcgis.com/datasets/15299a7b8e6c498d94a08b687c75b73f_0.csv
+LSOAtoLTLA = arear::.cached({
+    readr::read_csv("https://opendata.arcgis.com/datasets/15299a7b8e6c498d94a08b687c75b73f_0.csv")
+  },hash="",name = "lsoa2ltla")
+
+LTLAdemand = dem %>% 
+  tibble::as_tibble() %>% 
+  dplyr::inner_join(LSOAtoLTLA, by=c("code"="LSOA11CD")) %>% dplyr::group_by(geo_code=LAD19CD) %>% dplyr::summarise(n_geo = sum(population))
+
+```
+
+```{r main-fig-4}
+
+# Get CMMID epiforecasts data which provides the probabilistic LTLA data:
+# https://raw.githubusercontent.com/epiforecasts/covid19.nhs.data/b9e298ab20ee6f4e8601216a0a3ea087532012d0/data-raw/trust-ltla-mapping/trust_ltla_mapping_public.csv
+
+probLTLAMapping = readr::read_csv("https://raw.githubusercontent.com/epiforecasts/covid19.nhs.data/b9e298ab20ee6f4e8601216a0a3ea087532012d0/data-raw/trust-ltla-mapping/trust_ltla_mapping_public.csv")
+
+# For NHS Hospitals in england there should be no trusts in surgecapacity that are not in the LSHTM mapping
+if(
+  surgecapacity %>% dplyr::filter(nation == "England" & sector == "NHS Sector") %>% dplyr::anti_join(probLTLAMapping, by=c("trustId"="trust_code")) %>% nrow() > 0
+) stop("Hospitals in surgecapacity that are not in the LSHTM mapping")
+
+# LSHTM mapping should not include trusts that are not in the surgecapacity lists
+# probLTLAMapping %>% dplyr::anti_join(surgecapacity, by=c("trust_code"="trustId"))
+# However there are a few that are are due to merges and reorganisations
+
+probLTLAMapping2 = probLTLAMapping %>% dplyr::semi_join(surgecapacity, by=c("trust_code"="trustId"))
+
+# `p_trust`, the proportion of admissions at a given Trust that come from a given LTLA (or UTLA)
+# `p_geo`, the proportion of admissions from a given LTLA (or UTLA) that go to a given Trust.
+
+# excluding these trusts means some LTLAs have to be renormalised
+# probLTLAMapping2 %>% dplyr::group_by(trust_code) %>% dplyr::summarise(p_trust = sum(p_trust)) %>% utils::View() # all 1
+# probLTLAMapping2 %>% dplyr::group_by(geo_code) %>% dplyr::summarise(p_trust = sum(p_geo)) %>% utils::View() # not all 1
+
+probLTLAMapping3 = probLTLAMapping2 %>% dplyr::group_by(geo_code) %>% dplyr::mutate(p_trust = p_trust/sum(p_trust))
+
+# probLTLAMapping3 %>% dplyr::group_by(geo_code) %>% dplyr::summarise(p_trust = sum(p_geo)) %>% utils::View() # all 1
+# This now has 311 LTLA's in it so some have been stripped out by this
+
+# We are using the catchment area as determined by the acuteBeds here (rather than the HDU beds)
+# this is giving a fair comparison of method between LSHTM method and label propagation 
+
+# For the label propagation the proportion of LTLA population covered by each trusts catchment area
+# describes likelihood of that LTLA being associate with a trust. This gives us something to 
+# directly compare tot he LSHTM probabilistic method.
+labelProp = catch2b$crossMapping %>% 
+  dplyr::left_join(LSOAtoLTLA, by=c("code"="LSOA11CD")) %>% 
+  dplyr::group_by(geo_code = LAD19CD, trust_code = trustId) %>%
+  dplyr::summarise(cases = sum(population)) %>%
+  dplyr::group_by(geo_code) %>%
+  dplyr::mutate(
+    p_geo = cases/sum(cases)
+  ) %>%
+  dplyr::select(-cases)
+
+lshtmProbabilistic = probLTLAMapping3 %>% dplyr::select(geo_code,trust_code,p_geo)
+
+# Comparison is between derive probability Trust given LTLA from label propagation and LSHTM data.
+predicted = labelProp %>% dplyr::rename(p_geo.arear = p_geo) %>%
+  dplyr::full_join(
+    lshtmProbabilistic %>% dplyr::rename(p_geo.lshtm = p_geo), by = c("geo_code","trust_code")
+  ) %>%
+  dplyr::mutate(
+    dplyr::across(.cols = tidyselect::starts_with("p_geo"), .fns = function(x) ifelse(is.na(x),0,x))
+  ) %>% dplyr::inner_join(
+    LTLAdemand, by="geo_code"
+  ) %>% dplyr::mutate(
+    dplyr::across(.cols = tidyselect::starts_with("p_geo"), .fns = function(x) x*n_geo, .names = "{stringr::str_replace(.col,'p_','n_')}")
+  ) %>% dplyr::ungroup() %>%
+  dplyr::mutate(
+    dplyr::across(.cols = tidyselect::starts_with("n_geo."), .fns = function(x) x/sum(x), .names = "{stringr::str_replace(.col,'n_','ratio_')}")
+  )
+
+p1b = ggplot2::ggplot(predicted, ggplot2::aes(x=n_geo.lshtm/1000, y=n_geo.arear/1000))+ggplot2::geom_point(size=0.25)+ggplot2::geom_abline(slope=1,colour="blue")+ggplot2::coord_fixed()+
+  ggplot2::xlab("Activity based cases (thousands)")+ggplot2::ylab("Label propagation cases (thousands)")
+
+p1a = ggplot2::ggplot(predicted, ggplot2::aes(x=p_geo.lshtm, y=p_geo.arear))+ggplot2::geom_point(size=0.25)+ggplot2::geom_abline(slope=1,colour="blue")+ggplot2::coord_fixed()+
+  ggplot2::xlab("Activity based proportion")+ggplot2::ylab("Label propagation  proportion")
+
+(p1a+p1b+patchwork::plot_annotation(tag_levels="A")) %>% saveThirdPageFigure(here::here("vignettes/latex/FIG4_prob_comparison_agreement"))
+
+# Caption:
+# Classification agreement between activity based approach and label propagation algorithm. Each point is a unique combination of lower tier local authority and NHS trust and in panel A the proportion of the LTLA assigned to that trust is plotted for the activity based algorithm on the x-axis and the label propagation algorithm on the y-axis. In panel B the total number of cases assigned to each trust is plotted when the population size for the area is considered. The blue line represents perfect agreement.
+```
+
+
+```{r}
+
+# Intra-rater reliability measure
+predMat2 = predicted %>% dplyr::select(n_geo.lshtm,n_geo.arear) %>% as.matrix()
+irr = irr::icc(predMat2,model = "twoway",type = "agreement", unit="average")
+inlineData$dataInterRater = sprintf("%1.2f (95%% CI: %1.2f \u2013 %1.2f)",irr$value,irr$lbound,irr$ubound)
+
+```
+
+
+```{r}
+if (!fs::file_exists(here::here("vignettes/non-public-data/outcodes-of-itu-admissions.csv"))) {
+  ## Write data
+  arear::surgecapacity %>% dplyr::mutate(lat = sf::st_coordinates(.)[,"Y"],long = sf::st_coordinates(.)[,"X"]) %>% tibble::as_tibble() %>% dplyr::select(-geometry) %>% openxlsx::write.xlsx(file=here::here("vignettes/latex/S2-surge-capacity-estimates.xlsx"))
+  writeChar(inlineLatex(),con = here::here("vignettes/latex/inline_data.tex"))
+  stop("The non public data set is not available in vignettes/non-public-data/outcodes-of-itu-admissions.csv. This is as far as we can go without it.")
+}
+```
+
+
+```{r}
+
+## POSTCODE validation ----
+
+# Label Propagation
+outcodes = arear::getMap("OUTCODE")
+ladMap = arear::getMap("LAD19") %>% dplyr::filter(code %>% stringr::str_starts("E"))
+outcodeCentroid = outcodes %>% sf::st_centroid()
+outcodeToLAD = outcodeCentroid %>% dplyr::group_by(code) %>% arear::getContainedIn(ladMap %>% dplyr::group_by(ladCode = code))
+# get the LAD that centroid of each outcode is within
+outcodes = outcodes %>% dplyr::semi_join(outcodeToLAD, by="code")
+
+# Supply side stays the same - hospital and itu beds
+nhsHospitals = arear::surgecapacity %>% dplyr::filter(nation == "England" & sector=="NHS Sector")
+ituHospitals = arear::surgecapacity %>% dplyr::filter(nation == "England" & hduBeds>0 & sector=="NHS Sector")
+
+# demand is recast onto postcode outcode map using areal interpolation:
+# This is England only. Some small areas are not overlapping which may be islands.
+dTmp = arear::interpolateByArea(
+  inputDf = arear::uk2019adultpopulation %>% dplyr::filter(stringr::str_starts(code,"E")), by="code", 
+  inputShape = arear::uk2019demographicsmap() %>% dplyr::filter(stringr::str_starts(code,"E")), 
+  interpolateVar = population, 
+  outputShape = outcodes %>% dplyr::rename(pcd = code) %>% dplyr::group_by(pcd)
+)
+outcodeDemand = outcodes %>% dplyr::left_join(dTmp, by=c("code"="pcd"))
+```
+
+```{r}
+# Non public chess data set detailing outcodes and hospital admissions gives us an individual activity based comparison
+sariLL = readr::read_csv(here::here("vignettes/non-public-data/outcodes-of-itu-admissions.csv"))
+
+sariLL2 = sariLL %>% 
+  dplyr::semi_join(probLTLAMapping3, by=c("trustId"="trust_code")) %>% #make sure case is in outcode that is mappable to LTLA & trust
+  dplyr::semi_join(ituHospitals, by=c("trustId")) %>%
+  dplyr::semi_join(outcodes, by=c("outcode"="code"))
+
+#acuteHospitals = arear::surgecapacity %>% dplyr::filter(acuteBeds>0 & sector=="NHS Sector")
+
+catch = arear::catchment(
+        supplyShape = ituHospitals %>% dplyr::group_by(trustId,trustName),
+        supplyIdVar = trustId,
+        supplyVar = acuteBeds,
+        demandShape = outcodeDemand,
+        demandIdVar = code,
+        demandVar = population,
+        outputMap = TRUE
+      )
+
+# arear::preview(
+#    shape = catch$map, shapeLabelGlue = "{trustName}",
+#    shapePopupGlue = "<b>{trustName}</b><ul><li>pop: {floor(population)}</li><li>acute: {acuteBeds}</li><li>per100K: {acuteBeds/floor(population)*100000}</li></ul>",
+#    poi = catch$suppliers, poiLabelGlue = "{hospitalName}",
+#    poiPopupGlue = "<b>{hospitalName}</b><ul><li>trust: {trustName}</li><li>acute: {acuteBeds}</li><li>hdu: {hduBeds}</li></ul>"
+# )
+
+sariLL4 = catch$crossMapping %>% as.data.frame() %>% 
+  dplyr::select(code,trustId) %>% 
+  dplyr::full_join(sariLL2,by=c("code"="outcode"),suffix=c(".pred",".obs")) %>% 
+  dplyr::rename(predicted = trustId.pred, observed=trustId.obs) %>% 
+  dplyr::mutate(
+    predicted = ifelse(is.na(predicted),"unknown",predicted)
+  ) %>% 
+  dplyr::filter(
+    !is.na(observed)
+  )
+
+# trusts = arear::surgecapacity %>% tibble::as_tibble() %>% dplyr::select(trustId,trustName) %>% dplyr::distinct()
+
+# sariLL4 = sariLL4 %>% 
+#   dplyr::left_join(trusts %>% dplyr::select(predicted = trustId,trustName.pred = trustName), by="predicted") %>%
+#   dplyr::left_join(trusts %>% dplyr::select(observed = trustId,trustName.obs = trustName), by="observed") %>%
+#   dplyr::filter(!is.na(trustName.obs)) %>%
+#   dplyr::filter(!is.na(trustName.pred))
+
+eval1 = cvms:::evaluate(sariLL4 %>% dplyr::ungroup(),target_col = "observed",prediction_cols = "predicted", type="multinomial", include_predictions = FALSE)
+
+res1 = tibble::tibble(
+  method = "Label propagation",
+  total = sariLL4 %>% dplyr::count() %>% dplyr::pull(n),
+  correct = sariLL4 %>% dplyr::filter(observed==predicted) %>% dplyr::count() %>% dplyr::pull(n),
+  acc = sprintf("%1.1f%%",eval1$`Overall Accuracy`*100),
+  mcc = sprintf("%1.2f",eval1$MCC)
+)
+
+inlineData$dataCorrect = res1$correct
+inlineData$dataTotal = res1$total
+inlineData$dataMcc = res1$mcc
+inlineData$dataAcc = res1$acc
+inlineData$dataNumItus = nrow(ituHospitals)
+
+```
+
+```{r}
+# Probabilistic
+# TODO: could bootstrap here
+
+probMapping = outcodeToLAD %>% dplyr::inner_join(probLTLAMapping, by=c("ladCode"="geo_code")) %>% 
+  dplyr::group_by(code) %>%
+  dplyr::arrange(desc(p_geo)) %>%
+  dplyr::filter(row_number() == 1) %>%
+  dplyr::select(code,trustId = trust_code) %>%
+  dplyr::distinct() %>%
+  dplyr::ungroup()
+  
+probSari = probMapping %>% 
+  dplyr::full_join(sariLL2,by=c("code"="outcode"),suffix=c(".pred",".obs")) %>% 
+  dplyr::rename(predicted = trustId.pred, observed=trustId.obs) %>% 
+  dplyr::mutate(
+    predicted = ifelse(is.na(predicted),"unknown",predicted)
+  ) %>% 
+  dplyr::filter(
+    !is.na(observed)
+  )
+
+eval3 = cvms:::evaluate(probSari %>% dplyr::ungroup(),target_col = "observed",prediction_cols = "predicted", type="multinomial", include_predictions = FALSE)
+
+res3 = tibble::tibble(
+  method = "Activity based",
+  total = probSari %>% dplyr::count() %>% dplyr::pull(n),
+  correct = probSari %>% dplyr::filter(observed==predicted) %>% dplyr::count() %>% dplyr::pull(n),
+  acc = sprintf("%1.1f%%",eval3$`Overall Accuracy`*100),
+  mcc = sprintf("%1.2f",eval3$MCC)
+)
+
+inlineData$dataOverallAccuracy = sprintf("%s (label propagation) versus %s (activity based)", res1$acc, res3$acc)
+
+
+
+```
+
+
+```{r}
+# # Probabilistic
+# # Bootstrap attempt crashes R when accuracy calculated.
+# 
+# probMapping = outcodeToLAD %>% dplyr::inner_join(probLTLAMapping, by=c("ladCode"="geo_code")) %>%
+#   dplyr::group_by(code, trustId = trust_code) %>%
+#   dplyr::group_modify(function(d,g,...) {
+#     return(tibble::tibble(i = rep(1,floor(d$p_geo*100))))
+#   }) %>%
+#   dplyr::select(code,trustId) %>%
+#   dplyr::ungroup()
+# 
+# probSari = probMapping %>%
+#   dplyr::full_join(sariLL2,by=c("code"="outcode"),suffix=c(".pred",".obs")) %>%
+#   dplyr::rename(predicted = trustId.pred, observed=trustId.obs) %>%
+#   dplyr::mutate(
+#     predicted = ifelse(is.na(predicted),"unknown",predicted)
+#   ) %>%
+#   dplyr::filter(
+#     !is.na(observed)
+#   )
+# 
+# eval3 = cvms:::evaluate(probSari,target_col = "observed",prediction_cols = "predicted", type="multinomial")
+# 
+# res3 = tibble::tibble(
+#   method = "Activity based",
+#   total = probSari %>% dplyr::count() %>% dplyr::pull(n),
+#   correct = probSari %>% dplyr::filter(observed==predicted) %>% dplyr::count() %>% dplyr::pull(n),
+#   acc = sprintf("%1.1f%%",eval3$Overall Accuracy*100),
+#   mcc = sprintf("%1.2f",eval3$MCC)
+# )
+# 
+# # dplyr::bind_rows(res1,res3) %>% standardPrintOutput::saveTable("~/Dropbox/covid19/catchment-areas/sari_accuracy_comparison")
+
+```
+
+```{r main-fig-5}
+
+classComp = dplyr::bind_rows(
+  eval1$`Class Level Results`[[1]] %>% dplyr::mutate(method = "Label propagation"),
+  eval3$`Class Level Results`[[1]] %>% dplyr::mutate(method = "Activity based")
+)
+
+#p1 = dplyr::bind_rows(res1,res3) %>% dplyr::select(-mcc) %>% standardPrintOutput::simpleFigureTable(pts = 8,unwrapped = TRUE)
+
+p1b = dplyr::bind_rows(res1,res3) %>% dplyr::select(-mcc) %>% ggrrr::gg_simple_table(pts = 8)
+
+p2 = ggplot2::ggplot(classComp, ggplot2::aes(x=`Balanced Accuracy`,fill=method))+ggplot2::geom_bar(position = ggplot2::position_dodge2(width = 0.6, preserve = "single"))+ggplot2::scale_x_binned(n.breaks = 10)+ggplot2::scale_fill_brewer(palette="Dark2",name=NULL)+ggplot2::expand_limits(x=c(0.5,1))+ggplot2::ylab("NHS Trusts")
+
+#p2+ggpp::annotate(geom="grob_npc",npcx = 0.05, npcy = 0.95,label = p1,vjust="inward",hjust="inward",vp.width=1,vp.height=1)
+#p2+ggplot2::annotation_custom(p1,xmin=0.5,xmax=0.80,ymin=20,ymax=Inf)
+
+layout = c(
+  patchwork::area(0,0,100,100),
+  patchwork::area(t = 5,l = 5,b = 25,r = 60)
+)
+#graphics::plot(layout)
+
+(p2+p1b+patchwork::plot_layout(design = layout)) %>% saveThirdPageFigure(here::here("vignettes/latex/FIG5_sari_accuracy_comparison"))
+
+# Caption
+# Accuracy measures for the predictions of activity based and label propagation approaches based on UK postcode outcodes, and a subset of observed NHS trust of intensive care admissions in England between 20th October 2000 and 16th March 2021. The histogram shows the distribution of the balanced accuracy for each NHS trust in a one-vs-all binomial evaluation, and the inset table shows the overall accuracy from the multinomial evaluation, along with the raw counts af overall evaluations and correct predictions for each method
+
+```
+
+
+
+```{r}
+trusts = nhsHospitals %>% tibble::as_tibble() %>% dplyr::group_by(trustId,trustName) %>% dplyr::summarise(hduBeds = sum(hduBeds)) %>% dplyr::ungroup() %>% dplyr::mutate(centile = rank(hduBeds)/dplyr::n())
+
+sariLL5 = sariLL4 %>% 
+  
+   dplyr::left_join(trusts %>% dplyr::select(predicted = trustId,trustName.pred = trustName,hduBeds.pred=hduBeds,centile.pred=centile), by="predicted") %>%
+   dplyr::left_join(trusts %>% dplyr::select(observed = trustId,trustName.obs = trustName,hduBeds.obs=hduBeds,centile.obs=centile), by="observed") %>%
+   dplyr::filter(!is.na(trustName.obs)) %>%
+   dplyr::filter(!is.na(trustName.pred))
+
+misclass = sariLL5 %>% 
+  dplyr::group_by(observed) %>% dplyr::mutate(n_tot = dplyr::n()) %>%
+  dplyr::ungroup() %>%
+  dplyr::filter(n_tot > 100) %>%
+  dplyr::filter(observed != predicted) %>% 
+  dplyr::mutate(Trust = stringr::str_to_title(trustName.obs), `April 2020 ITU beds (Centile)` = sprintf("%1.0f (%1.0f%%)",hduBeds.obs,centile.obs*100)) %>% 
+  dplyr::group_by(trustId = observed, Trust, `April 2020 ITU beds (Centile)`) %>% dplyr::summarise(n=dplyr::n()) %>% dplyr::arrange(desc(n)) %>% utils::head(10) %>% dplyr::ungroup() %>% dplyr::rename(`Classification errors`=n) 
+
+goodclass = sariLL5 %>% 
+  dplyr::group_by(observed) %>% dplyr::mutate(n_tot = dplyr::n()) %>%
+  dplyr::ungroup() %>%
+  dplyr::filter(n_tot > 100) %>%
+  dplyr::filter(observed != predicted) %>% 
+  dplyr::mutate(Trust = stringr::str_to_title(trustName.obs), `April 2020 ITU beds (Centile)` = sprintf("%1.0f (%1.0f%%)",hduBeds.obs,centile.obs*100)) %>% 
+  dplyr::group_by(trustId = observed, Trust, `April 2020 ITU beds (Centile)`) %>% dplyr::summarise(n=dplyr::n()) %>% dplyr::arrange(desc(n)) %>% utils::tail(10) %>% dplyr::ungroup() %>% dplyr::rename(`Classification errors`=n) 
+
+inlineData$dataTopMisclass = top10misclass = sum(misclass$`Classification errors`)
+top10misclassPercent = inlineData$dataTopMisclassPercent = sprintf("%1.1f%%",top10misclass/(res1$total-res1$correct)*100)
+
+# sariLL5 %>% 
+#   dplyr::filter(observed != predicted) %>%
+#   dplyr::group_by(trustName.obs,trustName.pred) %>% dplyr::count() %>% utils::View()
+```
+
+\pagebreak
+
+# Characterisation of misclassification 
+
+In `r tab("mis")` we qualitatively examine the ten NHS Trusts that have the highest number of ITU patients that the label propagation algorithm predicted to be admitted elsewhere, and mis-classified them. These represent `r top10misclass` (`r top10misclassPercent`) of the total mis-classifications. The majority of these 10 hospitals are major tertiary referral intensive care units, or specialist centres, as demonstrated by them being in the top quintile of NHS trusts by ITU bed capacity. This result is consistent with both the possibilities that severely ill patients may end up in specialist centres rather than their closest hospital for treatment, or that in the event of a large surge in cases, patients may overflow from smaller to larger intensive care units. Both of these could lead to mis-classification of these patients by the label propagation algorithm, as we see here.
+
+`r tab("mis","The NHS trusts with the ten most misclassified covid ITU cases as assigned by the label propagation algorithm")`
+```{r fig.width=6}
+misclass %>% ggrrr::hux_default_layout() %>% ggrrr::hux_save_as(here::here("vignettes/latex/TABLE-S1-many-errors.pdf"))
+```
+
+\pagebreak
+In `r tab("good")` we look at the trusts where there are fewest cases incorrectly assigned to other trusts by the label propagation algorithm. Although these are generally the smaller intensive care units this is not globally the case. This is just a measure of type 1 error and could be the result of an inappropriately large catchment area.
+
+`r tab("good","The NHS trusts with the ten least misclassified covid ITU cases as assigned by the label propagation algorithm")`
+```{r fig.width=6}
+goodclass %>% ggrrr::hux_default_layout() %>% ggrrr::hux_save_as(here::here("vignettes/latex/TABLE-S2-few-errors.pdf"))
+```
+
+The distribution of patients who attended hospitals with the fewest misclassication errors is shown in `r fig("fewest")` and these tends to be the intensive care units with fewest attendees, with a few long distance out of area patients.
+
+```{r fig.height=8, fig.width=6}
+
+tmp = sariLL5 %>% 
+  dplyr::semi_join(goodclass %>% utils::tail(4), by=c("observed"="trustId")) %>%
+  dplyr::group_by(observed,code) %>% dplyr::count() %>%
+  dplyr::left_join(outcodeCentroid %>% dplyr::select(code,geometry), by="code") %>% 
+  sf::st_as_sf()
+
+ggplot()+
+  ggplot2::geom_sf(data = catch$map, size=0.1,colour="white",fill="black")+
+  ggplot2::geom_sf(data = tmp, mapping=ggplot2::aes(size=n), colour="red",alpha=1,stroke=1,shape=1)+
+  ggplot2::geom_sf(data = catch$map %>% dplyr::semi_join(goodclass %>% utils::tail(4), by=c("trustId")) %>% dplyr::mutate(observed=trustId), colour="cyan", fill=NA)+ggplot2::scale_size_area(max_size = 4)+
+  ggplot2::facet_wrap(dplyr::vars(observed))+arear::mapTheme()
+
+
+```
+`r fig("fewest","The origin of patients attendind the hospitals which are best predicted by the label propagation algorithm. Hospital codes are given in the associated tables. Red circles are patients admitted to the given hospitals and cyan areas the predicted catchment area")`
+
+The distribution of patients who attended hospitals with the most misclassification errors is shown in `r fig("most")` and these tends to be the intensive care units with many attendees, spread over much wider areas than the algorithm predicts. These are typically large intensive care units based in dense towns, where there are many other hospitals. A limitation of the label propagation algorithm is that as tertiary referral centres, these hospitals catchment areas for ITU services are probably different in nature from those of the surrounding smaller hospitals. In this case a two-layered approach to the catchment area may be more appropriate, where one layer considers wider tertiary referral and the other locally directly admitted patients who will tend ot be more local. 
+
+```{r fig.height=8, fig.width=6}
+
+tmp = sariLL5 %>% 
+  dplyr::semi_join(misclass %>% utils::head(4), by=c("observed"="trustId")) %>%
+  dplyr::group_by(observed,code) %>% dplyr::count() %>%
+  dplyr::left_join(outcodeCentroid %>% dplyr::select(code,geometry), by="code") %>% 
+  sf::st_as_sf()
+
+ggplot()+
+  ggplot2::geom_sf(data = catch$map, size=0.1,colour="white",fill="black")+
+  ggplot2::geom_sf(data = tmp, mapping=ggplot2::aes(size=n), colour="red",alpha=1,stroke=1,shape=1)+
+  ggplot2::geom_sf(data = catch$map %>% dplyr::semi_join(misclass %>% utils::head(4), by=c("trustId")) %>% dplyr::mutate(observed=trustId), colour="cyan", fill=NA)+ggplot2::scale_size_area(max_size = 4)+
+  ggplot2::facet_wrap(dplyr::vars(observed))+arear::mapTheme()
+
+
+```
+
+`r fig("most","The origin of patients attendind the 4 hospitals which are worst predicted by the label propagation algorithm. Hospital codes are given in the associated tables. Red circles are patients admitted to the given hospitals and cyan areas the predicted catchment area")`
+
+```{r}
+
+## Write data
+arear::surgecapacity %>% dplyr::mutate(lat = sf::st_coordinates(.)[,"Y"],long = sf::st_coordinates(.)[,"X"]) %>% tibble::as_tibble() %>% dplyr::select(-geometry) %>% openxlsx::write.xlsx(file=here::here("vignettes/latex/S2-surge-capacity-estimates.xlsx"))
+writeChar(inlineLatex(),con = here::here("vignettes/latex/inline_data.tex"))
+
+setwd(here::here("vignettes/latex"))
+tinytex::latexmk("catchment-areas.tex")
+```
+

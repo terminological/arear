@@ -100,7 +100,7 @@ LAD20:
   license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
 CCG20:
   source: "https://geoportal.statistics.gov.uk/datasets/clinical-commissioning-groups-april-2020-generalised-clipped-boundaries-en"
-  url: "https://opendata.arcgis.com/api/v3/datasets/e33a6b14379f4d0b9890f9dfa26f8a1f_1/downloads/data?format=shp&spatialRefId=27700"
+  url: "https://opendata.arcgis.com/api/v3/datasets/8e410b3299154bb3a93fae1a69ed4f2b_1/downloads/data?format=shp&spatialRefId=27700"
   mapName: "Clinical_Commissioning_Groups__April_2020__EN_BGC"
   codeCol: "ccg20cd"
   nameCol: "ccg20nm"
@@ -110,16 +110,17 @@ CCG20:
 NHSER20:
   source: "https://geoportal.statistics.gov.uk/datasets/nhs-england-regions-april-2020-boundaries-en-bgc"
   url: "https://opendata.arcgis.com/api/v3/datasets/87511f3ae00a40208741c685f827c1d3_0/downloads/data?format=shp&spatialRefId=27700"
-  mapName: "NHS_England_Regions__April_2020__Boundaries_EN_BGC"
+  mapName: "NHS_England_Regions__April_2020__Boundaries_EN_BFC_V2"
   codeCol: "nhser20cd"
   nameCol: "nhser20nm"
   altCodeCol: ~
   simplify: FALSE
   license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+### GEOJSON example:
 PHEC16:
-  source: "https://geoportal.statistics.gov.uk/datasets/public-health-england-centres-december-2016-generalised-clipped-boundaries-in-england"
-  url: "https://opendata.arcgis.com/api/v3/datasets/91d15139a82e47fc8167a11c0e4e86de_2/downloads/data?format=shp&spatialRefId=27700"
-  mapName: "Public_Health_England_Centres__December_2016__Boundaries"
+  source: "https://ons-inspire.esriuk.com/arcgis/rest/services/Health_Boundaries/Public_Health_England_Centres_December_2016_Boundaries"
+  url: "https://ons-inspire.esriuk.com/arcgis/rest/services/Health_Boundaries/Public_Health_England_Centres_December_2016_Boundaries/MapServer/2/query?where=1%3d1&outFields=*&outSR=4326&f=geojson"
+  mapName: "geojson"
   codeCol: "phec16cd"
   nameCol: "phec16nm"
   altCodeCol: ~

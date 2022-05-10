@@ -21,7 +21,7 @@ getIntersection(
 
 \item{recalcArea}{- do you need the area of the intersected shape (e.g. for areal interpolation)}
 
-\item{...}{- passed on to .cached() (cache control)}
+\item{...}{passed on to .cached() (cache control) - relevant is nocache = TRUE which prevents this from being precalculated}
 }
 \value{
 a sf object representing the intersection of the input and output shapes.

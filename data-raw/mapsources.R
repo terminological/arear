@@ -1,6 +1,24 @@
 ## code to prepare `DATASET` dataset goes here
 library(tidyverse)
 
+# TODO: Need to look into this as a more persistent source of map data
+# ons = tibble(boundaryType = c("Administrative_Boundaries",
+#                       "Census_Boundaries",
+#                       "Electoral_Boundaries",
+#                       "Eurostat_Boundaries",
+#                       "Health_Boundaries",
+#                       "Other_Boundaries",
+#                       "Postcodes"))
+#
+# ons = ons %>% mutate(services = purrr::map(boundaryType, function(.x) {
+#       tmp = jsonlite::read_json(paste0('https://ons-inspire.esriuk.com/arcgis/rest/services/',.x,'?f=pjson'))
+#       tmp = bind_rows(lapply(tmp$services, as_tibble)) %>%
+#         filter(type == 'MapServer') %>%
+#         mutate(boundary = stringr::str_extract(name, '(?<=\\/)(.+)'))
+# }))
+
+ons = ons %>% unnest(cols = services) %>% rename(feature = name)
+ons %>% View()
 
 here::i_am("data-raw/mapsources.R")
 devtools::load_all()
@@ -22,35 +40,9 @@ surgecapacity = readr::read_csv(here::here("data-raw/NHSSurgeCapacityMarch2020.c
 surgecapacity = sf::st_as_sf(surgecapacity, coords=c("long","lat"), crs=4326)
 usethis::use_data(surgecapacity, overwrite = TRUE)
 
-## PHE coronavirus tracker maps -------------
-
-pheDashboardMap = rbind(
-  arear::getMap("LAD19") %>% dplyr::filter(code %>% stringr::str_starts("E")),
-  #arear::getMap("CA19"),
-  arear::getMap("LHB19") %>% rmapshaper::ms_simplify(keep=0.1, keep_shapes=TRUE),
-  arear::getMap("LGD12") %>% rmapshaper::ms_simplify(keep=0.1, keep_shapes=TRUE)
-) %>% dplyr::ungroup() #group_by(code,name))
-uklegacycovidmap = pheDashboardMap
-usethis::use_data(uklegacycovidmap, overwrite = TRUE)
-
-pheDashboardMap = rbind(
-  arear::getMap("LAD19")
-) %>% dplyr::ungroup() #group_by(code,name))
-ukcovidmap = pheDashboardMap
-usethis::use_data(ukcovidmap, overwrite = TRUE)
-
-## Demographics map -------------
-
-demographicsMap = rbind(
-  arear::getMap("LSOA11"),
-  arear::getMap("DZ11"),
-  arear::getMap("LGD12")
-)
-uk2019demographicsmap = demographicsMap %>% rmapshaper::ms_simplify(keep=0.1, keep_shapes=TRUE)
-usethis::use_data(uk2019demographicsmap, overwrite = TRUE)
-
 ## UK Demographics estimates ----
 
+# this location is not checked into github
 wd = here::here("data-raw/cache")
 # England and wales:
 # https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/lowersuperoutputareamidyearpopulationestimates
@@ -136,4 +128,7 @@ uk2019retiredpopulation = demographics %>% filter(age>65) %>%
 usethis::use_data(uk2019adultpopulation, overwrite = TRUE)
 usethis::use_data(uk2019retiredpopulation, overwrite = TRUE)
 
+## London shapefile ----
 
+londonShape = arear::getMap("NHSER20") %>% filter(name == "London")
+usethis::use_data(londonShape, overwrite = TRUE)

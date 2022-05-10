@@ -3,13 +3,11 @@ output:
   pdf_document:
     fig_caption: yes
 documentclass: standalone
-classoption:
-  
 knit: (function(inputFile, encoding,...) {
   rmarkdown::render(
     inputFile,
     encoding = encoding,
-    output_dir = "~/Dropbox/covid19/catchment-areas", output_file=paste0('catchment-areas-algorithm-',Sys.Date(),'.pdf'))
+    output_dir = here::here("vignettes/latex"), output_file=paste0('catchment-areas-algorithm-',Sys.Date(),'.pdf'))
   })
 # TODO: https://www.reed.edu/data-at-reed/software/R/markdown_multiple_reports.html
 header-includes:
@@ -34,7 +32,7 @@ out.width: "100%"
 \SetKwInOut{Output}{Output}
 \SetKwComment{Comment}{\--- }{}
 \Input{$V_N$ - the $N$ regions of demand as a set of geographical polygons}
-\Input{$D(V_n)$ - the density of demand in any given region as a function of the region $V_n$}
+\Input{$stats::D(V_n)$ - the density of demand in any given region as a function of the region $V_n$}
 \Input{$P_M$ - a set of $M$ labelled suppliers as a set of geographical points}
 \Input{$S(P_m)$ - the capacity of supply at any given supply point as a function of the supplier $P_m$}
 \Input{$C_{growth}$ - a rate constant defining rate of label propagation}
@@ -64,7 +62,7 @@ $k \gets 0$\;
   \Comment{define the un-labelled neighbours of $G_{M,k-1}$ as $U_{M,k}$ as the previously unlabelled neighbours and the neighbours of the most recently labelled neighbours $V^{new}_{M,k-1}$:}
   $U_{M,k} \gets U_{M,k-1} \cup (U_k \cap \nu(V^{new}_{M,k-1}))$\;
   \Comment{define the reserve capacity, $R_M$, to supply existing labelled, $G_{M,k-1}$,  and un-labelled neighbours $U_{M,k}$, as:}
-  $R_M \gets \frac{S(P_M)}{D(U_{M,k} \cup G_{M,k-1})}$\;
+  $R_M \gets \frac{S(P_M)}{stats::D(U_{M,k} \cup G_{M,k-1})}$\;
   \Comment{for unlabelled areas only, update the accumulated growth score, $A_{U_{M,k}}$, with the normalised rank of the reserve capacity and multiplied by a constant $C_{growth} > 1$ representing the speed at which the accumulated growth score increases in all areas:}
   $R_{M,k} \gets R_m \{m \in U_{M,k}\}$\;
   $A_{U_{M,k}} \gets A_{U_{M,k-1}} + C_{growth} \times \text{rank}(R_{M,k})/|R_{M,k}|$\;

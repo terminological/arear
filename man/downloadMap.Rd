@@ -2,7 +2,7 @@
 % Please edit documentation in R/load-maps.R
 \name{downloadMap}
 \alias{downloadMap}
-\title{Download a map, unpack it, and rename columns}
+\title{Download a map, unpack it, and rename columns.}
 \usage{
 downloadMap(
   zipUrl,
@@ -12,14 +12,14 @@ downloadMap(
   altCodeCol = NULL,
   codeType = NA_character_,
   simplify = FALSE,
-  wd = tempdir(),
+  wd = getOption("arear.download.dir", tempdir()),
   id = NULL
 )
 }
 \arguments{
 \item{zipUrl}{- the URL of the zipped shapefile}
 
-\item{mapName}{- the layer name or map name - this is the "xyz" of a zip file containing "xyz.shp"}
+\item{mapName}{- the layer name or map name - this is the "xyz" of a zip file containing "xyz.shp". If you are getting multiple layers it is OK to repeatedly call this within the same session as the download is stored, see wd option.}
 
 \item{codeCol}{- the name of the column containing the id or code}
 
@@ -31,9 +31,9 @@ downloadMap(
 
 \item{simplify}{- do you want to simplify the map}
 
-\item{wd}{- an optional working directory (defaults to tempdir)}
+\item{wd}{- an optional working directory (defaults to `getOption("arear.download.dir", tempdir())`)}
 
-\item{id}{- an optional id for the map - defaults to either the mapName or if not present the name of the zip file.}
+\item{id}{- an optional id for the map that can be used to retrieve it later (through getMap()) - defaults to either the mapName or if not present the name of the zip file.}
 }
 \value{
 a sf object containing the map

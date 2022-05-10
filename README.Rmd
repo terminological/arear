@@ -22,17 +22,11 @@ library(tidyverse)
 [![Codecov test coverage](https://codecov.io/gh/terminological/arear/branch/main/graph/badge.svg)](https://codecov.io/gh/terminological/arear?branch=main)
 <!-- badges: end -->
 
-The goal of arear is to ...
+This package provides a suite of geo-spatial functions that were useful during the response to the COVID-19 pandemic in the UK. It provides some curated data relevant to hospital capacity in the NHS, and demographic data for the UK at the beginning of the pandemic. Coupled with this are a range of functions to simplify the management of mapping data between different administrative geographies, at different levels of detail that were involved in COVID-19 reporting. For mapping community case data to hospital admissions data the library provides an algorithmic hospital catchment area estimation based on label propagation, the methods for which are described in detail here - AWAITING FINAL URL. Many of the operations in the package involve time consuming calculations, which only generally need to be performed once, so the package incorporates a transparent filesystem caching layer to speed it all up.
 
 ## Installation
 
-You can install the released version of arear from [CRAN](https://CRAN.R-project.org) with:
-
-``` r
-install.packages("arear")
-```
-
-And the development version from [GitHub](https://github.com/) with:
+Arear is not yet on CRAN. You can install the development version from [GitHub](https://github.com/terminological/arear) with the following commands:
 
 ``` r
 # install.packages("devtools")
@@ -40,61 +34,30 @@ devtools::install_github("terminological/arear")
 ```
 ## Example
 
-There are a set of maps bundled:
+Without this package accessing maps relevant to the UK requires knowing where to look for various shape files, and then managing the various differences between nomenclature and naming conventions. The package provides a simple interface to downloading, extracting, standardising, and caching the main UK maps. Getting and plotting a map for the UK based on the administrative code in use is made relatively simple:
 
 ```{r example}
 # devtools::load_all()
 here::i_am("README.Rmd")
-options("arear.cache.dir"=here::here("data-raw/cache"))
+options("arear.download.dir"=rappdirs::user_cache_dir("arear-download"))
+options("arear.cache.dir"=rappdirs::user_cache_dir("arear-vignette"))
 
 library(arear)
 library(sf)
 
-## basic example code
-arear::listStandardMaps()
-```
+# list the available maps ids:
+# arear::listStandardMaps()
 
-Getting and plotting a map for the UK is simple:
-
-```{r}
 map = arear::getMap("CTRY19")
 nhshospitals = arear::surgecapacity %>% dplyr::filter(sector == "NHS Sector")
+
 ggplot()+
   geom_sf(data=map)+
-  geom_sf(data=nhshospitals,aes(colour=tier1))
+  geom_sf(data=nhshospitals, aes(colour=tier1))+
+  arear::mapTheme()
 ```
 
-But the main thing is creating a catchment area:
+## Next steps
 
-```{r}
+Please check the getting-started vignette for more examples on the available functions, including the catchment area algorithm.
 
-apiTrusts = readr::read_csv("https://api.coronavirus.data.gov.uk/v2/data?areaType=nhsTrust&metric=hospitalCases&format=csv&release=2021-03-01")
-
-# There are quite a few mental health, community, specialist and children's trusts that we do not as yet have sensible capacity data for, and although they report COVID
-# cases these are essentially incidental to the care of the patient.
-# However at last look this list also includes NHS Nightingale hospitals which we have not included
-# apiTrusts %>% select(areaCode,areaName) %>% distinct() %>% anti_join(arear::surgecapacity, by = c("areaCode"="trustId")) %>% View()
-
-# The API output includes only NHS trusts in England
-# there should be no NHS Trusts in this data that do not appear in the API.
-# arear::surgecapacity %>% filter(nation == "England" & sector == "NHS Sector") %>% anti_join(apiTrusts, by = c("trustId"="areaCode")) %>% View()
-
-sup = arear::surgecapacity %>% semi_join(apiTrusts, by = c("trustId"="areaCode"))
-dem = arear::uk2019demographicsmap %>% filter(code %>% stringr::str_starts("E")) %>% left_join(arear::uk2019adultpopulation %>% select(-name,-codeType), by="code")
-
-catchment = arear::createCatchment(
-  supplyShape = sup, 
-  supplyIdVar = trustId, 
-  supplyVar = acuteBeds,
-  demandShape = dem,
-  demandIdVar = code, 
-  demandVar = population,
-  outputMap = TRUE
-)
-
-ggplot(catchment$map)+geom_sf()
-
-# catchment$map %>% View()
-
-
-```

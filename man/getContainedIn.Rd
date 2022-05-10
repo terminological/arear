@@ -33,7 +33,7 @@ This assumes an id column in input and output shapes and
 # find the hospitals in a given area.
 mapping = getContainedIn(
 inputShape = arear::surgecapacity,
-outputShape = arear::ukcovidmap,
+outputShape = arear::ukcovidmap(),
 inputVars = dplyr::vars(hospitalId),
 outputVars = dplyr::vars(code)
 )

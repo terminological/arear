@@ -2,7 +2,7 @@
 % Please edit documentation in R/arear.R
 \name{createNeighbourNetwork}
 \alias{createNeighbourNetwork}
-\title{create a neighbourhood network from a shapefile}
+\title{create a neighbourhood network from touching regions in a shapefile, with additional capability to connect non touching areas where there may be bridges etc.}
 \usage{
 createNeighbourNetwork(
   shape,
@@ -19,13 +19,13 @@ createNeighbourNetwork(
 
 \item{bridges}{- a df with the following columns: name start.lat start.long end.lat end.long defining connections between non touching shapes (e.g. bridges / ferries / etc.)}
 
-\item{queen}{- include neighbouring areas that touch at corners}
+\item{queen}{- include neighbouring areas that only touch at corners, defaults to false.}
 
-\item{...}{- passed on to .cached() (cache control)}
+\item{...}{- passed on to .cached() (cache control) - relevant is nocache = TRUE which prevents this from being precalculated}
 }
 \value{
 an edge list of ids with from and to columns
 }
 \description{
-create a neighbourhood network from a shapefile
+create a neighbourhood network from touching regions in a shapefile, with additional capability to connect non touching areas where there may be bridges etc.
 }
