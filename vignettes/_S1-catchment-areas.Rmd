@@ -726,8 +726,11 @@ ggplot()+
 ## Write data
 arear::surgecapacity %>% dplyr::mutate(lat = sf::st_coordinates(.)[,"Y"],long = sf::st_coordinates(.)[,"X"]) %>% tibble::as_tibble() %>% dplyr::select(-geometry) %>% openxlsx::write.xlsx(file=here::here("vignettes/latex/S2-surge-capacity-estimates.xlsx"))
 writeChar(inlineLatex(),con = here::here("vignettes/latex/inline_data.tex"))
+```
 
+```{r}
 setwd(here::here("vignettes/latex"))
-tinytex::latexmk("catchment-areas.tex")
+tinytex::parse_install("catchment-areas.log")
+tinytex::latexmk("catchment-areas.tex",install_packages = TRUE)
 ```
 
