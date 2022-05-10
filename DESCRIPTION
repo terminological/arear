@@ -30,6 +30,7 @@ VignetteBuilder: knitr
 Imports: 
     rmapshaper,
     sf,
+    lwgeom,
     dplyr,
     magrittr,
     rlang,
