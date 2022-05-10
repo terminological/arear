@@ -22,7 +22,7 @@ jobs:
       - name: Install GDAL on macOS
         if: runner.os == 'macOS'
         run: |
-          brew install gdal
+          brew install gdal proj geos
       - name: Install GDAL on linux
         if: runner.os == 'Linux'
         run: sudo add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable && sudo apt-get -q update && sudo apt-get -y install libudunits2-dev libgdal-dev libgeos-dev libproj-dev
