@@ -25,7 +25,8 @@ Suggests:
     markdown,
     pkgdown,
     scales,
-    tidyr
+    tidyr,
+    rprojroot
 VignetteBuilder: knitr
 Imports: 
     rmapshaper,

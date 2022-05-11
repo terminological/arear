@@ -1,0 +1,10 @@
+# Ignore everything in this directory
+*
+# Except this file and the downloaded map files
+# this is here to ensure the arear.Rmd vignette does not have to download
+# the maps from the internet when 
+!.gitignore
+!CTRY19.zip
+!LAD19.zip
+!NHSER20.zip
+!README.md
