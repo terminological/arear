@@ -47,11 +47,6 @@ and caching the main UK maps. Getting and plotting a map for the UK
 based on the administrative code in use is made relatively simple:
 
 ``` r
-# devtools::load_all()
-here::i_am("README.Rmd")
-#> here() starts at /media/data/Git/arear
-options("arear.download.dir"=rappdirs::user_cache_dir("arear-download"))
-options("arear.cache.dir"=rappdirs::user_cache_dir("arear-vignette"))
 
 library(arear)
 library(sf)

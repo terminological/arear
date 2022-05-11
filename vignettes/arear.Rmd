@@ -12,19 +12,11 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-```
 
-# Background
 
-This library is a collection of functions that I created when working on the COVID-19 pandemic. The main focus of this was integrating geospatial demographic, hospital capacity and COVID data from England, Scotland, Wales and Northern Ireland, all of which were available on different sites and methods. The UK has a wide range of administrative geographic boundaries for different purposes and moving from different scales and resolutions proved necessary. As the geospatial operations are quite time consuming but don't need to be repeated the ability to cache results of geospatial transformations is useful and embedded into these functions.
-
-```{r setup}
-#devtools::load_all()
-library(tidyverse)
-library(patchwork)
 
 # normally I would be using the `here` package
-# however this does not work when building vignetted in github actions. Something to do with R-CMD-check moving the vignettes out of the source tree.
+# however this does not work when building vignettes in github actions. Something to do with R-CMD-check moving the vignettes out of the source tree.
 # here::i_am("vignettes/arear.Rmd")
 
 projectRoot = tryCatch({
@@ -35,9 +27,25 @@ projectRoot = tryCatch({
 })
 
 downloadDir = paste0(projectRoot,"/data-raw/download-cache/")
-
 message("Setting download directory to: ",downloadDir)
+```
 
+# Background
+
+This library is a collection of functions that I created when working on the COVID-19 pandemic. The main focus of this was integrating geospatial demographic, hospital capacity and COVID data from England, Scotland, Wales and Northern Ireland, all of which were available on different sites and methods. The UK has a wide range of administrative geographic boundaries for different purposes and moving from different scales and resolutions proved necessary. As the geospatial operations are quite time consuming but don't need to be repeated the ability to cache results of geospatial transformations is useful and embedded into these functions.
+
+```{r setup}
+
+library(tidyverse)
+library(patchwork)
+library(arear)
+
+# the usual setup would be to place downloaded files in either a user cache directory or a tempdir.:
+# options("arear.cache.dir" = rappdirs::user_cache_dir("arear-download"))
+# options("arear.cache.dir" = tempddir())
+# however this does not seem to work well in github actions.
+
+# the following line is for github actions to work properly:
 options("arear.download.dir" = downloadDir)
 options("arear.cache.dir" = rappdirs::user_cache_dir("arear-vignette"))
 
@@ -73,7 +81,8 @@ hospitalId2nhser = arear::getContainedIn(nhshospitals %>% dplyr::group_by(hospit
 hospitalsByNhser = nhshospitals %>% dplyr::inner_join(hospitalId2nhser,by=c("hospitalId","hospitalName"))
 ggplot()+ggplot2::geom_sf(data=nhser)+ggplot2::geom_sf(data = hospitalsByNhser,ggplot2::aes(colour=name),size=0.5)
 ```
-And hence estimate capacity at the NHS regional level:
+
+And hence we can estimate capacity at the NHS regional level:
 
 ```{r}
 nhserBeds = hospitalsByNhser %>% tibble::as_tibble() %>% dplyr::group_by(code,name) %>% dplyr::summarise(

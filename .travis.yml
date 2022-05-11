@@ -11,6 +11,8 @@ before_install:
 
 brew_packages:
   - gdal
+  - proj
+  - geos
 
 install:
   - R -e 'devtools::install_deps(dep = T)'
