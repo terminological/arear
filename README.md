@@ -28,7 +28,21 @@ transparent filesystem caching layer to speed it all up.
 
 ## Installation
 
-Arear is not yet on CRAN. You can install the development version from
+Arear is not yet on CRAN. Arear has a dependency on the `sf` package
+which in turn requires the `gdal`, `geos` and `proj` libraries. These
+can
+
+``` bash
+# in debian / ubuntu
+sudo add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable
+sudo apt-get -q update
+sudo apt-get -y install libudunits2-dev libgdal-dev libgeos-dev libproj-dev
+
+# or on macOS
+brew install gdal proj geos
+```
+
+You can then install the development version of arear from
 [GitHub](https://github.com/terminological/arear) with the following
 commands:
 
@@ -36,6 +50,8 @@ commands:
 # install.packages("devtools")
 devtools::install_github("terminological/arear")
 ```
+
+This can take some time if `sf` has not already been set up.
 
 ## Example
 
