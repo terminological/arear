@@ -342,7 +342,7 @@ popoutArea = function(shape, popoutShape = arear::londonShape, popoutPosition = 
 .gg_simple_table = function(df, pts=8) {
   p = suppressWarnings(suppressMessages({
     ttheme = gridExtra::ttheme_minimal(
-      base_size = pts, base_colour = "black", base_family = "Roboto",
+      base_size = pts, base_colour = "black",
       parse = FALSE, padding = grid::unit(c(4, 1.5), "mm"),
       core=list(fg_params=list(hjust=0, x=0.1), bg_params = list(fill = "#FFFFFF", alpha=1, col=NA)),
       colhead=list(fg_params=list(hjust=0, x=0.1), bg_params = list(fill = "#FFFFFF", alpha=1, col=NA))
