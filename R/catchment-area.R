@@ -65,7 +65,7 @@ createCatchment = function(
 
     # define the neighborhood network $nu(V_x)$ - and connect non neighbouring areas that have transport links defined
     # createNeighbourNetwork creates a directed edgelist but with symmetrical edges, and the edges are defined in terms of $n$
-    E_N = V_N %>% arear::createNeighbourNetwork(n, bridges)
+    E_N = V_N %>% arear::createNeighbourNetwork(idVar=n, bridges=bridges)
 
     # find the regions containing the supply points
     # define $V_M$ as the geographic region in $G$ (i.e. $V_N$) containing point $P_M$

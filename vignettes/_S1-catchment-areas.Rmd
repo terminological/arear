@@ -59,8 +59,11 @@ ggrrr::cran(c("huxtable","openxlsx","fs","captioner","readr","here","patchwork",
 ```{r}
 here::i_am("vignettes/_S1-catchment-areas.Rmd")
 
-devtools::load_all("~/Git/arear/")
-options("arear.cache.dir"=here::here("data-raw/cache"))
+library(arear)
+
+options("arear.cache.dir" = rappdirs::user_cache_dir("arear-download"))
+options("arear.cache.dir" = rappdirs::user_cache_dir("arear-vignette"))
+
 
 library(tidyverse)
 library(patchwork)
@@ -193,7 +196,7 @@ N.B. No sitrep data for Scotland or for Northern Ireland
 # Supplementary results
 
 ```{r}
-
+# devtools::load_all()
 # Create a catchment area based on Scotland, Wales and England with Adult population and high dependency beds
 
 sup = arear::surgecapacity %>% dplyr::filter(hduBeds>0 & sector=="NHS Sector") %>% dplyr::group_by(hospitalId,hospitalName)
@@ -216,12 +219,13 @@ catch1 = arear::catchment(
 
 p1a = ggplot2::ggplot(catch1$map)+ggplot2::geom_sf(aes(fill=hduBeds/population*100000), colour="white",size=0.1)+
   ggplot2::geom_sf(data=catch1$suppliers, mapping=ggplot2::aes(size=hduBeds), colour="red",alpha=0.5,stroke=0.5,fill=NA,shape=1)+
-  arear::mapTheme()
+  arear::mapTheme() 
 
-p2a = p1a+ggplot2::coord_sf(xlim=c(-0.5,0.2),ylim=c(51.3,51.7))+arear::mapTheme() 
+p2a = p1a+ggplot2::coord_sf(xlim=c(-0.5,0.2),ylim=c(51.3,51.7))+arear::mapTheme()
 
 p1a = p1a+ggplot2::scale_fill_viridis_c(limit=c(0,75),oob=scales::squish)+ggplot2::theme(plot.margin = unit(c(0,0,0,0),"pt"))+ggplot2::guides(fill=ggplot2::guide_colourbar(title = "hdu beds/100K"), size=ggplot2::guide_bins("hdu beds"))
 p2a = p2a+ggplot2::scale_fill_viridis_c(limit=c(0,75),oob=scales::squish)+ggplot2::theme(plot.margin = unit(c(0,0,0,0),"pt"))+ggplot2::guides(fill="none", size="none")
+
 p2b = ggplot2::ggplot(catch1$map %>% dplyr::mutate(supVdem = hduBeds/population*100000),ggplot2::aes(x=supVdem)) + ggplot2::geom_histogram(binwidth = 1,fill="darkblue")+ggplot2::coord_cartesian(xlim=c(0,NA))+ggplot2::xlab("hdu beds/100K")
 
 p3a = ((p2a/p2b)|p1a) + patchwork::plot_annotation(tag_levels = "A")
@@ -322,7 +326,7 @@ p5 %>% saveHalfPageFigure(here::here("vignettes/latex/FIG3_HDU_Acute_SW_example"
 # LSOA11 to LAD19
 # from https://geoportal.statistics.gov.uk/datasets/ons::lower-layer-super-output-area-2011-to-ward-2019-lookup-in-england-and-wales/about
 # https://opendata.arcgis.com/datasets/15299a7b8e6c498d94a08b687c75b73f_0.csv
-LSOAtoLTLA = arear::.cached({
+LSOAtoLTLA = arear:::.cached({
     readr::read_csv("https://opendata.arcgis.com/datasets/15299a7b8e6c498d94a08b687c75b73f_0.csv")
   },hash="",name = "lsoa2ltla")
 
@@ -682,7 +686,7 @@ goodclass %>% ggrrr::hux_default_layout() %>% ggrrr::hux_save_as(here::here("vig
 
 The distribution of patients who attended hospitals with the fewest misclassication errors is shown in `r fig("fewest")` and these tends to be the intensive care units with fewest attendees, with a few long distance out of area patients.
 
-```{r fig.height=8, fig.width=6}
+```{r}
 
 tmp = sariLL5 %>% 
   dplyr::semi_join(goodclass %>% utils::tail(4), by=c("observed"="trustId")) %>%
@@ -690,19 +694,19 @@ tmp = sariLL5 %>%
   dplyr::left_join(outcodeCentroid %>% dplyr::select(code,geometry), by="code") %>% 
   sf::st_as_sf()
 
-ggplot()+
+p = ggplot()+
   ggplot2::geom_sf(data = catch$map, size=0.1,colour="white",fill="black")+
   ggplot2::geom_sf(data = tmp, mapping=ggplot2::aes(size=n), colour="red",alpha=1,stroke=1,shape=1)+
-  ggplot2::geom_sf(data = catch$map %>% dplyr::semi_join(goodclass %>% utils::tail(4), by=c("trustId")) %>% dplyr::mutate(observed=trustId), colour="cyan", fill=NA)+ggplot2::scale_size_area(max_size = 4)+
+  ggplot2::geom_sf(data = catch$map %>% dplyr::semi_join(goodclass %>% utils::tail(4), by=c("trustId")) %>% dplyr::mutate(observed=trustId), colour="cyan", fill=NA, size=0.5)+ggplot2::scale_size_area(max_size = 4)+
   ggplot2::facet_wrap(dplyr::vars(observed))+arear::mapTheme()
 
-
+p %>% ggrrr::gg_save_as(size = ggrrr::std_size$full,formats = "pdf") 
 ```
 `r fig("fewest","The origin of patients attendind the hospitals which are best predicted by the label propagation algorithm. Hospital codes are given in the associated tables. Red circles are patients admitted to the given hospitals and cyan areas the predicted catchment area")`
 
 The distribution of patients who attended hospitals with the most misclassification errors is shown in `r fig("most")` and these tends to be the intensive care units with many attendees, spread over much wider areas than the algorithm predicts. These are typically large intensive care units based in dense towns, where there are many other hospitals. A limitation of the label propagation algorithm is that as tertiary referral centres, these hospitals catchment areas for ITU services are probably different in nature from those of the surrounding smaller hospitals. In this case a two-layered approach to the catchment area may be more appropriate, where one layer considers wider tertiary referral and the other locally directly admitted patients who will tend ot be more local. 
 
-```{r fig.height=8, fig.width=6}
+```{r}
 
 tmp = sariLL5 %>% 
   dplyr::semi_join(misclass %>% utils::head(4), by=c("observed"="trustId")) %>%
@@ -710,12 +714,13 @@ tmp = sariLL5 %>%
   dplyr::left_join(outcodeCentroid %>% dplyr::select(code,geometry), by="code") %>% 
   sf::st_as_sf()
 
-ggplot()+
+p = ggplot()+
   ggplot2::geom_sf(data = catch$map, size=0.1,colour="white",fill="black")+
   ggplot2::geom_sf(data = tmp, mapping=ggplot2::aes(size=n), colour="red",alpha=1,stroke=1,shape=1)+
-  ggplot2::geom_sf(data = catch$map %>% dplyr::semi_join(misclass %>% utils::head(4), by=c("trustId")) %>% dplyr::mutate(observed=trustId), colour="cyan", fill=NA)+ggplot2::scale_size_area(max_size = 4)+
+  ggplot2::geom_sf(data = catch$map %>% dplyr::semi_join(misclass %>% utils::head(4), by=c("trustId")) %>% dplyr::mutate(observed=trustId), colour="cyan", fill=NA, size=0.5)+ggplot2::scale_size_area(max_size = 4)+
   ggplot2::facet_wrap(dplyr::vars(observed))+arear::mapTheme()
 
+p %>% ggrrr::gg_save_as(size = ggrrr::std_size$full,formats = "pdf") 
 
 ```
 
@@ -729,8 +734,8 @@ writeChar(inlineLatex(),con = here::here("vignettes/latex/inline_data.tex"))
 ```
 
 ```{r}
-setwd(here::here("vignettes/latex"))
-tinytex::parse_install("catchment-areas.log")
-tinytex::latexmk("catchment-areas.tex",install_packages = TRUE)
+# setwd(here::here("vignettes/latex"))
+# tinytex::parse_install("catchment-areas.log")
+# tinytex::latexmk("catchment-areas.tex",install_packages = TRUE)
 ```
 

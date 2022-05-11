@@ -2,8 +2,9 @@
 .forceGeos = function(expr) {
   sfState = sf::sf_use_s2()
   sf::sf_use_s2(FALSE)
-  expr
+  out = expr
   sf::sf_use_s2(sfState)
+  return(out)
 }
 
 #' Intersection of 2 shapes
@@ -97,8 +98,8 @@ getContainedIn = function( inputShape,  outputShape,  inputVars = inputShape %>%
       dplyr::left_join(inputShape %>% tibble::as_tibble() %>% dplyr::select(tmp_input_id, !!!inputVars), by="tmp_input_id") %>%
       dplyr::left_join(outputShape %>% tibble::as_tibble() %>% dplyr::select(tmp_output_id, !!!outputVars), by="tmp_output_id", suffix=suffix) %>%
       dplyr::select(-tmp_input_id,-tmp_output_id)
+    return(mapping)
   })
-  return(mapping)
 }
 
 #' interpolate a variable from one set of shapes to another
@@ -181,8 +182,8 @@ interpolateByArea = function(
     mapping = mapping %>% dplyr::mutate(intersectionValue = !!interpolateVar * fracInput)
     mapping = mapping %>% dplyr::group_by(!!!inputVars,!!!outputVars) %>% dplyr::summarise(.interp = aggregateFn(intersectionValue)) %>% dplyr::rename(!!interpolateVar := .interp)
 
+    return(mapping)
   })
-  return(mapping)
 }
 
 #' create a neighbourhood network from touching regions in a shapefile, with additional capability to connect non touching areas where there may be bridges etc.
@@ -205,9 +206,10 @@ createNeighbourNetwork = function(shape, idVar="code", bridges = arear::ukconnec
       bridgeStart = bridges %>% sf::st_as_sf(coords=c("start.long","start.lat"), crs=4326) %>% arear::getContainedIn(shape,inputVars = dplyr::vars(name), outputVars = list(idVar))
       bridgeEnd = bridges %>% sf::st_as_sf(coords=c("end.long","end.lat"), crs=4326) %>% arear::getContainedIn(shape,inputVars = dplyr::vars(name), outputVars = list(idVar))
       bridges = bridgeStart %>% dplyr::rename(start = !!idVar) %>% dplyr::inner_join(bridgeEnd  %>% dplyr::rename(end = !!idVar),by="name") %>% dplyr::filter(start != end) %>% dplyr::select(-name)
+      # browser()
 
-      graph = spdep::poly2nb(shape %>% sf::as_Spatial(),queen=queen)
-        #shape %>% sf::st_intersects()
+      graph = spdep::poly2nb(shape %>% sf::as_Spatial(), queen=queen)
+      #shape %>% sf::st_intersects()
       #browser()
 
       if(graph %>% purrr::flatten() %>% length() == 0) {
@@ -227,10 +229,10 @@ createNeighbourNetwork = function(shape, idVar="code", bridges = arear::ukconnec
         dplyr::bind_rows(bridges %>% dplyr::rename(from = start, to=end)) %>%
         dplyr::bind_rows(bridges %>% dplyr::rename(from = end, to=start))
 
+      return(edges)
     })
-    edges
 
-  }, hash = list(shape,idVar,bridges),name = "neighbourhood", ...)
+  }, hash = list(shape,idVar,bridges,queen), name = "neighbourhood", ...)
 }
 
 #' Preview a map with POI using leaflet
@@ -274,25 +276,22 @@ preview = function(shape, shapeLabelGlue = "{name}", shapePopupGlue = "{code}", 
 
 ## Plotting functions ----
 
-#' A map theme
-#'
-#' @param baseSize the basic font size in points.
+#' A map theme to remove extraneous clutter
 #'
 #' @export
 #' @examples
 #' ggplot2::ggplot()+mapTheme()
-mapTheme = function(baseSize = 8) {
+mapTheme = function() {
   return(
-    ggplot2::theme_bw(base_size=baseSize)+
     ggplot2::theme(
-      axis.text.x.top = ggplot2::element_blank(),
-      axis.text.x.bottom = ggplot2::element_blank(),
-      axis.text.y.right = ggplot2::element_blank(),
-      axis.text.y.left = ggplot2::element_blank(),
-      axis.ticks=ggplot2::element_blank(),
-      axis.title.x=ggplot2::element_blank(),
-      axis.title.y=ggplot2::element_blank(),
-      panel.grid = ggplot2::element_blank()
+        axis.text.x.top = ggplot2::element_blank(),
+        axis.text.x.bottom = ggplot2::element_blank(),
+        axis.text.y.right = ggplot2::element_blank(),
+        axis.text.y.left = ggplot2::element_blank(),
+        axis.ticks=ggplot2::element_blank(),
+        axis.title.x=ggplot2::element_blank(),
+        axis.title.y=ggplot2::element_blank(),
+        panel.grid = ggplot2::element_blank()
     )
   )
 }

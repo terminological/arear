@@ -150,7 +150,7 @@ uk2019demographicsmap = function() {
       arear::getMap("DZ11"),
       arear::getMap("LGD12")
     ) %>% rmapshaper::ms_simplify(keep=0.1, keep_shapes=TRUE)
-  })
+  }, name = "demographics-map")
 }
 
 ## statistical reporting maps ----
@@ -183,22 +183,24 @@ uk2019demographicsmap = function() {
 #' }
 #' @export
 ukcovidmap = function(legacy = FALSE) {
-  if (legacy) {
 
-    rbind(
-      arear::getMap("LAD19") %>% dplyr::filter(code %>% stringr::str_starts("E")),
-      #arear::getMap("CA19"),
-      arear::getMap("LHB19") %>% rmapshaper::ms_simplify(keep=0.1, keep_shapes=TRUE),
-      arear::getMap("LGD12") %>% rmapshaper::ms_simplify(keep=0.1, keep_shapes=TRUE)
-    ) %>%
-    dplyr::ungroup() %>%
-    return()
+  .cached({
+    if (legacy) {
+      rbind(
+        arear::getMap("LAD19") %>% dplyr::filter(code %>% stringr::str_starts("E")),
+        #arear::getMap("CA19"),
+        arear::getMap("LHB19") %>% rmapshaper::ms_simplify(keep=0.1, keep_shapes=TRUE),
+        arear::getMap("LGD12") %>% rmapshaper::ms_simplify(keep=0.1, keep_shapes=TRUE)
+      ) %>%
+      dplyr::ungroup() %>%
+      return()
 
-  } else {
+    } else {
 
-    return(arear::getMap("LAD19"))
+      return(arear::getMap("LAD19"))
 
-  }
+    }
+  },name = "reporting-map",hash = legacy)
 
 }
 

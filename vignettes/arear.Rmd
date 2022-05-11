@@ -49,7 +49,9 @@ library(arear)
 options("arear.download.dir" = downloadDir)
 options("arear.cache.dir" = rappdirs::user_cache_dir("arear-vignette"))
 
-ggplot2::theme_set(arear::mapTheme())
+ggplot2::theme_set(
+  ggplot2::theme_bw(base_size = 8)+arear::mapTheme()
+)
 ```
 
 # Maps and capacity data
@@ -191,6 +193,8 @@ supply = arear::surgecapacity %>%
 demand = arear::uk2019demographicsmap() %>% 
   dplyr::filter(code %>% stringr::str_starts("E")) %>% # easy way to get england only.
   dplyr::left_join(arear::uk2019adultpopulation %>% dplyr::select(-name,-codeType), by="code")
+
+# devtools::load_all()
 
 catchment = arear::createCatchment(
   supplyShape = supply, 
