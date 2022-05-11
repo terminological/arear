@@ -2,15 +2,12 @@
 % Please edit documentation in R/arear.R
 \name{mapTheme}
 \alias{mapTheme}
-\title{A map theme}
+\title{A map theme to remove extraneous clutter}
 \usage{
-mapTheme(baseSize = 8)
-}
-\arguments{
-\item{baseSize}{the basic font size in points.}
+mapTheme()
 }
 \description{
-A map theme
+A map theme to remove extraneous clutter
 }
 \examples{
 ggplot2::ggplot()+mapTheme()
