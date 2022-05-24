@@ -39,6 +39,7 @@ library(tidyverse)
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/terminological/arear/workflows/R-CMD-check/badge.svg)](https://github.com/terminological/arear/actions)
 [![Codecov test coverage](https://codecov.io/gh/terminological/arear/branch/main/graph/badge.svg)](https://codecov.io/gh/terminological/arear?branch=main)
+[![DOI](https://zenodo.org/badge/340773310.svg)](https://zenodo.org/badge/latestdoi/340773310)
 <!-- badges: end -->
 
 This package provides a suite of geo-spatial functions that were useful during the response to the COVID-19 pandemic in the UK. It provides some curated data relevant to hospital capacity in the NHS, and demographic data for the UK at the beginning of the pandemic. Coupled with this are a range of functions to simplify the management of mapping data between different administrative geographies, at different levels of detail that were involved in COVID-19 reporting. For mapping community case data to hospital admissions data the library provides an algorithmic hospital catchment area estimation based on label propagation, the methods for which are described in detail here - AWAITING FINAL URL. Many of the operations in the package involve time consuming calculations, which only generally need to be performed once, so the package incorporates a transparent filesystem caching layer to speed it all up.

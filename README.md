@@ -10,6 +10,7 @@ Arear
 [![R-CMD-check](https://github.com/terminological/arear/workflows/R-CMD-check/badge.svg)](https://github.com/terminological/arear/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/terminological/arear/branch/main/graph/badge.svg)](https://codecov.io/gh/terminological/arear?branch=main)
+[![DOI](https://zenodo.org/badge/340773310.svg)](https://zenodo.org/badge/latestdoi/340773310)
 <!-- badges: end -->
 
 This package provides a suite of geo-spatial functions that were useful
@@ -66,7 +67,6 @@ based on the administrative code in use is made relatively simple:
 
 library(arear)
 library(sf)
-#> Linking to GEOS 3.7.1, GDAL 2.2.2, PROJ 4.9.2; sf_use_s2() is TRUE
 
 # list the available maps ids:
 # arear::listStandardMaps()
