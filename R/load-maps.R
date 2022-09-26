@@ -114,8 +114,8 @@ downloadMap = function(zipUrl, mapName=NULL, codeCol="code", nameCol="name", alt
 
   .cached({
 
-    onsZip = paste0(wd,"/",id,".zip")
-    unzipDir = paste0(wd,"/",id)
+    onsZip = fs::path(wd,id) %>% fs::path_ext_set("zip")
+    unzipDir = fs::path(wd,id)
     if(!file.exists(onsZip)) {
       status = utils::download.file(zipUrl, destfile = onsZip)
       if (status != 0) stop("Problem downloading map: ",zipUrl)
@@ -125,7 +125,7 @@ downloadMap = function(zipUrl, mapName=NULL, codeCol="code", nameCol="name", alt
     paths = utils::unzip(onsZip, exdir=unzipDir, junkpaths = TRUE)
     if(length(paths) < 1) stop("Could not extract files from shapefile zip: ",onsZip)
 
-    mapFile = paste0(unzipDir,"/",list.files(unzipDir,recursive = TRUE,pattern = pattern))
+    mapFile = fs::path(unzipDir,list.files(unzipDir,recursive = TRUE,pattern = pattern))
     if(length(mapFile)!=1) stop("More than one matching map has been found: ",mapFile)
 
     map = sf::st_read(mapFile) %>% sf::st_transform(crs=4326)
