@@ -18,6 +18,8 @@ This package provides a suite of geo-spatial functions that were useful during t
 sudo add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable
 sudo apt-get -q update
 sudo apt-get -y install libudunits2-dev libgdal-dev libgeos-dev libproj-dev libprotobuf-dev libjq-dev
+# the following may also be requried to install sf
+sudo ldconfig
 
 # or on macOS
 brew install gdal proj geos protobuf jq
