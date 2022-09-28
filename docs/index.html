@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">arear</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -50,7 +50,14 @@
   <a href="reference/index.html">Reference</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/terminological/arear/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -62,57 +69,59 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-
 <div id="arear" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#arear" class="anchor"></a>Arear</h1></div>
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-</div>
-<div id="arear-1" class="section level1">
-<h1 class="hasAnchor">
-<a href="#arear-1" class="anchor"></a>arear</h1>
+<a href="#arear" class="anchor"></a>arear</h1></div>
 <!-- badges: start -->
 
-<p>This package provides a suite of geo-spatial functions that were useful during the response to the COVID-19 pandemic in the UK. It provides some curated data relevant to hospital capacity in the NHS, and demographic data for the UK at the beginning of the pandemic. Coupled with this are a range of functions to simplify the management of mapping data between different administrative geographies, at different levels of detail that were involved in COVID-19 reporting. For mapping community case data to hospital admissions data the library provides an algorithmic hospital catchment area estimation based on label propagation, the methods for which are described in detail here - AWAITING FINAL URL. Many of the operations in the package involve time consuming calculations, which only generally need to be performed once, so the package incorporates a transparent filesystem caching layer to speed it all up.</p>
+<p>This package provides a suite of geo-spatial functions that were useful during the response to the COVID-19 pandemic in the UK. It provides some curated data relevant to hospital capacity in the NHS, and demographic data for the UK at the beginning of the pandemic. Coupled with this are a range of functions to simplify the management of mapping data between different administrative geographies, at different levels of detail that were involved in COVID-19 reporting. For mapping community case data to hospital admissions data the library provides an algorithmic hospital catchment area estimation based on label propagation, the methods for which are described in detail in the paper <a href="https://bmchealthservres.biomedcentral.com/articles/10.1186/s12913-022-08127-7">“Algortihmic hospital catchment area estimation using label propagation”</a>. Many of the operations in the package involve time consuming calculations, which only generally need to be performed once, so the package incorporates a transparent filesystem caching layer to speed it all up.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>Arear is not yet on CRAN. Arear has a dependency on the <code>sf</code> package which in turn requires the <code>gdal</code>, <code>geos</code> and <code>proj</code> libraries. These can</p>
+<p><code>arear</code> is distributed via ‘r-universe’. <code>arear</code> has a dependency on the <code>sf</code> package which in turn requires the <code>gdal</code>, <code>geos</code> and <code>proj</code> libraries. These can be installed on MacOS and linux using the instructions below but more details is available in the <a href="https://r-spatial.github.io/sf/"><code>sf</code> package</a></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># in debian / ubuntu</span></span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="fu">sudo</span> add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable</span>
 <span id="cb1-3"><a href="#cb1-3"></a><span class="fu">sudo</span> apt-get -q update</span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="fu">sudo</span> apt-get -y install libudunits2-dev libgdal-dev libgeos-dev libproj-dev</span>
-<span id="cb1-5"><a href="#cb1-5"></a></span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="co"># or on macOS</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="ex">brew</span> install gdal proj geos</span></code></pre></div>
-<p>You can then install the development version of arear from <a href="https://github.com/terminological/arear">GitHub</a> with the following commands:</p>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="fu">sudo</span> apt-get -y install libudunits2-dev libgdal-dev libgeos-dev libproj-dev libprotobuf-dev libjq-dev</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="co"># the following may also be requried to install sf</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="fu">sudo</span> ldconfig</span>
+<span id="cb1-7"><a href="#cb1-7"></a></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="co"># or on macOS</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="ex">brew</span> install gdal proj geos protobuf jq</span></code></pre></div>
+<p>With <code>sf</code> installed you can then install the development version of <code>arear</code> from <a href="https://github.com/terminological/arear">GitHub</a> with the following commands:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="co"># install.packages("devtools")</span>
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"terminological/arear"</span><span class="op">)</span></pre></div>
+<p>or stable releases from <code>r-universe</code> by:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="co"># Enable repository from terminological</span>
+<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+  terminological <span class="op">=</span> <span class="st">'https://terminological.r-universe.dev'</span>,
+  CRAN <span class="op">=</span> <span class="st">'https://cloud.r-project.org'</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Download and install rmaven in R</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">'arear'</span><span class="op">)</span></pre></div>
 <p>This can take some time if <code>sf</code> has not already been set up.</p>
 </div>
 <div id="example" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example" class="anchor"></a>Example</h2>
 <p>Without this package accessing maps relevant to the UK requires knowing where to look for various shape files, and then managing the various differences between nomenclature and naming conventions. The package provides a simple interface to downloading, extracting, standardising, and caching the main UK maps. Getting and plotting a map for the UK based on the administrative code in use is made relatively simple:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
+<div class="sourceCode" id="cb4"><pre class="downlit">
 
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">arear</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://terminological.github.io/arear/index.html">arear</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span>
-<span class="co">#&gt; Linking to GEOS 3.7.1, GDAL 2.2.2, PROJ 4.9.2; sf_use_s2() is TRUE</span>
 
 <span class="co"># list the available maps ids:</span>
 <span class="co"># arear::listStandardMaps()</span>
 
 <span class="va">map</span> <span class="op">=</span> <span class="fu">arear</span><span class="fu">::</span><span class="fu"><a href="reference/getMap.html">getMap</a></span><span class="op">(</span><span class="st">"CTRY19"</span><span class="op">)</span>
-<span class="co">#&gt; using cached item: ~/.cache/arear-vignette/CTRY19-4c76523a56d19ec1a8fea7c3d89b0c97-e8ad913f081c0dbf1597ddd548bcd596.rda</span>
 <span class="va">nhshospitals</span> <span class="op">=</span> <span class="fu">arear</span><span class="fu">::</span><span class="va"><a href="reference/surgecapacity.html">surgecapacity</a></span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">sector</span> <span class="op">==</span> <span class="st">"NHS Sector"</span><span class="op">)</span>
 
 <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span><span class="op">+</span>
   <span class="fu">geom_sf</span><span class="op">(</span>data<span class="op">=</span><span class="va">map</span><span class="op">)</span><span class="op">+</span>
   <span class="fu">geom_sf</span><span class="op">(</span>data<span class="op">=</span><span class="va">nhshospitals</span>, <span class="fu">aes</span><span class="op">(</span>colour<span class="op">=</span><span class="va">tier1</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
   <span class="fu">arear</span><span class="fu">::</span><span class="fu"><a href="reference/mapTheme.html">mapTheme</a></span><span class="op">(</span><span class="op">)</span></pre></div>
-<p><img src="reference/figures/README-example-1.png" width="100%"></p>
 </div>
 <div id="next-steps" class="section level2">
 <h2 class="hasAnchor">
@@ -120,11 +129,19 @@
 <p>Please check the getting-started vignette for more examples on the available functions, including the catchment area algorithm.</p>
 </div>
 </div>
-
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="license">
+    <div class="links">
+<h2>Links</h2>
+<ul class="list-unstyled">
+<li>Browse source code at <br><a href="https://github.com/terminological/arear/">https://​github.com/​terminological/​arear/​</a>
+</li>
+<li>Report a bug at <br><a href="https://github.com/terminological/arear/issues">https://​github.com/​terminological/​arear/​issues</a>
+</li>
+</ul>
+</div>
+<div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
@@ -142,7 +159,8 @@
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/terminological/arear/actions"><img src="https://github.com/terminological/arear/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://codecov.io/gh/terminological/arear?branch=main"><img src="https://codecov.io/gh/terminological/arear/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://zenodo.org/badge/latestdoi/340773310"><img src="https://zenodo.org/badge/340773310.svg" alt="DOI"></a></li>
+<li><a href="https://terminological.r-universe.dev"><img src="https://terminological.r-universe.dev/badges/arear" alt="arear status badge"></a></li>
 </ul>
 </div>
 </div>

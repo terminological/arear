@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">arear</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -92,7 +92,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/terminological/arear/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -107,7 +112,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Gets maps for which the metadata is known.</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/terminological/arear/blob/master/R/load-maps.R'><code>R/load-maps.R</code></a></small>
     <div class="hidden name"><code>getMap.Rd</code></div>
     </div>
 
@@ -115,7 +120,7 @@
     <p>If a map needs to be downloaded as a shapefile then it is stored temporarily. The location of this download directory can be set as option("arear.download.dir" = "~/.)</p>
     </div>
 
-    <pre class="usage"><span class='fu'>getMap</span><span class='op'>(</span><span class='va'>mapId</span>, sources <span class='op'>=</span> <span class='fu'>arear</span><span class='fu'>::</span><span class='va'><a href='mapsources.html'>mapsources</a></span>, codeType <span class='op'>=</span> <span class='va'>mapId</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>getMap</span><span class='op'>(</span><span class='va'>mapId</span>, sources <span class='op'>=</span> <span class='fu'>.loadSources</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>, codeType <span class='op'>=</span> <span class='va'>mapId</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -126,11 +131,15 @@
     </tr>
     <tr>
       <th>sources</th>
-      <td><p>- a list of map sources - see arear::mapsources</p></td>
+      <td><p>- a list of map sources - see `getOption("arear.mapsources",arear::mapsources)``</p></td>
     </tr>
     <tr>
       <th>codeType</th>
       <td><p>- defaults to mapId, the codeType of the map</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>- passed to .cache, param `nocache=TRUE` to disable caching</p></td>
     </tr>
     </table>
 

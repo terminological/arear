@@ -15,7 +15,7 @@ standardiseMap(sf, codeCol, nameCol, altCodeCol, codeType)
 
 \item{altCodeCol}{- an alternative code column}
 
-\item{codeType}{- a fixed vlue for the codeType}
+\item{codeType}{- a fixed value for the codeType}
 }
 \value{
 a standardised map

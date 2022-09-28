@@ -13,7 +13,9 @@ downloadMap(
   codeType = NA_character_,
   simplify = FALSE,
   wd = getOption("arear.download.dir", tempdir()),
-  id = NULL
+  id = NULL,
+  license = "unknown",
+  ...
 )
 }
 \arguments{
@@ -34,6 +36,10 @@ downloadMap(
 \item{wd}{- an optional working directory (defaults to `getOption("arear.download.dir", tempdir())`)}
 
 \item{id}{- an optional id for the map that can be used to retrieve it later (through getMap()) - defaults to either the mapName or if not present the name of the zip file.}
+
+\item{license}{- an optional license string}
+
+\item{...}{- passed to .cache, param nocache=TRUE to disable caching}
 }
 \value{
 a sf object containing the map

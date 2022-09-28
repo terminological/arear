@@ -4,14 +4,16 @@
 \alias{getMap}
 \title{Gets maps for which the metadata is known.}
 \usage{
-getMap(mapId, sources = arear::mapsources, codeType = mapId)
+getMap(mapId, sources = .loadSources(...), codeType = mapId, ...)
 }
 \arguments{
 \item{mapId}{- a name of a map}
 
-\item{sources}{- a list of map sources - see arear::mapsources}
+\item{sources}{- a list of map sources - see `getOption("arear.mapsources",arear::mapsources)``}
 
 \item{codeType}{- defaults to mapId, the codeType of the map}
+
+\item{...}{- passed to .cache, param `nocache=TRUE` to disable caching}
 }
 \value{
 a standard sf map

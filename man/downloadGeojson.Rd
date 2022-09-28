@@ -11,7 +11,9 @@ downloadGeojson(
   altCodeCol = NULL,
   codeType = NA_character_,
   simplify = FALSE,
-  id
+  id,
+  license = "unknown",
+  ...
 )
 }
 \arguments{
@@ -28,6 +30,10 @@ downloadGeojson(
 \item{simplify}{- do you want to simplify the map}
 
 \item{id}{- an id for the map that can be used to retrieve it in the future (through getMap()).}
+
+\item{license}{- an optional license string}
+
+\item{...}{- passed to .cache, param nocache=TRUE to disable caching}
 }
 \value{
 the sf object for this geoJson

@@ -26,8 +26,6 @@ projectRoot = tryCatch({
   paste0(fs::path_home(),"/Git/arear/")
 })
 
-downloadDir = paste0(projectRoot,"/data-raw/download-cache/")
-message("Setting download directory to: ",downloadDir)
 ```
 
 # Background
@@ -41,12 +39,9 @@ library(patchwork)
 library(arear)
 
 # the usual setup would be to place downloaded files in either a user cache directory or a tempdir.:
-# options("arear.cache.dir" = rappdirs::user_cache_dir("arear-download"))
-# options("arear.cache.dir" = tempddir())
 # however this does not seem to work well in github actions.
 
-# the following line is for github actions to work properly:
-options("arear.download.dir" = downloadDir)
+options("arear.download.dir" = rappdirs::user_cache_dir("arear-download"))
 options("arear.cache.dir" = rappdirs::user_cache_dir("arear-vignette"))
 
 ggplot2::theme_set(
@@ -183,7 +178,7 @@ Prior to any hospital activity data for COVID being available, we developed an a
 
 ```{r}
 
-apiTrusts = readr::read_csv("https://api.coronavirus.data.gov.uk/v2/data?areaType=nhsTrust&metric=hospitalCases&format=csv&release=2021-03-01")
+apiTrusts = suppressWarnings(readr::read_csv("https://api.coronavirus.data.gov.uk/v2/data?areaType=nhsTrust&metric=hospitalCases&format=csv&release=2021-03-01"))
 
 # this limits to england only NHS trusts.
 supply = arear::surgecapacity %>% 
