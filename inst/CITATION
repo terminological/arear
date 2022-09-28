@@ -1,0 +1,23 @@
+c(
+	bibentry(bibtype = "Manual",
+		title = "arear: Geospatial Convenience Functions and a Supply Demand Catchment Area Generator",
+		year = 2022,
+		note = "R package version 0.1.0",
+		url = "https://terminological.github.io/arear/",
+		doi = "https://doi.org/10.5281/zenodo.6576072",
+		author = c(
+			person(given = "Rob",family = "Challen",email = "rob.challen@bristol.ac.uk",comment = structure("0000-0002-5504-7768", .Names = "ORCID"),role = c("aut", "cre"))		)
+	),
+	bibentry(bibtype = "Article",
+		title = "Algorithmic Hospital Catchment Area Estimation Using Label Propagation",
+		author = "Challen, Robert J. and Griffith, Gareth J. and Lacasa, Lucas and Tsaneva-Atanasova, Krasimira",
+		date = "2022-06-27",
+		journal = "BMC Health Services Research",
+		year = 2022,
+		volume = "22",
+		number = "1",
+		pages = "828",
+		issn = "1472-6963",
+		doi = "10.1186/s12913-022-08127-7"
+	)
+)
