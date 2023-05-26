@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Challen"
+  given-names: "Robert"
+  orcid: "https://orcid.org/0000-0002-5504-7768"
+title: "arear: Geospatial Convenience Functions and a Supply Demand Catchment Area Generator"
+version: 0.1.0
+doi: 10.5281/zenodo.7120851
+date-released: 2022-01-01
+url: "https://github.com/terminological/arear"
