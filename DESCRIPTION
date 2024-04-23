@@ -11,6 +11,7 @@ Description: Geospatial function collection from the COVID-19 pandemic. The main
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+LazyDataCompression: bzip2
 Suggests: 
     knitr,
     rmarkdown,
@@ -25,19 +26,16 @@ Suggests:
     markdown,
     pkgdown,
     scales,
-    tidyr,
     rprojroot
 VignetteBuilder: knitr
 Imports: 
     rmapshaper,
     sf,
-    lwgeom,
     dplyr,
     magrittr,
     rlang,
     fs,
     stringr,
-    here,
     spdep,
     glue,
     leaflet,
@@ -52,11 +50,14 @@ Imports:
     gridExtra,
     patchwork,
     httr,
+    readxl,
     tidyselect,
-    jsonlite
+    tidyr,
+    jsonlite,
+    lwgeom
 Depends: 
     R (>= 2.10)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 URL: https://terminological.github.io/arear/index.html,
 	https://github.com/terminological/arear
 BugReports: https://github.com/terminological/arear/issues

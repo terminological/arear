@@ -1,7 +1,7 @@
 
 .loadFromPackage = function(id) {
   x = rlang::new_environment()
-  data(list=c(id),package="arear",envir = x)
+  utils::data(list=c(id),package="arear",envir = x)
   y = get(ls(x)[[1]],envir = x)
   x=NULL
   return(y)
@@ -25,7 +25,7 @@
 #' }
 getMap = function(mapId, sources = .loadSources(...), codeType = mapId, ...) {
 
-  tmp2 = data(package="arear")
+  tmp2 = utils::data(package="arear")
   items = tmp2$results[,"Item"]
   if (mapId %in% items) return(.loadFromPackage(mapId))
 
@@ -255,7 +255,7 @@ standardiseMap = function(sf, codeCol, nameCol, altCodeCol, codeType) {
   nameCol = tryCatch(rlang::ensym(nameCol), error = function(e) NULL)
   altCodeCol = tryCatch(rlang::ensym(altCodeCol), error = function(e) NULL)
   sf = sf %>%
-    rename_with(.fn=tolower) %>%
+    dplyr::rename_with(.fn=tolower) %>%
     dplyr::mutate(tmp_code = as.character(!!codeCol))
 
 

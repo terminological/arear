@@ -245,8 +245,8 @@ uk2019demographics = function() {
     # https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/lowersuperoutputareamidyearpopulationestimates
     # https://www.ons.gov.uk/file?uri=%2fpeoplepopulationandcommunity%2fpopulationandmigration%2fpopulationestimates%2fdatasets%2flowersuperoutputareamidyearpopulationestimates%2fmid2018sape21dt1a/sape21dt2mid2018lsoasyoaestimatesunformatted.zip
     destfile = paste0(wd,"/demographicsUK.zip")
-    if(!file.exists(destfile)) download.file(url="https://www.ons.gov.uk/file?uri=%2fpeoplepopulationandcommunity%2fpopulationandmigration%2fpopulationestimates%2fdatasets%2flowersuperoutputareamidyearpopulationestimates%2fmid2018sape21dt1a/sape21dt2mid2018lsoasyoaestimatesunformatted.zip",destfile = destfile)
-    unzip(destfile,junkpaths = TRUE,exdir=wd,overwrite = TRUE)
+    if(!file.exists(destfile)) utils::download.file(url="https://www.ons.gov.uk/file?uri=%2fpeoplepopulationandcommunity%2fpopulationandmigration%2fpopulationestimates%2fdatasets%2flowersuperoutputareamidyearpopulationestimates%2fmid2018sape21dt1a/sape21dt2mid2018lsoasyoaestimatesunformatted.zip",destfile = destfile)
+    utils::unzip(destfile,junkpaths = TRUE,exdir=wd,overwrite = TRUE)
 
     # A zipped excel file
     # sheets are: Mid-2018 Males A5:CP34758
@@ -261,7 +261,7 @@ uk2019demographics = function() {
 
         tmp = demogByLSOA %>%
           dplyr::select(-`All Ages`) %>%
-          tidyr::pivot_longer(cols=all_of(ageCols),names_to = "age",values_to = "count") #, names_ptypes = list(age=integer()))
+          tidyr::pivot_longer(cols=dplyr::all_of(ageCols),names_to = "age",values_to = "count") #, names_ptypes = list(age=integer()))
 
         tmp = tmp %>% dplyr::rename(code = `Area Codes`, name=`Area Names`) %>% #, total=`All Ages`) %>%
           dplyr::mutate(age = as.integer(stringr::str_remove(age,"\\+")), codeType="LSOA11")
@@ -282,15 +282,15 @@ uk2019demographics = function() {
     # females - https://www.nrscotland.gov.uk/files//statistics/population-estimates/sape-time-series/females/sape-2018-females.xlsx
     # sheet - Table 1c Females (2018) A6:CR6982
 
-    if(!file.exists(scotDemogM)) download.file(url="https://www.nrscotland.gov.uk/files//statistics/population-estimates/sape-time-series/males/sape-2018-males.xlsx",destfile = scotDemogM)
-    if(!file.exists(scotDemogF)) download.file(url="https://www.nrscotland.gov.uk/files//statistics/population-estimates/sape-time-series/females/sape-2018-females.xlsx",destfile = scotDemogF)
+    if(!file.exists(scotDemogM)) utils::download.file(url="https://www.nrscotland.gov.uk/files//statistics/population-estimates/sape-time-series/males/sape-2018-males.xlsx",destfile = scotDemogM)
+    if(!file.exists(scotDemogF)) utils::download.file(url="https://www.nrscotland.gov.uk/files//statistics/population-estimates/sape-time-series/females/sape-2018-females.xlsx",destfile = scotDemogF)
 
     convert2 = function(demogBySGDZ) {
       suppressMessages(suppressWarnings({
         demogBySGDZ = demogBySGDZ %>% dplyr::select(-...4,-...5)
         ageCols = colnames(demogBySGDZ)[!is.na(as.integer(stringr::str_remove(colnames(demogBySGDZ),"\\.+")))]
         demogBySGDZ = demogBySGDZ %>%
-          tidyr::pivot_longer(cols=all_of(ageCols),names_to="age",values_to="count")
+          tidyr::pivot_longer(cols=tidyselect::all_of(ageCols),names_to="age",values_to="count")
         demogBySGDZ = demogBySGDZ %>%
           dplyr::mutate(age = as.integer(stringr::str_remove(age,"\\.+"))-6, codeType="SGDZ11") %>% dplyr::rename(code = DataZone2011Code, name=DataZone2011Name) %>% dplyr::select(-CouncilArea2018Name)
       }))
@@ -301,11 +301,11 @@ uk2019demographics = function() {
     demogBySGDZ_F =  readxl::read_excel(scotDemogF, sheet = "Table 1c Females (2018)", range = "A6:CR6982") %>% convert2() %>% dplyr::mutate(gender = "female")
 
     niDemog = paste0(wd,"/demographicsNI.xlsx")
-    if(!file.exists(niDemog)) download.file(url="https://www.nisra.gov.uk/system/files/statistics/MYE11-21_SYA-2021BASED.xlsx",niDemog)
+    if(!file.exists(niDemog)) utils::download.file(url="https://www.nisra.gov.uk/system/files/statistics/MYE11-21_SYA-2021BASED.xlsx",niDemog)
     demogNI = readxl::read_excel(niDemog,sheet = "Flat")
     demogNI = demogNI %>%
       dplyr::filter(area == "2. Local Government Districts (LGD2014)") %>%
-      dplyr::mutate(gender = case_when(
+      dplyr::mutate(gender = dplyr::case_when(
         sex == "Females" ~ "female",
         sex == "Males" ~ "male",
         TRUE ~ NA
