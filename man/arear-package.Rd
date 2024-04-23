@@ -4,7 +4,7 @@
 \name{arear-package}
 \alias{arear}
 \alias{arear-package}
-\title{arear: Geospatial convenience functions and a supply demand catchment area generator}
+\title{arear: Geospatial Convenience Functions and a Supply Demand Catchment Area Generator}
 \description{
 Geospatial function collection from the COVID-19 pandemic. The main focus of this was integrating geospatial demographic, hospital capacity and COVID data from England, Scotland, Wales and Northern Ireland, all of which were available on different sites and methods. The UK has a wide range of administrative geographic boundaries for different purposes and moving from different scales and resolutions proved necessary. As the geospatial operations are quite time consuming but don't need to be repeated the ability to cache results of geospatial transformations is useful and embedded into these functions.
 }
@@ -18,7 +18,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Robert Challen \email{rc538@exeter.ac.uk} (\href{https://orcid.org/0000-0002-5504-7768}{ORCID})
+\strong{Maintainer}: Robert Challen \email{rob.challen@bristol.ac.uk} (\href{https://orcid.org/0000-0002-5504-7768}{ORCID})
 
 }
 \keyword{internal}

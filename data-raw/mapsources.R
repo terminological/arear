@@ -9,9 +9,10 @@ library(tidyverse)
 #                       "Health_Boundaries",
 #                       "Other_Boundaries",
 #                       "Postcodes"))
-#
+# #
 # ons = ons %>% mutate(services = purrr::map(boundaryType, function(.x) {
-#       tmp = jsonlite::read_json(paste0('https://ons-inspire.esriuk.com/arcgis/rest/services/',.x,'?f=pjson'))
+# #       tmp = jsonlite::read_json(paste0('https://ons-inspire.esriuk.com/arcgis/rest/services/',.x,'?f=pjson'))
+#       tmp = jsonlite::read_json(paste0('https://services1.arcgis.com/ESMARspQHYMw9BZ9/ArcGIS/rest/services/',.x,'?f=pjson'))
 #       tmp = bind_rows(lapply(tmp$services, as_tibble)) %>%
 #         filter(type == 'MapServer') %>%
 #         mutate(boundary = stringr::str_extract(name, '(?<=\\/)(.+)'))
@@ -24,9 +25,30 @@ here::i_am("data-raw/mapsources.R")
 devtools::load_all()
 options("arear.cache.dir"=here::here("data-raw/cache"))
 
+
+
 ## Map sources ----
 mapsources = yaml::read_yaml(here::here("data-raw/mapsources.yaml"))
 usethis::use_data(mapsources, overwrite = TRUE)
+
+tmp2 = data(package="arear")
+items = tmp2$results[,"Item"]
+
+for (x in names(mapsources)) {
+  # x= "WD11"
+  if (!x %in% items) {
+
+    try({
+      tmp = list()
+      tmp[[x]] = arear::getMap(x,sources = mapsources)
+      ex = rlang::expr(usethis::use_data(!!as.symbol(x),overwrite = TRUE))
+      suppressMessages(with(tmp, eval(ex)))
+      message("Wrote: ",x)
+    })
+  } else {
+    message("Skipped: ",x)
+  }
+}
 
 ## UK Bridges and ferry data ----
 tmp =  yaml::read_yaml(here::here("data-raw/mapconnections.yaml"))

@@ -131,7 +131,7 @@ phecBeds %>% dplyr::ungroup() %>% tidyr::pivot_wider(names_from = type, values_f
 The spread of COVID between different areas depends on the connections between areas. Whilst this has a lot to do with commuting and transport networks, there is an element which is due to geographical proximity. The redistribution of hospitalised cases between different regions may also be driven by nearby capacity. The library makes it easier to represent the geography as a network and in this example we investigate local authority districts (LAD) and  weight the nodes of that network by the number of beds in each LAD. The result is just about recognizably the UK but lying on its side. If you want a more geographical view of the network each node has the SF polygon in it so with some processing this can be converted into a centroid and these co-ordinates used to lay out the graph.
 
 ```{r}
-lad = arear::getMap("LAD19")
+lad = arear::LAD19
 
 tmp = arear::surgecapacity %>% 
   dplyr::group_by(hospitalId, hospitalName, acuteBeds, hduBeds) %>% 
@@ -178,11 +178,9 @@ Prior to any hospital activity data for COVID being available, we developed an a
 
 ```{r}
 
-apiTrusts = suppressWarnings(readr::read_csv("https://api.coronavirus.data.gov.uk/v2/data?areaType=nhsTrust&metric=hospitalCases&format=csv&release=2021-03-01"))
-
 # this limits to england only NHS trusts.
 supply = arear::surgecapacity %>% 
-  dplyr::semi_join(apiTrusts, by = c("trustId"="areaCode")) %>%
+  dplyr::semi_join(arear::apiTrusts, by = c("trustId"="area_code")) %>%
   dplyr::mutate(beds = acuteBeds+hduBeds)
 
 demand = arear::uk2019demographicsmap() %>% 
@@ -235,21 +233,21 @@ It is useful to be able to highlight regions by name on maps according to some c
 ```{r fig.width=6, fig.height=8}
 # devtools::load_all()
 # Investigate the timeseries of cases at 4 date points
-maxDate = max(apiTrusts$date)
+maxDate = as.Date("2021-03-01")
 dateFacets = seq(maxDate,by = -14,length.out = 6)
 
 # make sure the data is complete and no missing zero values
 apiTrusts2 = apiTrusts %>% 
   dplyr::filter(date %in% dateFacets) %>%
-  tidyr::complete(tidyr::nesting(areaCode,areaType,areaName),date,fill=list(hospitalCases=0))
+  tidyr::complete(tidyr::nesting(area_code,area_type,area_name),date,fill=list(value=0))
 
-mapTs = mapWithPopout %>% dplyr::left_join(apiTrusts2, by = c("trustId" = "areaCode"))
+mapTs = mapWithPopout %>% dplyr::left_join(apiTrusts2, by = c("trustId" = "area_code"))
 
 tmp = arear::plotLabelledMap(
   mapTs %>% dplyr::group_by(date), 
-  mapping = ggplot2::aes(fill = hospitalCases/beds*100), 
+  mapping = ggplot2::aes(fill = value/beds*100), 
   size=0.1, colour="white", # Default styles for map
-  labelMapping = ggplot2::aes(label = trustId, name = areaName),
+  labelMapping = ggplot2::aes(label = trustId, name = area_name),
   labels = 4,
   labelInset = "inset" #this means the labels relevant to the inset are only placed on the inset itself
 )

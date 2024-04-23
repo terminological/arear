@@ -1,4 +1,12 @@
 
+.loadFromPackage = function(id) {
+  x = rlang::new_environment()
+  data(list=c(id),package="arear",envir = x)
+  y = get(ls(x)[[1]],envir = x)
+  x=NULL
+  return(y)
+}
+
 #' Gets maps for which the metadata is known.
 #'
 #' If a map needs to be downloaded as a shapefile then it is stored temporarily. The location of this download directory can be set as option("arear.download.dir" = "~/.)
@@ -16,15 +24,20 @@
 #' map = getMap("NHSER20")
 #' }
 getMap = function(mapId, sources = .loadSources(...), codeType = mapId, ...) {
+
+  tmp2 = data(package="arear")
+  items = tmp2$results[,"Item"]
+  if (mapId %in% items) return(.loadFromPackage(mapId))
+
   if (!(mapId %in% names(sources))) stop("Unknown map: ",mapId)
   loader = sources[[mapId]]
-  codeCol = as.symbol(loader$codeCol)
-  nameCol = tryCatch(as.symbol(loader$nameCol), error = function(e) NULL)
-  altCodeCol = tryCatch(as.symbol(loader$altCodeCol), error = function(e) NULL)
+  codeCol = as.symbol(tolower(loader$codeCol))
+  nameCol = tryCatch(as.symbol(tolower(loader$nameCol)), error = function(e) NULL)
+  altCodeCol = tryCatch(as.symbol(tolower(loader$altCodeCol)), error = function(e) NULL)
   if(loader$mapName == "geojson") {
-    map = downloadGeojson(geojsonUrl = loader$url, codeCol = !!codeCol, nameCol = !!nameCol, altCodeCol = !!altCodeCol, codeType=codeType, id=mapId, license = loader$license, ...)
+    map = downloadGeojson(geojsonUrl = loader$url, codeCol = !!codeCol, nameCol = !!nameCol, altCodeCol = !!altCodeCol, codeType=codeType, id=mapId, license = loader$license, simplify = loader$simplify, ...)
   } else {
-    map = downloadMap(zipUrl = loader$url, mapName = loader$mapName, codeCol = !!codeCol, nameCol = !!nameCol, altCodeCol = !!altCodeCol, codeType=codeType, id=mapId, license = loader$license, ...)
+    map = downloadMap(zipUrl = loader$url, mapName = loader$mapName, codeCol = !!codeCol, nameCol = !!nameCol, altCodeCol = !!altCodeCol, codeType=codeType, id=mapId, license = loader$license, simplify = loader$simplify, ...)
   }
   return(map)
 }
@@ -99,11 +112,37 @@ downloadGeojson = function(geojsonUrl, codeCol="code", nameCol="name", altCodeCo
 
   .cached({
 
-    shape = httr::GET(geojsonUrl)
-    content = httr::content(shape,type='text',encoding='UTF-8')
-    tmp = jsonlite::fromJSON(content)
-    if (isTRUE(tmp$exceededTransferLimit)) stop("geoJson transfer limit exceeded")
-    map = sf::read_sf(content) %>% sf::st_transform(crs=4326)
+    complete = FALSE
+    row = 0
+    map = NULL
+    while(!complete) {
+
+      if (stringr::str_ends(geojsonUrl,"query")) {
+        geojsonUrl2 = sprintf("%s?outSR=4326&outFields=*&f=pgeojson&where=1%%3D1&resultOffset=%d",geojsonUrl, row)
+      } else {
+        geojsonUrl2 = geojsonUrl
+      }
+
+
+      content = .cached({
+        shape = httr::GET(geojsonUrl2)
+        httr::content(shape,type='text',encoding='UTF-8')
+      },hash=list(geojsonUrl2))
+
+      tmp = jsonlite::fromJSON(content)
+
+
+      map = dplyr::bind_rows(map, sf::read_sf(content) %>% sf::st_transform(crs=4326))
+      complete = TRUE
+
+      if (isTRUE(tmp$exceededTransferLimit) || isTRUE(tmp$properties$exceededTransferLimit)) {
+        row = nrow(map)
+        message("rows: ",row)
+        complete = FALSE
+      }
+
+    }
+
     map = standardiseMap(map, !!codeCol, !!nameCol, !!altCodeCol, codeType)
     if(simplify) map = suppressWarnings(map %>% rmapshaper::ms_simplify(keep=0.1))
 
@@ -215,7 +254,11 @@ standardiseMap = function(sf, codeCol, nameCol, altCodeCol, codeType) {
   codeCol = rlang::ensym(codeCol)
   nameCol = tryCatch(rlang::ensym(nameCol), error = function(e) NULL)
   altCodeCol = tryCatch(rlang::ensym(altCodeCol), error = function(e) NULL)
-  sf = sf %>% dplyr::mutate(tmp_code = as.character(!!codeCol))
+  sf = sf %>%
+    rename_with(.fn=tolower) %>%
+    dplyr::mutate(tmp_code = as.character(!!codeCol))
+
+
 
   .forceGeos({
     #TODO: catch missing columns and throw helpful error

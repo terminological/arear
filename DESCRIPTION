@@ -1,6 +1,6 @@
 Package: arear
 Title: Geospatial Convenience Functions and a Supply Demand Catchment Area Generator
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: 
     person(given = "Robert",
            family = "Challen",
@@ -56,7 +56,7 @@ Imports:
     jsonlite
 Depends: 
     R (>= 2.10)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 URL: https://terminological.github.io/arear/index.html,
 	https://github.com/terminological/arear
 BugReports: https://github.com/terminological/arear/issues

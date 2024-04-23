@@ -1,7 +1,7 @@
 ###source: "maps ----"
 WD11:
   source: "https://geoportal.statistics.gov.uk/datasets/wards-december-2011-boundaries-ew-bgc"
-  url: "https://opendata.arcgis.com/api/v3/datasets/bc0c7a7e865643cb90eae44bc4f15df0_0/downloads/data?format=geojson&spatialRefId=4326&where=1%3D1"
+  url: "https://services1.arcgis.com/ESMARspQHYMw9BZ9/ArcGIS/rest/services/Wards_December_2011_GCB_EW_2022/FeatureServer/0/query"
   mapName: "geojson"
   codeCol: "wd11cd"
   nameCol: "wd11nm"
@@ -10,7 +10,7 @@ WD11:
   license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
 WD19:
   source: "https://geoportal.statistics.gov.uk/datasets/wards-december-2019-boundaries-ew-bgc"
-  url: "https://opendata.arcgis.com/api/v3/datasets/bf1a23cfe83f4da9844e7f34e4824d03_0/downloads/data?format=geojson&spatialRefId=4326&where=1%3D1"
+  url: "https://services1.arcgis.com/ESMARspQHYMw9BZ9/ArcGIS/rest/services/Wards_December_2019_Boundaries_UK_BGC_2022/FeatureServer/0/query"
   mapName: "geojson"
   codeCol: "wd19cd"
   nameCol: "wd19nm"
@@ -19,7 +19,7 @@ WD19:
   license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
 LSOA11:
   source: "https://geoportal.statistics.gov.uk/datasets/lower-layer-super-output-areas-december-2011-boundaries-ew-bgc"
-  url: "https://opendata.arcgis.com/api/v3/datasets/8bbadffa6ddc493a94078c195a1e293b_0/downloads/data?format=geojson&spatialRefId=4326&where=1%3D1"
+  url: "https://services1.arcgis.com/ESMARspQHYMw9BZ9/ArcGIS/rest/services/LSOA_2011_Boundaries_Super_Generalised_Clipped_BSC_EW_V4/FeatureServer/0/query"
   mapName: "geojson"
   codeCol: "LSOA11CD"
   nameCol: "LSOA11NM"
@@ -28,12 +28,12 @@ LSOA11:
   license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
 MSOA11:
   source: "https://geoportal.statistics.gov.uk/datasets/middle-layer-super-output-areas-december-2011-boundaries-generalised-clipped-bgc-ew-v3"
-  url: "https://opendata.arcgis.com/api/v3/datasets/abfccdf1071c43dd981a49eb7da13d2b_0/downloads/data?format=geojson&spatialRefId=4326&where=1%3D1"
+  url: "https://services1.arcgis.com/ESMARspQHYMw9BZ9/ArcGIS/rest/services/MSOA_Dec_2011_Boundaries_Super_Generalised_Clipped_BSC_EW_V3_2022/FeatureServer/0/query"
   mapName: "geojson"
   codeCol: "MSOA11CD"
   nameCol: "MSOA11NM"
   altCodeCol: ~
-  simplify: FALSE
+  simplify: TRUE
   license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
 DZ11:
   source: "https://data.gov.uk/dataset/ab9f1f20-3b7f-4efa-9bd2-239acf63b540/data-zone-boundaries-2011"
@@ -42,14 +42,14 @@ DZ11:
   codeCol: "DataZone"
   nameCol: "Name"
   altCodeCol: ~
-  simplify: FALSE
+  simplify: TRUE
   license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
 CA19:
   source: "https://www.spatialdata.gov.scot/geonetwork/srv/eng/catalog.search#/metadata/1cd57ea6-8d6e-412b-a9dd-d1c89a80ad62"
-  url: "https://geo.spatialhub.scot/geoserver/sh_las/wfs?authkey=b85aa063-d598-4582-8e45-e7e6048718fc"
-  mapName: "pub_las"
+  url: "https://geo.spatialhub.scot/geoserver/sh_las/wfs?authkey=b85aa063-d598-4582-8e45-e7e6048718fc&request=GetFeature&service=WFS&version=1.1.0&typeName=pub_las&outputFormat=application%2Fjson"
+  mapName: "geojson"
   codeCol: "code"
-  nameCol: "local_auth"
+  nameCol: "local_authority"
   altCodeCol: ~
   simplify: FALSE
   license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
@@ -60,11 +60,11 @@ HB19:
   codeCol: "HBCode"
   nameCol: "HBName"
   altCodeCol: ~
-  simplify: FALSE
+  simplify: TRUE
   license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
 LHB19:
   source: "https://geoportal.statistics.gov.uk/datasets/local-health-boards-april-2019-boundaries-wa-buc"
-  url: "https://opendata.arcgis.com/api/v3/datasets/def40bdc98a9457aa108eb3a5fb052b1_0/downloads/data?format=geojson&spatialRefId=4326&where=1%3D1"
+  url: "https://services1.arcgis.com/ESMARspQHYMw9BZ9/ArcGIS/rest/services/Local_Health_Boards_April_2019_GCB_EN_2022/FeatureServer/0/query"
   mapName: "geojson"
   codeCol: "lhb19cd"
   nameCol: "lhb19nm"
@@ -73,7 +73,7 @@ LHB19:
   license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
 CTYUA19:
   source: "https://geoportal.statistics.gov.uk/datasets/counties-and-unitary-authorities-april-2019-boundaries-ew-buc-1"
-  url: "https://opendata.arcgis.com/api/v3/datasets/a917c123e49d436f90660ef6a9ceb5cc_0/downloads/data?format=geojson&spatialRefId=4326&where=1%3D1"
+  url: "https://services1.arcgis.com/ESMARspQHYMw9BZ9/ArcGIS/rest/services/CTYUA_Dec_2019_UGCB_in_the_UK_2022/FeatureServer/0/query"
   mapName: "geojson"
   codeCol: "ctyua19cd"
   nameCol: "ctyua19nm"
@@ -82,7 +82,7 @@ CTYUA19:
   license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
 LAD19:
   source: "https://geoportal.statistics.gov.uk/datasets/local-authority-districts-december-2019-boundaries-uk-buc"
-  url: "https://opendata.arcgis.com/api/v3/datasets/3a4fa2ce68f642e399b4de07643eeed3_0/downloads/data?format=geojson&spatialRefId=4326&where=1%3D1"
+  url: "https://services1.arcgis.com/ESMARspQHYMw9BZ9/ArcGIS/rest/services/Local_Authority_Districts_December_2019_UGCB_UK_2022/FeatureServer/0/query"
   mapName: "geojson"
   codeCol: "lad19cd"
   nameCol: "lad19nm"
@@ -91,7 +91,7 @@ LAD19:
   license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
 LAD20:
   source: "https://geoportal.statistics.gov.uk/datasets/local-authority-districts-may-2020-boundaries-uk-buc"
-  url: "https://opendata.arcgis.com/api/v3/datasets/910f48f3c4b3400aa9eb0af9f8989bbe_0/downloads/data?format=geojson&spatialRefId=4326&where=1%3D1"
+  url: "https://services1.arcgis.com/ESMARspQHYMw9BZ9/ArcGIS/rest/services/LAD_DEC_2020_UK_BGC/FeatureServer/0/query"
   mapName: "geojson"
   codeCol: "LAD20CD"
   nameCol: "LAD20NM"
@@ -100,7 +100,7 @@ LAD20:
   license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
 CCG20:
   source: "https://geoportal.statistics.gov.uk/datasets/clinical-commissioning-groups-april-2020-generalised-clipped-boundaries-en"
-  url: "https://opendata.arcgis.com/api/v3/datasets/8e410b3299154bb3a93fae1a69ed4f2b_1/downloads/data?format=geojson&spatialRefId=4326&where=1%3D1"
+  url: "https://services1.arcgis.com/ESMARspQHYMw9BZ9/ArcGIS/rest/services/Clinical_Commissioning_Groups_April_2020_Ultra_Generalised_Boundaries_EN_2022/FeatureServer/0/query"
   mapName: "geojson"
   codeCol: "ccg20cd"
   nameCol: "ccg20nm"
@@ -109,7 +109,7 @@ CCG20:
   license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
 NHSER20:
   source: "https://geoportal.statistics.gov.uk/datasets/nhs-england-regions-april-2020-boundaries-en-bgc"
-  url: "https://opendata.arcgis.com/api/v3/datasets/87511f3ae00a40208741c685f827c1d3_0/downloads/data?format=geojson&spatialRefId=4326&where=1%3D1"
+  url: "https://services1.arcgis.com/ESMARspQHYMw9BZ9/ArcGIS/rest/services/NHS_England_Regions_April_2020_Generalised_Clipped_Boundaries_EN_2022/FeatureServer/0/query"
   mapName: "geojson"
   codeCol: "nhser20cd"
   nameCol: "nhser20nm"
@@ -119,7 +119,7 @@ NHSER20:
 ### GEOJSON example:
 PHEC16:
   source: "https://ons-inspire.esriuk.com/arcgis/rest/services/Health_Boundaries/Public_Health_England_Centres_December_2016_Boundaries"
-  url: "https://ons-inspire.esriuk.com/arcgis/rest/services/Health_Boundaries/Public_Health_England_Centres_December_2016_Boundaries/MapServer/2/query?where=1%3d1&outFields=*&outSR=4326&f=geojson"
+  url: "https://services1.arcgis.com/ESMARspQHYMw9BZ9/ArcGIS/rest/services/PHEC_Dec_2016_GCB_in_England_2022/FeatureServer/0/query"
   mapName: "geojson"
   codeCol: "phec16cd"
   nameCol: "phec16nm"
@@ -128,7 +128,7 @@ PHEC16:
   license: "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
 CTRY19:
   source: "https://geoportal.statistics.gov.uk/datasets/countries-december-2019-boundaries-uk-bgc/data"
-  url: "https://opendata.arcgis.com/api/v3/datasets/b789ba2f70fe45eb92402cee87092730_0/downloads/data?format=geojson&spatialRefId=4326&where=1%3D1"
+  url: "https://services1.arcgis.com/ESMARspQHYMw9BZ9/ArcGIS/rest/services/Countries_December_2019_GCB_GB_2022/FeatureServer/0/query"
   mapName: "geojson"
   codeCol: "ctry19cd"
   nameCol: "ctry19nm"

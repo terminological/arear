@@ -223,3 +223,121 @@ ukcovidmap = function(legacy = FALSE) {
 #'   \item{gridSupplyDegenerate}{a 5 point supply with 2 points in the same grid square amd a different 2 points with the same id}
 #' }
 "testdata"
+
+
+
+
+## uk demographics ----
+
+#' UK small area single year of age population estimates from 2019
+#'
+#' These estimates are appropriate for the majority of the pandemic, and are
+#' the highest geographical resolution estimates by single year of age that
+#' I could find.
+#'
+#' @return a dataframe with age, gender, codeType, code, name and count
+#' @export
+uk2019demographics = function() {
+
+  demographics = .cached({
+    wd = getOption("arear.cache.dir", default=rappdirs::user_cache_dir("arear"))
+    # England and wales:
+    # https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/lowersuperoutputareamidyearpopulationestimates
+    # https://www.ons.gov.uk/file?uri=%2fpeoplepopulationandcommunity%2fpopulationandmigration%2fpopulationestimates%2fdatasets%2flowersuperoutputareamidyearpopulationestimates%2fmid2018sape21dt1a/sape21dt2mid2018lsoasyoaestimatesunformatted.zip
+    destfile = paste0(wd,"/demographicsUK.zip")
+    if(!file.exists(destfile)) download.file(url="https://www.ons.gov.uk/file?uri=%2fpeoplepopulationandcommunity%2fpopulationandmigration%2fpopulationestimates%2fdatasets%2flowersuperoutputareamidyearpopulationestimates%2fmid2018sape21dt1a/sape21dt2mid2018lsoasyoaestimatesunformatted.zip",destfile = destfile)
+    unzip(destfile,junkpaths = TRUE,exdir=wd,overwrite = TRUE)
+
+    # A zipped excel file
+    # sheets are: Mid-2018 Males A5:CP34758
+    # sheets are: Mid-2018 Females A5:CP34758
+    UKdemog = paste0(wd,"/SAPE21DT2-mid-2018-lsoa-syoa-estimates-unformatted.xlsx")
+
+    convert = function(demogByLSOA) {
+
+      suppressMessages(suppressWarnings({
+
+        ageCols = colnames(demogByLSOA)[!is.na(as.integer(stringr::str_remove(colnames(demogByLSOA),"\\+")))]
+
+        tmp = demogByLSOA %>%
+          dplyr::select(-`All Ages`) %>%
+          tidyr::pivot_longer(cols=all_of(ageCols),names_to = "age",values_to = "count") #, names_ptypes = list(age=integer()))
+
+        tmp = tmp %>% dplyr::rename(code = `Area Codes`, name=`Area Names`) %>% #, total=`All Ages`) %>%
+          dplyr::mutate(age = as.integer(stringr::str_remove(age,"\\+")), codeType="LSOA11")
+      }))
+      return(tmp)
+    }
+
+    demogByLSOA_M <- readxl::read_excel(UKdemog, sheet="Mid-2018 Males", skip = 4) %>% convert() %>% dplyr::mutate(gender = "male")
+    demogByLSOA_F <- readxl::read_excel(UKdemog, sheet="Mid-2018 Females", skip = 4) %>% convert() %>% dplyr::mutate(gender = "female")
+
+    scotDemogM = paste0(wd,"/demographicsScot_M.xlsx")
+    scotDemogF = paste0(wd,"/demographicsScot_F.xlsx")
+
+    # Scotland:
+    # https://www.nrscotland.gov.uk/statistics-and-data/statistics/statistics-by-theme/population/population-estimates/2011-based-special-area-population-estimates/small-area-population-estimates/time-series#2018
+    # males - https://www.nrscotland.gov.uk/files//statistics/population-estimates/sape-time-series/males/sape-2018-males.xlsx
+    # sheet - Table 1b Males (2018) A6:CR6982
+    # females - https://www.nrscotland.gov.uk/files//statistics/population-estimates/sape-time-series/females/sape-2018-females.xlsx
+    # sheet - Table 1c Females (2018) A6:CR6982
+
+    if(!file.exists(scotDemogM)) download.file(url="https://www.nrscotland.gov.uk/files//statistics/population-estimates/sape-time-series/males/sape-2018-males.xlsx",destfile = scotDemogM)
+    if(!file.exists(scotDemogF)) download.file(url="https://www.nrscotland.gov.uk/files//statistics/population-estimates/sape-time-series/females/sape-2018-females.xlsx",destfile = scotDemogF)
+
+    convert2 = function(demogBySGDZ) {
+      suppressMessages(suppressWarnings({
+        demogBySGDZ = demogBySGDZ %>% dplyr::select(-...4,-...5)
+        ageCols = colnames(demogBySGDZ)[!is.na(as.integer(stringr::str_remove(colnames(demogBySGDZ),"\\.+")))]
+        demogBySGDZ = demogBySGDZ %>%
+          tidyr::pivot_longer(cols=all_of(ageCols),names_to="age",values_to="count")
+        demogBySGDZ = demogBySGDZ %>%
+          dplyr::mutate(age = as.integer(stringr::str_remove(age,"\\.+"))-6, codeType="SGDZ11") %>% dplyr::rename(code = DataZone2011Code, name=DataZone2011Name) %>% dplyr::select(-CouncilArea2018Name)
+      }))
+      return(demogBySGDZ)
+    }
+
+    demogBySGDZ_M =  readxl::read_excel(scotDemogM, sheet = "Table 1b Males (2018)", range = "A6:CR6982") %>% convert2() %>% dplyr::mutate(gender = "male")
+    demogBySGDZ_F =  readxl::read_excel(scotDemogF, sheet = "Table 1c Females (2018)", range = "A6:CR6982") %>% convert2() %>% dplyr::mutate(gender = "female")
+
+    niDemog = paste0(wd,"/demographicsNI.xlsx")
+    if(!file.exists(niDemog)) download.file(url="https://www.nisra.gov.uk/system/files/statistics/MYE11-21_SYA-2021BASED.xlsx",niDemog)
+    demogNI = readxl::read_excel(niDemog,sheet = "Flat")
+    demogNI = demogNI %>%
+      dplyr::filter(area == "2. Local Government Districts (LGD2014)") %>%
+      dplyr::mutate(gender = case_when(
+        sex == "Females" ~ "female",
+        sex == "Males" ~ "male",
+        TRUE ~ NA
+      ), codeType="LGD") %>%
+      dplyr::filter(year==2020) %>%
+      dplyr::select(code =area_code, name=area_name, age=age, count=MYE, gender, codeType) %>%
+      dplyr::filter(gender %in% c("male","female"))
+
+    dplyr::bind_rows(
+      demogByLSOA_M,
+      demogByLSOA_F,
+      demogBySGDZ_M,
+      demogBySGDZ_F,
+      demogNI
+    )
+  })
+
+  return(demographics)
+}
+
+## api NHS Trust data ----
+
+#' NHS trust admissions data from the legacy COVID api from 2021
+#'
+#' @format A 72928 line data frame:
+#' \describe{
+#'   \item{date}{the ONS code for the ares}
+#'   \item{area_name}{The name for the area}
+#'   \item{area_type}{the type of area (LSOA, DZ or LGD)}
+#'   \item{area_code}{the NHS ODS code}
+#'   \item{metric}{hospital cases}
+#'   \item{metric_name}{hospital cases}
+#'   \item{value}{the count}
+#' }
+"apiTrusts"
