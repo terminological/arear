@@ -255,15 +255,15 @@ standardiseMap = function(sf, codeCol, nameCol, altCodeCol, codeType) {
   nameCol = tryCatch(rlang::ensym(nameCol), error = function(e) NULL)
   altCodeCol = tryCatch(rlang::ensym(altCodeCol), error = function(e) NULL)
   sf = sf %>%
-    dplyr::rename_with(.fn=tolower) %>%
-    dplyr::mutate(tmp_code = as.character(!!codeCol))
+    dplyr::rename_with(.fn=tolower)
 
 
 
   .forceGeos({
     #TODO: catch missing columns and throw helpful error
     if(!as.character(codeCol) %in% colnames(sf)) stop("the codeCol column is not present in sf should be one of: ",paste(colnames(sf),collapse = ","))
-
+    sf = sf %>%
+      dplyr::mutate(tmp_code = as.character(!!codeCol))
     if(!identical(nameCol,NULL)) {
       if(!as.character(nameCol) %in% colnames(sf)) stop("the nameCol column is not present in sf should be one of: ",paste(colnames(sf),collapse = ","))
       sf = sf %>% dplyr::mutate(tmp_name = as.character(!!nameCol))

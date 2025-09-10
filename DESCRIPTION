@@ -54,10 +54,11 @@ Imports:
     tidyselect,
     tidyr,
     jsonlite,
-    lwgeom
+    lwgeom,
+    pins
 Depends: 
-    R (>= 2.10)
-RoxygenNote: 7.3.1
+    R (>= 3.5)
+RoxygenNote: 7.3.2.9005
 URL: https://terminological.github.io/arear/index.html,
 	https://github.com/terminological/arear
 BugReports: https://github.com/terminological/arear/issues
