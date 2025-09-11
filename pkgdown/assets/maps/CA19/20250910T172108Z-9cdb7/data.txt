@@ -1,0 +1,10 @@
+file: CA19.rds
+file_size: 51
+pin_hash: 9cdb7b50adf84141
+type: rds
+title: 'CA19: a pinned character vector'
+description: ~
+tags: ~
+urls: ~
+created: 20250910T172108Z
+api_version: 1

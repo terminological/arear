@@ -1,0 +1,10 @@
+file: NHSER20.rds
+file_size: 1216753
+pin_hash: 6967b687b61399c1
+type: rds
+title: 'NHSER20: a pinned 7 x 6 data frame'
+description: ~
+tags: ~
+urls: ~
+created: 20250910T172121Z
+api_version: 1

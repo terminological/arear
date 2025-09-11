@@ -1,0 +1,10 @@
+file: CTYUA19.rds
+file_size: 260395
+pin_hash: 6fe34ac32379850c
+type: rds
+title: 'CTYUA19: a pinned 216 x 6 data frame'
+description: ~
+tags: ~
+urls: ~
+created: 20250910T172109Z
+api_version: 1

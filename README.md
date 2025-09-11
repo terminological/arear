@@ -5,6 +5,7 @@ arear
 [![R-CMD-check](https://github.com/terminological/arear/workflows/R-CMD-check/badge.svg)](https://github.com/terminological/arear/actions)
 [![DOI](https://zenodo.org/badge/340773310.svg)](https://zenodo.org/badge/latestdoi/340773310)
 [![arear status badge](https://terminological.r-universe.dev/badges/arear)](https://terminological.r-universe.dev)
+[![R-CMD-check](https://github.com/terminological/arear/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/terminological/arear/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 This package provides a suite of geo-spatial functions that were useful during

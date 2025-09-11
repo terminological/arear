@@ -1,9 +1,8 @@
-
 .loadFromPackage = function(id) {
   x = rlang::new_environment()
-  utils::data(list=c(id),package="arear",envir = x)
-  y = get(ls(x)[[1]],envir = x)
-  x=NULL
+  utils::data(list = c(id), package = "arear", envir = x)
+  y = get(ls(x)[[1]], envir = x)
+  x = NULL
   return(y)
 }
 
@@ -24,58 +23,106 @@
 #' map = getMap("NHSER20")
 #' }
 getMap = function(mapId, sources = .loadSources(...), codeType = mapId, ...) {
+  tmp2 = arear
+  items = tmp2$results[, "Item"]
+  if (mapId %in% items) {
+    return(.loadFromPackage(mapId))
+  }
 
-  tmp2 = utils::data(package="arear")
-  items = tmp2$results[,"Item"]
-  if (mapId %in% items) return(.loadFromPackage(mapId))
-
-  if (!(mapId %in% names(sources))) stop("Unknown map: ",mapId)
+  if (!(mapId %in% names(sources))) {
+    stop("Unknown map: ", mapId)
+  }
   loader = sources[[mapId]]
   codeCol = as.symbol(tolower(loader$codeCol))
-  nameCol = tryCatch(as.symbol(tolower(loader$nameCol)), error = function(e) NULL)
-  altCodeCol = tryCatch(as.symbol(tolower(loader$altCodeCol)), error = function(e) NULL)
-  if(loader$mapName == "geojson") {
-    map = downloadGeojson(geojsonUrl = loader$url, codeCol = !!codeCol, nameCol = !!nameCol, altCodeCol = !!altCodeCol, codeType=codeType, id=mapId, license = loader$license, simplify = loader$simplify, ...)
+  nameCol = tryCatch(as.symbol(tolower(loader$nameCol)), error = function(e) {
+    NULL
+  })
+  altCodeCol = tryCatch(
+    as.symbol(tolower(loader$altCodeCol)),
+    error = function(e) NULL
+  )
+  if (loader$mapName == "geojson") {
+    map = downloadGeojson(
+      geojsonUrl = loader$url,
+      codeCol = !!codeCol,
+      nameCol = !!nameCol,
+      altCodeCol = !!altCodeCol,
+      codeType = codeType,
+      id = mapId,
+      license = loader$license,
+      simplify = loader$simplify,
+      ...
+    )
   } else {
-    map = downloadMap(zipUrl = loader$url, mapName = loader$mapName, codeCol = !!codeCol, nameCol = !!nameCol, altCodeCol = !!altCodeCol, codeType=codeType, id=mapId, license = loader$license, simplify = loader$simplify, ...)
+    map = downloadMap(
+      zipUrl = loader$url,
+      mapName = loader$mapName,
+      codeCol = !!codeCol,
+      nameCol = !!nameCol,
+      altCodeCol = !!altCodeCol,
+      codeType = codeType,
+      id = mapId,
+      license = loader$license,
+      simplify = loader$simplify,
+      ...
+    )
   }
   return(map)
 }
 
 .loadSources = function(nocache = FALSE, ...) {
-  mapsources = getOption("arear.mapsources",arear::mapsources)
-  cache = getOption("arear.cache.dir", default=rappdirs::user_cache_dir("arear"))
+  mapsources = getOption("arear.mapsources", arear::mapsources)
+  cache = getOption(
+    "arear.cache.dir",
+    default = rappdirs::user_cache_dir("arear")
+  )
   cachedVersion = fs::path(cache, "sources.json")
   if (nocache || !fs::file_exists(cachedVersion)) {
     version = mapsources
-    if(fs::file_exists(cachedVersion)) unlink(cachedVersion)
+    if (fs::file_exists(cachedVersion)) unlink(cachedVersion)
   } else {
-    version = c(mapsources, jsonlite::read_json(cachedVersion,simplifyVector = TRUE))
+    version = c(
+      mapsources,
+      jsonlite::read_json(cachedVersion, simplifyVector = TRUE)
+    )
   }
   return(version)
 }
 
-.addSource = function(name, source = url,
-                      url,
-                      codeCol,
-                      nameCol,
-                      altCodeCol,
-                      simplify=FALSE,
-                      license="unknown",...) {
-
-  cache = getOption("arear.cache.dir", default=rappdirs::user_cache_dir("arear"))
+.addSource = function(
+  name,
+  source = url,
+  url,
+  codeCol,
+  nameCol,
+  altCodeCol,
+  simplify = FALSE,
+  license = "unknown",
+  ...
+) {
+  cache = getOption(
+    "arear.cache.dir",
+    default = rappdirs::user_cache_dir("arear")
+  )
   cachedVersion = fs::path(cache, "sources.json")
 
   if (!(name %in% names(arear::mapsources))) {
-    if(fs::file_exists(cachedVersion)) {
-      source = jsonlite::read_json(cachedVersion,simplifyVector = TRUE)
+    if (fs::file_exists(cachedVersion)) {
+      source = jsonlite::read_json(cachedVersion, simplifyVector = TRUE)
     } else {
       source = list()
     }
 
-    source[[name]] = list(name=name, source=source, url=url, codeCol=codeCol,
-                nameCol=nameCol, altCodeCol=altCodeCol,
-                simplify=simplify, license=license)
+    source[[name]] = list(
+      name = name,
+      source = source,
+      url = url,
+      codeCol = codeCol,
+      nameCol = nameCol,
+      altCodeCol = altCodeCol,
+      simplify = simplify,
+      license = license
+    )
 
     jsonlite::write_json(source, cachedVersion)
   }
@@ -103,56 +150,92 @@ listStandardMaps = function() {
 #'
 #' @return the sf object for this geoJson
 #' @export
-downloadGeojson = function(geojsonUrl, codeCol="code", nameCol="name", altCodeCol=NULL, codeType=NA_character_, simplify=FALSE, id, license = "unknown", ...) {
-
-
+downloadGeojson = function(
+  geojsonUrl,
+  codeCol = "code",
+  nameCol = "name",
+  altCodeCol = NULL,
+  codeType = NA_character_,
+  simplify = FALSE,
+  id,
+  license = "unknown",
+  ...
+) {
   codeCol = rlang::ensym(codeCol)
   nameCol = tryCatch(rlang::ensym(nameCol), error = function(e) NULL)
   altCodeCol = tryCatch(rlang::ensym(altCodeCol), error = function(e) NULL)
 
-  .cached({
+  .cached(
+    {
+      complete = FALSE
+      row = 0
+      map = NULL
+      while (!complete) {
+        if (stringr::str_ends(geojsonUrl, "query")) {
+          geojsonUrl2 = sprintf(
+            "%s?outSR=4326&outFields=*&f=pgeojson&where=1%%3D1&resultOffset=%d",
+            geojsonUrl,
+            row
+          )
+        } else {
+          geojsonUrl2 = geojsonUrl
+        }
 
-    complete = FALSE
-    row = 0
-    map = NULL
-    while(!complete) {
+        content = .cached(
+          {
+            shape = httr::GET(geojsonUrl2)
+            httr::content(shape, type = 'text', encoding = 'UTF-8')
+          },
+          hash = list(geojsonUrl2)
+        )
 
-      if (stringr::str_ends(geojsonUrl,"query")) {
-        geojsonUrl2 = sprintf("%s?outSR=4326&outFields=*&f=pgeojson&where=1%%3D1&resultOffset=%d",geojsonUrl, row)
-      } else {
-        geojsonUrl2 = geojsonUrl
+        tmp = jsonlite::fromJSON(content)
+
+        map = dplyr::bind_rows(
+          map,
+          sf::read_sf(content) %>% sf::st_transform(crs = 4326)
+        )
+        complete = TRUE
+
+        if (
+          isTRUE(tmp$exceededTransferLimit) ||
+            isTRUE(tmp$properties$exceededTransferLimit)
+        ) {
+          row = nrow(map)
+          message("rows: ", row)
+          complete = FALSE
+        }
       }
 
-
-      content = .cached({
-        shape = httr::GET(geojsonUrl2)
-        httr::content(shape,type='text',encoding='UTF-8')
-      },hash=list(geojsonUrl2))
-
-      tmp = jsonlite::fromJSON(content)
-
-
-      map = dplyr::bind_rows(map, sf::read_sf(content) %>% sf::st_transform(crs=4326))
-      complete = TRUE
-
-      if (isTRUE(tmp$exceededTransferLimit) || isTRUE(tmp$properties$exceededTransferLimit)) {
-        row = nrow(map)
-        message("rows: ",row)
-        complete = FALSE
+      map = standardiseMap(map, !!codeCol, !!nameCol, !!altCodeCol, codeType)
+      if (simplify) {
+        map = suppressWarnings(map %>% rmapshaper::ms_simplify(keep = 0.1))
       }
 
-    }
+      .addSource(
+        name = id,
+        url = geojsonUrl,
+        codeCol = rlang::as_label(codeCol),
+        nameCol = rlang::as_label(nameCol),
+        altCodeCol = rlang::as_label(altCodeCol),
+        simplify = simplify,
+        license = license
+      )
 
-    map = standardiseMap(map, !!codeCol, !!nameCol, !!altCodeCol, codeType)
-    if(simplify) map = suppressWarnings(map %>% rmapshaper::ms_simplify(keep=0.1))
-
-    .addSource(name = id, url = geojsonUrl,
-               codeCol = rlang::as_label(codeCol),nameCol = rlang::as_label(nameCol),
-               altCodeCol = rlang::as_label(altCodeCol),simplify = simplify, license=license)
-
-    map %>% dplyr::ungroup() %>% sf::st_as_sf()
-
-  }, name=id, hash=list(geojsonUrl,codeCol,nameCol,altCodeCol,codeType,simplify,license), ...)
+      map %>% dplyr::ungroup() %>% sf::st_as_sf()
+    },
+    name = id,
+    hash = list(
+      geojsonUrl,
+      codeCol,
+      nameCol,
+      altCodeCol,
+      codeType,
+      simplify,
+      license
+    ),
+    ...
+  )
 }
 
 #' Download a map, unpack it, and rename columns.
@@ -183,60 +266,111 @@ downloadGeojson = function(geojsonUrl, codeCol="code", nameCol="name", altCodeCo
 #'   nameCol="nhser20nm"
 #' )
 #' }
-downloadMap = function(zipUrl, mapName=NULL, codeCol="code", nameCol="name", altCodeCol=NULL, codeType=NA_character_, simplify=FALSE, wd = getOption("arear.download.dir", tempdir()), id=NULL, license = "unknown",  ...) {
-
+downloadMap = function(
+  zipUrl,
+  mapName = NULL,
+  codeCol = "code",
+  nameCol = "name",
+  altCodeCol = NULL,
+  codeType = NA_character_,
+  simplify = FALSE,
+  wd = getOption("arear.download.dir", tempdir()),
+  id = NULL,
+  license = "unknown",
+  ...
+) {
   codeCol = rlang::ensym(codeCol)
   nameCol = tryCatch(rlang::ensym(nameCol), error = function(e) NULL)
   altCodeCol = tryCatch(rlang::ensym(altCodeCol), error = function(e) NULL)
 
-  if(!stringr::str_ends(wd,"/")) wd = paste0(wd,"/")
+  if (!stringr::str_ends(wd, "/")) {
+    wd = paste0(wd, "/")
+  }
   try(fs::dir_create(wd))
 
-  pattern = if(is.null(mapName)) "*.shp" else sprintf("*/%s.shp",mapName)
+  pattern = if (is.null(mapName)) "*.shp" else sprintf("*/%s.shp", mapName)
 
-  if(is.null(id)) {
-    if(!is.null(mapName)) {
+  if (is.null(id)) {
+    if (!is.null(mapName)) {
       id = fs::path_sanitize(mapName)
     } else {
       id = zipUrl %>% fs::path_file() %>% fs::path_ext_remove()
     }
   }
 
-  .cached({
+  .cached(
+    {
+      onsZip = fs::path(wd, id) %>% fs::path_ext_set("zip")
+      unzipDir = fs::path(wd, id)
+      if (!file.exists(onsZip)) {
+        status = utils::download.file(zipUrl, destfile = onsZip)
+        if (status != 0) stop("Problem downloading map: ", zipUrl)
+      }
+      suppressWarnings(dir.create(unzipDir, recursive = TRUE))
 
-    onsZip = fs::path(wd,id) %>% fs::path_ext_set("zip")
-    unzipDir = fs::path(wd,id)
-    if(!file.exists(onsZip)) {
-      status = utils::download.file(zipUrl, destfile = onsZip)
-      if (status != 0) stop("Problem downloading map: ",zipUrl)
-    }
-    suppressWarnings(dir.create(unzipDir,recursive = TRUE))
+      paths = utils::unzip(onsZip, exdir = unzipDir, junkpaths = TRUE)
+      if (length(paths) < 1) {
+        stop("Could not extract files from shapefile zip: ", onsZip)
+      }
 
-    paths = utils::unzip(onsZip, exdir=unzipDir, junkpaths = TRUE)
-    if(length(paths) < 1) stop("Could not extract files from shapefile zip: ",onsZip)
+      # should be using fs::dir_ls with a glob to do an ends with match.
+      mapFile = fs::dir_ls(
+        fs::path_abs(unzipDir),
+        recurse = TRUE,
+        glob = "*.shp"
+      )
+      if (length(mapFile) == 0) {
+        stop("No shape file found in zip")
+      }
 
-    # should be using fs::dir_ls with a glob to do an ends with match.
-    mapFile = fs::dir_ls(fs::path_abs(unzipDir),recurse = TRUE,glob = "*.shp")
-    if(length(mapFile) == 0) stop("No shape file found in zip")
+      if (length(mapFile) > 1) {
+        mapFile = fs::dir_ls(
+          fs::path_abs(unzipDir),
+          recurse = TRUE,
+          glob = pattern
+        )
+        if (length(mapFile) != 1) {
+          stop(
+            "No uniquely matching shape file for ",
+            pattern,
+            " has been found in zip: ",
+            onsZip
+          )
+        }
+      }
 
-    if(length(mapFile)>1) {
-      mapFile = fs::dir_ls(fs::path_abs(unzipDir),recurse = TRUE,glob = pattern)
-      if(length(mapFile)!=1) stop("No uniquely matching shape file for ",pattern," has been found in zip: ",onsZip)
-    }
+      map = sf::st_read(mapFile) %>% sf::st_transform(crs = 4326)
 
-    map = sf::st_read(mapFile) %>% sf::st_transform(crs=4326)
+      map = standardiseMap(map, !!codeCol, !!nameCol, !!altCodeCol, codeType)
+      if (simplify) {
+        map = suppressWarnings(map %>% rmapshaper::ms_simplify(keep = 0.1))
+      }
 
-    map = standardiseMap(map, !!codeCol, !!nameCol, !!altCodeCol, codeType)
-    if(simplify) map = suppressWarnings(map %>% rmapshaper::ms_simplify(keep=0.1))
+      .addSource(
+        name = id,
+        url = zipUrl,
+        codeCol = rlang::as_label(codeCol),
+        nameCol = rlang::as_label(nameCol),
+        altCodeCol = rlang::as_label(altCodeCol),
+        simplify = simplify,
+        license = license
+      )
 
-    .addSource(name = id, url = zipUrl,
-               codeCol = rlang::as_label(codeCol),nameCol = rlang::as_label(nameCol),
-               altCodeCol = rlang::as_label(altCodeCol),simplify = simplify, license = license)
-
-    map %>% dplyr::ungroup() %>% sf::st_as_sf()
-
-  }, name=id, hash=list(zipUrl,mapName,codeCol,nameCol,altCodeCol,codeType,simplify,license), ...)
-
+      map %>% dplyr::ungroup() %>% sf::st_as_sf()
+    },
+    name = id,
+    hash = list(
+      zipUrl,
+      mapName,
+      codeCol,
+      nameCol,
+      altCodeCol,
+      codeType,
+      simplify,
+      license
+    ),
+    ...
+  )
 }
 
 
@@ -255,38 +389,55 @@ standardiseMap = function(sf, codeCol, nameCol, altCodeCol, codeType) {
   nameCol = tryCatch(rlang::ensym(nameCol), error = function(e) NULL)
   altCodeCol = tryCatch(rlang::ensym(altCodeCol), error = function(e) NULL)
   sf = sf %>%
-    dplyr::rename_with(.fn=tolower)
-
-
+    dplyr::rename_with(.fn = tolower)
 
   .forceGeos({
     #TODO: catch missing columns and throw helpful error
-    if(!as.character(codeCol) %in% colnames(sf)) stop("the codeCol column is not present in sf should be one of: ",paste(colnames(sf),collapse = ","))
+    if (!as.character(codeCol) %in% colnames(sf)) {
+      stop(
+        "the codeCol column is not present in sf should be one of: ",
+        paste(colnames(sf), collapse = ",")
+      )
+    }
     sf = sf %>%
       dplyr::mutate(tmp_code = as.character(!!codeCol))
-    if(!identical(nameCol,NULL)) {
-      if(!as.character(nameCol) %in% colnames(sf)) stop("the nameCol column is not present in sf should be one of: ",paste(colnames(sf),collapse = ","))
+    if (!identical(nameCol, NULL)) {
+      if (!as.character(nameCol) %in% colnames(sf)) {
+        stop(
+          "the nameCol column is not present in sf should be one of: ",
+          paste(colnames(sf), collapse = ",")
+        )
+      }
       sf = sf %>% dplyr::mutate(tmp_name = as.character(!!nameCol))
       sf = sf %>% dplyr::select(-!!nameCol)
     } else {
       sf = sf %>% dplyr::mutate(tmp_name = as.character(!!codeCol))
     }
-    sf = sf %>% dplyr::select(-!!codeCol) %>% dplyr::rename(code = tmp_code,name = tmp_name)
+    sf = sf %>%
+      dplyr::select(-!!codeCol) %>%
+      dplyr::rename(code = tmp_code, name = tmp_name)
 
-    if(!identical(altCodeCol,NULL)) {
-      if(!as.character(altCodeCol) %in% colnames(sf)) stop("the altCodeCol column is not present in sf should be one of: ",paste(colnames(sf),collapse = ","))
-      sf = sf %>% dplyr::mutate(tmpAltCode = !!altCodeCol) %>%
+    if (!identical(altCodeCol, NULL)) {
+      if (!as.character(altCodeCol) %in% colnames(sf)) {
+        stop(
+          "the altCodeCol column is not present in sf should be one of: ",
+          paste(colnames(sf), collapse = ",")
+        )
+      }
+      sf = sf %>%
+        dplyr::mutate(tmpAltCode = !!altCodeCol) %>%
         dplyr::select(-!!altCodeCol) %>%
         dplyr::rename(altCode = tmpAltCode) %>%
         dplyr::mutate(altCode = as.character(altCode))
     } else {
       sf = sf %>% dplyr::mutate(altCode = as.character(NA))
     }
-    sf = sf %>% dplyr::mutate(codeType = codeType) %>% dplyr::select(codeType, code, name, altCode)
+    sf = sf %>%
+      dplyr::mutate(codeType = codeType) %>%
+      dplyr::select(codeType, code, name, altCode)
 
     sf$area = sf %>% sf::st_area() %>% as.numeric()
     return(sf %>% sf::st_zm())
-
   })
 }
 
@@ -299,17 +450,31 @@ standardiseMap = function(sf, codeCol, nameCol, altCodeCol, codeType) {
 #'
 #' @return a the filename of the zipped shapefile
 #' @export
-saveShapefile = function(shape, mapId, dir=getwd(), overwrite=FALSE) {
-  if (!dir %>% stringr::str_ends("/")) dir = paste0(dir,"/")
-  zipDir = paste0(dir,mapId)
-  if (dir.exists(zipDir) & !overwrite & length(list.files(zipDir))>0) stop("Directory ",zipDir," exists and is not empty. use overwrite=TRUE to force update")
-  if (dir.exists(zipDir)) unlink(zipDir, recursive=TRUE)
+saveShapefile = function(shape, mapId, dir = getwd(), overwrite = FALSE) {
+  if (!dir %>% stringr::str_ends("/")) {
+    dir = paste0(dir, "/")
+  }
+  zipDir = paste0(dir, mapId)
+  if (dir.exists(zipDir) & !overwrite & length(list.files(zipDir)) > 0) {
+    stop(
+      "Directory ",
+      zipDir,
+      " exists and is not empty. use overwrite=TRUE to force update"
+    )
+  }
+  if (dir.exists(zipDir)) {
+    unlink(zipDir, recursive = TRUE)
+  }
   dir.create(zipDir, recursive = TRUE)
-  suppressWarnings(sf::st_write(shape, paste0(zipDir,"/",mapId, ".shp"), driver="ESRI Shapefile"))
+  suppressWarnings(sf::st_write(
+    shape,
+    paste0(zipDir, "/", mapId, ".shp"),
+    driver = "ESRI Shapefile"
+  ))
   wd = getwd()
   setwd(dir) # the parent directory
-  utils::zip(zipfile = paste0(zipDir,".zip"),files=mapId) #zip the directory
+  utils::zip(zipfile = paste0(zipDir, ".zip"), files = mapId) #zip the directory
   setwd(wd)
-  unlink(zipDir, recursive=TRUE)
-  return(paste0(zipDir,".zip"))
+  unlink(zipDir, recursive = TRUE)
+  return(paste0(zipDir, ".zip"))
 }

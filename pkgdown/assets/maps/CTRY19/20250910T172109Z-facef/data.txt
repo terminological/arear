@@ -1,0 +1,10 @@
+file: CTRY19.rds
+file_size: 3934137
+pin_hash: facef1e8be22901f
+type: rds
+title: 'CTRY19: a pinned 4 x 6 data frame'
+description: ~
+tags: ~
+urls: ~
+created: 20250910T172109Z
+api_version: 1

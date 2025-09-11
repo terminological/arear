@@ -1,0 +1,64 @@
+Package: arear
+Title: Geospatial Convenience Functions and a Supply Demand Catchment Area Generator
+Version: 0.1.1
+Authors@R: 
+    person(given = "Robert",
+           family = "Challen",
+           role = c("aut", "cre"),
+           email = "rob.challen@bristol.ac.uk",
+           comment = c(ORCID = "0000-0002-5504-7768"))
+Description: Geospatial function collection from the COVID-19 pandemic. The main focus of this was integrating geospatial demographic, hospital capacity and COVID data from England, Scotland, Wales and Northern Ireland, all of which were available on different sites and methods. The UK has a wide range of administrative geographic boundaries for different purposes and moving from different scales and resolutions proved necessary. As the geospatial operations are quite time consuming but don't need to be repeated the ability to cache results of geospatial transformations is useful and embedded into these functions.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+LazyDataCompression: bzip2
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat,
+    ggspatial,
+    covr,
+    tidyverse,
+    ggraph,
+    readr,
+    tidygraph,
+    devtools,
+    markdown,
+    pkgdown,
+    scales,
+    rprojroot
+VignetteBuilder: knitr
+Imports: 
+    rmapshaper,
+    sf,
+    dplyr,
+    magrittr,
+    rlang,
+    fs,
+    stringr,
+    spdep,
+    glue,
+    leaflet,
+    purrr,
+    tibble,
+    digest,
+    rappdirs,
+    ggrepel,
+    ggplot2,
+    gtable,
+    grid,
+    gridExtra,
+    patchwork,
+    httr,
+    readxl,
+    tidyselect,
+    tidyr,
+    jsonlite,
+    lwgeom,
+    pins
+Depends: 
+    R (>= 3.5)
+RoxygenNote: 7.3.2.9005
+URL: https://terminological.github.io/arear/index.html,
+	https://github.com/terminological/arear
+BugReports: https://github.com/terminological/arear/issues

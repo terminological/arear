@@ -1,192 +1,66 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>/articles/arear.html</loc>
-  </url>
-  <url>
-    <loc>/articles/catchment-areas.html</loc>
-  </url>
-  <url>
-    <loc>/articles/getting-started.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/CA19.html</loc>
-  </url>
-  <url>
-    <loc>/reference/CCG20.html</loc>
-  </url>
-  <url>
-    <loc>/reference/CTRY19.html</loc>
-  </url>
-  <url>
-    <loc>/reference/CTYUA19.html</loc>
-  </url>
-  <url>
-    <loc>/reference/DZ11.html</loc>
-  </url>
-  <url>
-    <loc>/reference/GBR_ISO3166_2.html</loc>
-  </url>
-  <url>
-    <loc>/reference/GBR_ISO3166_3.html</loc>
-  </url>
-  <url>
-    <loc>/reference/GOOGLE_MOBILITY.html</loc>
-  </url>
-  <url>
-    <loc>/reference/HB19.html</loc>
-  </url>
-  <url>
-    <loc>/reference/LAD19.html</loc>
-  </url>
-  <url>
-    <loc>/reference/LAD20.html</loc>
-  </url>
-  <url>
-    <loc>/reference/LGD12.html</loc>
-  </url>
-  <url>
-    <loc>/reference/LHB19.html</loc>
-  </url>
-  <url>
-    <loc>/reference/LSOA11.html</loc>
-  </url>
-  <url>
-    <loc>/reference/MSOA11.html</loc>
-  </url>
-  <url>
-    <loc>/reference/NHSER20.html</loc>
-  </url>
-  <url>
-    <loc>/reference/OUTCODE.html</loc>
-  </url>
-  <url>
-    <loc>/reference/PHEC16.html</loc>
-  </url>
-  <url>
-    <loc>/reference/WD11.html</loc>
-  </url>
-  <url>
-    <loc>/reference/WD19.html</loc>
-  </url>
-  <url>
-    <loc>/reference/apiTrusts.html</loc>
-  </url>
-  <url>
-    <loc>/reference/arear-package.html</loc>
-  </url>
-  <url>
-    <loc>/reference/cache_clear.html</loc>
-  </url>
-  <url>
-    <loc>/reference/catchment.html</loc>
-  </url>
-  <url>
-    <loc>/reference/createCatchment.html</loc>
-  </url>
-  <url>
-    <loc>/reference/createNeighbourNetwork.html</loc>
-  </url>
-  <url>
-    <loc>/reference/devonlocality.html</loc>
-  </url>
-  <url>
-    <loc>/reference/downloadGeojson.html</loc>
-  </url>
-  <url>
-    <loc>/reference/downloadMap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getContainedIn.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getIntersection.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getMap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/interpolateByArea.html</loc>
-  </url>
-  <url>
-    <loc>/reference/listStandardMaps.html</loc>
-  </url>
-  <url>
-    <loc>/reference/londonShape.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mapTheme.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mapsources.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nse-force.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pipe.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plotLabelledMap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/popoutArea.html</loc>
-  </url>
-  <url>
-    <loc>/reference/preview.html</loc>
-  </url>
-  <url>
-    <loc>/reference/saveShapefile.html</loc>
-  </url>
-  <url>
-    <loc>/reference/standardiseMap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/surgecapacity.html</loc>
-  </url>
-  <url>
-    <loc>/reference/testdata.html</loc>
-  </url>
-  <url>
-    <loc>/reference/uk2019adultpopulation.html</loc>
-  </url>
-  <url>
-    <loc>/reference/uk2019demographics.html</loc>
-  </url>
-  <url>
-    <loc>/reference/uk2019demographicsmap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/uk2019retiredpopulation.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ukconnections.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ukcovidmap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/uklegacycovidmap.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://terminological.github.io/arear/404.html</loc></url>
+<url><loc>https://terminological.github.io/arear/LICENSE-text.html</loc></url>
+<url><loc>https://terminological.github.io/arear/LICENSE.html</loc></url>
+<url><loc>https://terminological.github.io/arear/articles/arear.html</loc></url>
+<url><loc>https://terminological.github.io/arear/articles/catchment-areas.html</loc></url>
+<url><loc>https://terminological.github.io/arear/articles/getting-started.html</loc></url>
+<url><loc>https://terminological.github.io/arear/articles/index.html</loc></url>
+<url><loc>https://terminological.github.io/arear/authors.html</loc></url>
+<url><loc>https://terminological.github.io/arear/index.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/CA19.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/CCG20.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/CTRY19.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/CTYUA19.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/DZ11.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/GBR_ISO3166_2.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/GBR_ISO3166_3.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/GOOGLE_MOBILITY.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/HB19.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/LAD19.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/LAD20.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/LGD12.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/LHB19.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/LSOA11.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/MSOA11.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/NHSER20.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/OUTCODE.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/PHEC16.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/WD11.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/WD19.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/apiTrusts.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/arear-package.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/cache_clear.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/catchment.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/createCatchment.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/createNeighbourNetwork.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/devonlocality.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/downloadGeojson.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/downloadMap.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/getContainedIn.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/getIntersection.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/getMap.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/index.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/interpolateByArea.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/listStandardMaps.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/londonShape.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/mapTheme.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/mapsources.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/nse-force.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/pipe.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/plotLabelledMap.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/popoutArea.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/preview.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/saveShapefile.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/standardiseMap.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/surgecapacity.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/testdata.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/uk2019adultpopulation.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/uk2019demographics.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/uk2019demographicsmap.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/uk2019retiredpopulation.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/ukconnections.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/ukcovidmap.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/uklegacycovidmap.html</loc></url>
 </urlset>
+

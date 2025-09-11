@@ -1,0 +1,10 @@
+file: CCG20.rds
+file_size: 159556
+pin_hash: 1a7f50da90cd69c4
+type: rds
+title: 'CCG20: a pinned 135 x 6 data frame'
+description: ~
+tags: ~
+urls: ~
+created: 20250910T172108Z
+api_version: 1

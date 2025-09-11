@@ -1,0 +1,10 @@
+file: LGD12.rds
+file_size: 5228452
+pin_hash: 8ade5b7d16d31836
+type: rds
+title: 'LGD12: a pinned 11 x 6 data frame'
+description: ~
+tags: ~
+urls: ~
+created: 20250910T172118Z
+api_version: 1

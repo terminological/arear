@@ -1,0 +1,10 @@
+file: LAD20.rds
+file_size: 6696122
+pin_hash: 7b9a6c9abc9dd865
+type: rds
+title: 'LAD20: a pinned 379 x 6 data frame'
+description: ~
+tags: ~
+urls: ~
+created: 20250910T172117Z
+api_version: 1

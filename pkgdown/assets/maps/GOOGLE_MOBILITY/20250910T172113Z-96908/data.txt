@@ -1,0 +1,10 @@
+file: GOOGLE_MOBILITY.rds
+file_size: 5645156
+pin_hash: 96908ba8128df985
+type: rds
+title: 'GOOGLE_MOBILITY: a pinned 151 x 6 data frame'
+description: ~
+tags: ~
+urls: ~
+created: 20250910T172113Z
+api_version: 1

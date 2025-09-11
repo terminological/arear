@@ -1,0 +1,10 @@
+file: MSOA11.rds
+file_size: 1821588
+pin_hash: 3d66239edd0e6bc2
+type: rds
+title: 'MSOA11: a pinned 7201 x 6 data frame'
+description: ~
+tags: ~
+urls: ~
+created: 20250910T172120Z
+api_version: 1

@@ -1,0 +1,10 @@
+file: WD19.rds
+file_size: 14470833
+pin_hash: 0fe9aa7bb332c877
+type: rds
+title: 'WD19: a pinned 8887 x 6 data frame'
+description: ~
+tags: ~
+urls: ~
+created: 20250910T172126Z
+api_version: 1

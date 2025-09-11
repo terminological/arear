@@ -1,0 +1,10 @@
+file: GBR_ISO3166_2.rds
+file_size: 1489977
+pin_hash: 7e5271a0e73f3741
+type: rds
+title: 'GBR_ISO3166_2: a pinned 183 x 6 data frame'
+description: ~
+tags: ~
+urls: ~
+created: 20250910T172111Z
+api_version: 1
