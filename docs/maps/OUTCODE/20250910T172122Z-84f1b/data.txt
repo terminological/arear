@@ -1,0 +1,10 @@
+file: OUTCODE.rds
+file_size: 8806707
+pin_hash: 84f1b86025aca0eb
+type: rds
+title: 'OUTCODE: a pinned 2880 x 6 data frame'
+description: ~
+tags: ~
+urls: ~
+created: 20250910T172122Z
+api_version: 1

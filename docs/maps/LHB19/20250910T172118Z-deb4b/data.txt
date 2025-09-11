@@ -1,0 +1,10 @@
+file: LHB19.rds
+file_size: 383464
+pin_hash: deb4b1efa1ac828f
+type: rds
+title: 'LHB19: a pinned 7 x 6 data frame'
+description: ~
+tags: ~
+urls: ~
+created: 20250910T172118Z
+api_version: 1

@@ -1,0 +1,10 @@
+file: DZ11.rds
+file_size: 5467846
+pin_hash: 9b6a7f471617ccd1
+type: rds
+title: 'DZ11: a pinned 6976 x 6 data frame'
+description: ~
+tags: ~
+urls: ~
+created: 20250910T172110Z
+api_version: 1

@@ -1,0 +1,10 @@
+file: WD11.rds
+file_size: 12252656
+pin_hash: e2dce563290b74e2
+type: rds
+title: 'WD11: a pinned 8588 x 6 data frame'
+description: ~
+tags: ~
+urls: ~
+created: 20250910T172124Z
+api_version: 1

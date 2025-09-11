@@ -1,0 +1,10 @@
+file: LSOA11.rds
+file_size: 4527525
+pin_hash: 82576f9e63f9e0bc
+type: rds
+title: 'LSOA11: a pinned 34753 x 6 data frame'
+description: ~
+tags: ~
+urls: ~
+created: 20250910T172119Z
+api_version: 1

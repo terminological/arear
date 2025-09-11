@@ -1,0 +1,10 @@
+file: LAD19.rds
+file_size: 322481
+pin_hash: 566ce133ea1cd0b1
+type: rds
+title: 'LAD19: a pinned 382 x 6 data frame'
+description: ~
+tags: ~
+urls: ~
+created: 20250910T172116Z
+api_version: 1

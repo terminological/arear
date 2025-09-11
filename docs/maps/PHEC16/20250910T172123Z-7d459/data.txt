@@ -1,0 +1,10 @@
+file: PHEC16.rds
+file_size: 1207601
+pin_hash: 7d459c5c62db3ce4
+type: rds
+title: 'PHEC16: a pinned 9 x 6 data frame'
+description: ~
+tags: ~
+urls: ~
+created: 20250910T172123Z
+api_version: 1

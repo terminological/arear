@@ -1,0 +1,10 @@
+file: HB19.rds
+file_size: 21473226
+pin_hash: 9a1f8e138ecf8fc7
+type: rds
+title: 'HB19: a pinned 14 x 6 data frame'
+description: ~
+tags: ~
+urls: ~
+created: 20250910T172115Z
+api_version: 1
