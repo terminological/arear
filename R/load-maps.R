@@ -1,10 +1,6 @@
-.loadFromPackage = function(id) {
-  x = rlang::new_environment()
-  utils::data(list = c(id), package = "arear", envir = x)
-  y = get(ls(x)[[1]], envir = x)
-  x = NULL
-  return(y)
-}
+pin_board = .memoise(
+  ~ pins::board_url("https://terminological.github.io/arear/maps/")
+)
 
 #' Gets maps for which the metadata is known.
 #'
@@ -23,15 +19,15 @@
 #' map = getMap("NHSER20")
 #' }
 getMap = function(mapId, sources = .loadSources(...), codeType = mapId, ...) {
-  tmp2 = arear
-  items = tmp2$results[, "Item"]
-  if (mapId %in% items) {
-    return(.loadFromPackage(mapId))
+  pinnedIds = pins::pin_list(pin_board())
+  if (mapId %in% pinnedIds) {
+    return(pins::pin_read(pin_board(), mapId))
   }
 
   if (!(mapId %in% names(sources))) {
     stop("Unknown map: ", mapId)
   }
+
   loader = sources[[mapId]]
   codeCol = as.symbol(tolower(loader$codeCol))
   nameCol = tryCatch(as.symbol(tolower(loader$nameCol)), error = function(e) {
