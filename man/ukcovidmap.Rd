@@ -2,8 +2,7 @@
 % Please edit documentation in R/data.R
 \name{ukcovidmap}
 \alias{ukcovidmap}
-\title{Shape file related to the detailed level for PHE coronavirus statistical reporting in England, Wales, Scotland, and Northern Ireland on the coronavirus.gov.uk tracker.
-The legacy is the level at which detailed data was reported in the first wave, prior to the API and was aggregated by https://github.com/tomwhite/covid-19-uk-data}
+\title{COVID reporting map}
 \source{
 \describe{
   \item{England, Wales, Scotland & NI - LAD19}{https://geoportal.statistics.gov.uk/datasets/local-authority-districts-december-2019-boundaries-uk-buc}
@@ -28,10 +27,22 @@ A 382 line data frame (or a 335 line data frame for legacy):
 }
 }
 \description{
-This map matches the data reported by the PHE coronavirus api when it is downloading lower tier local authority regions e.g. via
-https://api.coronavirus.data.gov.uk/v2/data?areaType=ltla&metric=newCasesBySpecimenDate&format=csv
-There are 2 regions here for which no data is reported in this API - the city of London & the isles of scilly.
+Shape file related to the detailed level for PHE coronavirus statistical
+reporting in England, Wales, Scotland, and Northern Ireland on the
+coronavirus.gov.uk tracker. The legacy is the level at which detailed data
+was reported in the first wave, prior to the API and was aggregated by
+https://github.com/tomwhite/covid-19-uk-data
 }
 \details{
-Data available under open government licence: http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+This map matches the data reported by the PHE coronavirus api when it is
+downloading lower tier local authority regions e.g. via
+https://api.coronavirus.data.gov.uk/v2/data?areaType=ltla&metric=newCasesBySpecimenDate&format=csv
+The API has now been discontinued.
+
+There are 2 regions here for which no data is reported in this API - the city
+of London & the Isles of Scilly.
+
+Data available under open government licence:
+http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
 }
+\concept{datasets}

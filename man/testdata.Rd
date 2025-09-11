@@ -24,4 +24,5 @@ testdata
 \description{
 A list of regular lattice SF polygons used for testing purposes
 }
+\concept{datasets}
 \keyword{datasets}

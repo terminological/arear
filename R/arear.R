@@ -17,6 +17,7 @@
 #' @param recalcArea - do you need the area of the intersected shape (e.g. for areal interpolation)
 #' @param ... passed on to .cached() (cache control) - relevant is nocache = TRUE which prevents this from being precalculated
 #'
+#' @concept analysis
 #' @export
 #' @return a sf object representing the intersection of the input and output shapes.
 getIntersection = function(
@@ -71,26 +72,36 @@ getIntersection = function(
 }
 
 
-#' Generate a mapping representing how the input points fit into the output shape
+#' Generate a mapping table between 2 `sf` dataframes.
 #'
-#' This assumes an id column in input and output shapes and
+#' This assumes unique keys defined in input and output shapes through column
+#' grouping and outputs a mapping table between input and output groups. The
+#' input is related to the output by containment. I.e. the result will be where
+#' the input is wholly contained within the output shape
 #'
 #' @param inputShape - a sf containing points of interest (or shapes)
-#' @param outputShape - a sf containing polygons to locate the input in
-#' @param inputVars - defines the columns of the input that you want to retain (as a dplyr::vars(...) list). This grouping should uniquely identify the row. If not present will use the current grouping of inputShape.
-#' @param outputVars - defines the columns of the output that you want to retain (as a dplyr::vars(...) list). This grouping should uniquely identify the row. If not present will use the current grouping of outputShape.
+#' @param outputShape - a sf containing polygons to locate the input in.
+#' @param inputVars - defines the columns of the input that you want to retain
+#'   (as a dplyr::vars(...) list). This grouping should uniquely identify the
+#'   row. If not present will use the current grouping of inputShape.
+#' @param outputVars - defines the columns of the output that you want to retain
+#'   (as a dplyr::vars(...) list). This grouping should uniquely identify the
+#'   row. If not present will use the current grouping of outputShape.
 #' @param suffix - the suffix of any duplicated columns as per dplyr::inner_join()
 #'
-#' @return - a mapping as a dataframe relating the input id column and output id columns
+#' @return - a mapping as a dataframe relating the `inputVars` columns and
+#' `outputVars` columns
+#'
+#' @concept analysis
 #' @export
 #'
 #' @examples
 #' # find the hospitals in a given area.
 #' mapping = getContainedIn(
-#' inputShape = arear::surgecapacity,
-#' outputShape = arear::ukcovidmap(),
-#' inputVars = dplyr::vars(hospitalId),
-#' outputVars = dplyr::vars(code)
+#'   inputShape = arear::surgecapacity,
+#'   outputShape = arear::ukcovidmap(),
+#'   inputVars = dplyr::vars(hospitalId),
+#'   outputVars = dplyr::vars(code)
 #' )
 getContainedIn = function(
   inputShape,
@@ -153,15 +164,26 @@ getContainedIn = function(
 
 #' interpolate a variable from one set of shapes to another
 #'
-#' @param inputDf - in input data frame containing the variable(s) of interest to interpolate. Stratification of the variable can be achieved by grouping
-#' @param by - the columns to use to join the inputDf to the map provided in inputShape. This is in the format of a dplyr join specification.
+#' @param inputDf - in input data frame containing the variable(s) of interest
+#'   to interpolate. Stratification of the variable can be achieved by grouping
+#' @param by - the columns to use to join the inputDf to the map provided in
+#'   inputShape. This is in the format of a dplyr join specification.
 #' @param inputShape - an input sf map,
 #' @param interpolateVar - the column that we want to do areal interpolation on,
-#' @param outputShape - an output map which may be grouped by the desired output,
-#' @param inputVars - a list of columns from the inputDf (as a dplyr::vars(...) list) that define the stratification of inputDf and are desired in the output. Defaults to the grouping of inputDf
-#' @param outputVars - a list of columns from the outputShape (as a dplyr::vars(...) list) that we want preserved in output, or defined as a grouping of outputShape
-#' @param aggregateFn - a function that will be applied to area weighted components of interpolateVar - defaults to sum
-#' @return a dataframe containing the grouping columns, the outputIdVar and the interpolated value of interpolateVar
+#' @param outputShape - an output map which may be grouped by the desired
+#'   output,
+#' @param inputVars - a list of columns from the inputDf (as a
+#'   `dplyr::vars(...)` list) that define the stratification of inputDf and are
+#'   desired in the output. Defaults to the grouping of inputDf
+#' @param outputVars - a list of columns from the outputShape (as a
+#'   `dplyr::vars(...)` list) that we want preserved in output, or defined as a
+#'   grouping of outputShape
+#' @param aggregateFn - a function that will be applied to area weighted
+#'   components of interpolateVar - defaults to sum
+#' @return a dataframe containing the grouping columns in `inputVars` and
+#'   `outputVars`, and the interpolated value of `interpolateVar`
+#'
+#' @concept analysis
 #' @export
 interpolateByArea = function(
   inputDf,
@@ -285,10 +307,15 @@ interpolateByArea = function(
 #'
 #' @param shape - a sf object, if not present will be loaded from cache
 #' @param idVar - the column containing the coded identifier of the map
-#' @param bridges - a df with the following columns: name start.lat start.long end.lat end.long defining connections between non touching shapes (e.g. bridges / ferries / etc.)
-#' @param queen - include neighbouring areas that only touch at corners, defaults to false.
-#' @param ... - passed on to .cached() (cache control) - relevant is nocache = TRUE which prevents this from being precalculated
+#' @param bridges - a df with the following columns: name start.lat start.long
+#'   end.lat end.long defining connections between non touching shapes (e.g.
+#'   bridges / ferries / etc.)
+#' @param queen - include neighbouring areas that only touch at corners,
+#'   defaults to false.
+#' @inheritDotParams .cached .nocache
 #' @return an edge list of ids with from and to columns
+#'
+#' @concept analysis
 #' @export
 createNeighbourNetwork = function(
   shape,
@@ -370,6 +397,8 @@ createNeighbourNetwork = function(
   )
 }
 
+# Visualisations ----
+
 #' Preview a map with POI using leaflet
 #'
 #' @param shape - the map
@@ -380,6 +409,8 @@ createNeighbourNetwork = function(
 #' @param poiPopupGlue - a glue specification for the popup for each poi
 #'
 #' @return htmlwidget
+#'
+#' @concept vis
 #' @export
 preview = function(
   shape,
@@ -418,11 +449,11 @@ preview = function(
   return(leaf)
 }
 
-## Plotting functions ----
-
 #' A map theme to remove extraneous clutter
 #'
 #' @export
+#' @concept vis
+#'
 #' @examples
 #' ggplot2::ggplot()+mapTheme()
 mapTheme = function() {
@@ -441,18 +472,25 @@ mapTheme = function() {
 }
 
 
-#' Create a new map with a popout panel to show areas where there is a high density of people for example.
+#' Create a magnified pop-out panel of a map
 #'
-#' Defaults work well for London on an England only map.
+#' Create a new map with a pop-out panel to show areas where there is a high
+#' density of people for example. Defaults work well for London on an England
+#' only map.
 #'
 #' @param shape The original shape
-#' @param popoutShape The mask shape. This will be summarised before applied.
-#' @param popoutScale A factor to grow the popout area by. This is linear scale so the popout will appear the square of this factor bigger.
+#' @param popoutShape The mask shape. The outer boundary of this shape will be
+#'   used as a mask to select the original shape
+#' @param popoutScale A factor to grow the popout area by. This is linear scale
+#'   so the popout will appear the square of this factor bigger.
 #' @param popoutPosition Which corner to place the popout NE,NW,SE or SW
 #' @param nudgeX shift the popout panel by a small amount (in coordinate units)
 #' @param nudgeY shift the popout panel by a small amount (in coordinate units)
 #'
-#' @return A new map with the content intersecting the popout area duplicated, expanded and placed in the specified corner.
+#' @return A new map with the content intersecting the popout area duplicated,
+#'   expanded and placed in the specified corner.
+
+#' @concept vis
 #' @export
 popoutArea = function(
   shape,
@@ -589,31 +627,73 @@ popoutArea = function(
 
 #' Create a map, usually as a chloropleth, with selected areas labelled.
 #'
-#' This can be used to pick out specific highlighted regions based on a filter, label it on a map using a short code, and provide a tabular lookup of label to full name.
+#' This can be used to pick out specific highlighted regions based on a filter,
+#' label it on a map using a short code, and provide a tabular lookup of label
+#' to full name.
 #'
-#' @param data A sf object with some data in it. If using facets this should be grouped. (and if it is grouped facetting will be automatically added)
-#' @param mapping the aesthetics as would be passed to geom_sf
-#' @param ... additional formatting parameters as would be passed to geom_sf (defaults to a thin grey line for the edge of the maps.)
-#' @param labelMapping the aesthetics of the label layer. This could include any aesthetics that apply to ggrepel::geom_label_repel other than x,y.. It must include a label aesthetic (which will go on the map) and a name aesthetic (which will go in the lookup table)
-#' @param labelStyle any additional formatting parameters that would be passed to ggrepel::geom_label_repel. Defaults to a blue label on a light transparent background which works for dark maps.
-#' A `list(segment.colour = "cyan", colour="cyan", fill=="#000000A0")` should give a cyan label on a dark transparent background which might work for lighter maps.
-#' @param labelFilter (optional) on what criteria should we select labels to display. by default it gives the top N labels as determined by the fill aesthetic. Bottom N can be achieved with `rank(!!labelSort)<=labels`.
-#' In general though any expression filter can be used on the data but bear in mind it will be interpreted in the context of the grouped data which has first sorted by the labelSort expression.
-#' @param labelSort (optional) how should we sort the labels before applying the labelFilter. This defaults to the descending order of the same variable that determines the fill of the main map.
-#' @param labels how many labels do you want, per facet. The default 6 is good for a small number of facets. This will be overridden if labelFilter is specified
+#' @param data A sf object with some data in it. If using facets this should be
+#'   grouped. (and if it is grouped facetting will be automatically added)
+#' @param mapping the aesthetics as would be passed to `geom_sf`
+#' @param ... additional formatting parameters as would be passed to `geom_sf`
+#'   (defaults to a thin grey line for the edge of the maps.)
+#' @param labelMapping the aesthetics of the label layer. This could include any
+#'   aesthetics that apply to `ggrepel::geom_label_repel` other than `x`,`y`..
+#'   It must include a label aesthetic (which will go on the map) and a name
+#'   aesthetic (which will go in the lookup table)
+#' @param labelStyle any additional formatting parameters that would be passed
+#'   to `ggrepel::geom_label_repel`. Defaults to a blue label on a light
+#'   transparent background which works for dark maps. A
+#'   `list(segment.colour = "cyan", colour="cyan", fill=="#000000A0")`
+#'   should give a cyan label on a dark transparent background which might work
+#'   for lighter maps.
+#' @param labelFilter (optional) on what criteria should we select labels to
+#'   display. by default it gives the top N labels as determined by the fill
+#'   aesthetic. Bottom N can be achieved with `rank(!!labelSort)<=labels`. In
+#'   general though any expression filter can be used on the data but bear in
+#'   mind it will be interpreted in the context of the grouped data which has
+#'   first sorted by the `labelSort` expression.
+#' @param labelSort (optional) how should we sort the labels before applying the
+#'   `labelFilter`. This defaults to the descending order of the same variable
+#'   that determines the fill of the main map.
+#' @param labels how many labels do you want, per facet. The default 6 is good
+#'   for a small number of facets. This will be overridden if `labelFilter` is
+#'   specified
 #' @param labelSize in points.
-#' @param tableSize the labels and their associated names from all facets will be assembled into a table as a ggplot/patchwork object. This defines the font size (in points) of this table. No other config is allowed.
-#' @param labelInset if a map has an zoomed in inset as produced by `popoutArea()`, for areas which are in both the main map and the inset you may wish to label only the zoomed area in the "inset", only the unzoomed area in the "main" map or "both".
+#' @param tableSize the labels and their associated names from all facets will
+#'   be assembled into a table as a ggplot/patchwork object. This defines the
+#'   font size (in points) of this table. No other config is allowed.
+#' @param labelInset if a map has an zoomed in inset as produced by
+#'   `popoutArea()`, for areas which are in both the main map and the inset you
+#'   may wish to label only the zoomed area in the "inset", only the unzoomed
+#'   area in the "main" map or "both".
 #'
-#' @return a list containing 4 items. Plot and legend may be added together to form a ggplot patchwork. e.g. `p = plotLabelledMap(...)` then `p$plot+ggplot2::scale_fill_viridis_c()+ggplot2::facet_wrap(dplyr::vars(...))+p$legend+patchwork::plot_annotation(taglevels="A")` to actually show the map.
+#' @return a list containing 4 items. Plot and legend may be added together to
+#'   form a ggplot patchwork. e.g. `p = plotLabelledMap(...)` then
+#'   `p$plot+ggplot2::scale_fill_viridis_c()+ggplot2::facet_wrap(dplyr::vars(...))+p$legend+patchwork::plot_annotation(taglevels="A")`
+#'   to actually show the map.
 #' \describe{
-#'   \item{plot}{a ggplot object showing a chloropleth (usually) which is defined by the main mapping aesthetics, with an overlaid labelling layer defined by the labelMapping aesthetics. This does not include fill or colour scales so you will probably want
-#'   `plot+ggplot2::scale_fill_viridis_c()` or something similar to define the fill}
-#'   \item{legend}{a ggplot patchwork containing the lookup table from labels to names (as determined by the names aesthetic)}
-#'   \item{labelDf}{the filtered dataframe of the labels appearing in the labelling layer. The .x and .y columns are added which show where the label is placed on the main map. the .label and .name show the labels and names respectively}
-#'   \item{labeller}{A function that returns a layer of the labels, formatted in same way as the main map. the labeller function takes optional xVar and yVar parameter which are columns in the sf object. These define the x and y aesthetics of the labeller and default
-#'   to the same position as the main map. The labeller function can be used to add a labels layer to a different map, or to a different graph. This might be useful if you want to combine cartograms with points of interest and have them consistently labelled.}
+#'   \item{plot}{a ggplot object showing a chloropleth (usually) which is
+#'   defined by the main mapping aesthetics, with an overlaid labelling layer
+#'   defined by the labelMapping aesthetics. This does not include fill or
+#'   colour scales so you will probably want `plot+ggplot2::scale_fill_viridis_c()`
+#'   or something similar to define the fill}
+#'   \item{legend}{a ggplot patchwork containing the lookup table from labels
+#'   to names (as determined by the names aesthetic)}
+#'   \item{labelDf}{the filtered dataframe of the labels appearing in the
+#'   labelling layer. The .x and .y columns are added which show where the
+#'   label is placed on the main map. the .label and .name show the labels
+#'   and names respectively}
+#'   \item{labeller}{A function that returns a layer of the labels, formatted
+#'   in same way as the main map. the labeller function takes optional xVar
+#'   and yVar parameter which are columns in the sf object. These define the
+#'   x and y aesthetics of the labeller and default to the same position as
+#'   the main map. The labeller function can be used to add a labels layer to
+#'   a different map, or to a different graph. This might be useful if you want
+#'   to combine cartograms with points of interest and have them consistently
+#'   labelled.}
 #' }
+#'
+#' @concept vis
 #' @export
 plotLabelledMap = function(
   data,

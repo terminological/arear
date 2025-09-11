@@ -21,6 +21,8 @@ A list with:
 mapsources
 }
 \description{
-A list of URLs to get maps, and metadata about the maps in the shapefiles and the column labelling.
+A list of URLs to get maps, and metadata about the maps in the shapefiles and
+the column labelling.
 }
+\concept{datasets}
 \keyword{datasets}

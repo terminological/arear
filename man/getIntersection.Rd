@@ -29,3 +29,4 @@ a sf object representing the intersection of the input and output shapes.
 \description{
 get the intersection between to maps with ids. Caches the result in the working directory.
 }
+\concept{analysis}

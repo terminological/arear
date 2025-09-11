@@ -19,27 +19,37 @@ downloadMap(
 )
 }
 \arguments{
-\item{zipUrl}{- the URL of the zipped shapefile}
+\item{zipUrl}{the URL of the zipped shapefile}
 
-\item{mapName}{- the layer name or map name - this is the "xyz" of a zip file containing "xyz.shp". If you are getting multiple layers it is OK to repeatedly call this within the same session as the download is stored, see wd option.}
+\item{mapName}{the layer name or map name - this is the "xyz" of a zip file
+containing "xyz.shp". If you are getting multiple layers it is OK to
+repeatedly call this within the same session as the download is stored, see
+wd option.}
 
-\item{codeCol}{- the name of the column containing the id or code}
+\item{codeCol}{the name of the column containing the id or code}
 
-\item{nameCol}{- the name of the column containing the label (optional - defaults to the same as codeCol)}
+\item{nameCol}{the name of the column containing the label (optional -
+defaults to the same as codeCol)}
 
-\item{altCodeCol}{- an optional column name containing another code type}
+\item{altCodeCol}{an optional column name containing another code type}
 
-\item{codeType}{- the "type" of the code - optional. defaults to NA}
+\item{codeType}{the "type" of the code - optional. defaults to NA}
 
-\item{simplify}{- do you want to simplify the map}
+\item{simplify}{do you want to simplify the map}
 
-\item{wd}{- an optional working directory (defaults to `getOption("arear.download.dir", tempdir())`)}
+\item{wd}{an optional working directory (defaults to
+`getOption("arear.download.dir", tempdir())`)}
 
-\item{id}{- an optional id for the map that can be used to retrieve it later (through getMap()) - defaults to either the mapName or if not present the name of the zip file.}
+\item{id}{an optional id for the map that can be used to retrieve it later
+(through getMap()) - defaults to either the mapName or if not present the
+name of the zip file.}
 
-\item{license}{- an optional license string}
+\item{license}{an optional license string}
 
-\item{...}{- passed to .cache, param nocache=TRUE to disable caching}
+\item{...}{
+  Named arguments passed on to \code{\link[=.cached]{.cached}}\describe{
+    \item{\code{.nocache}}{an option to defeat the caching which can be set globally as options("cache.disable"=TRUE)}
+}}
 }
 \value{
 a sf object containing the map
@@ -57,3 +67,4 @@ downloadMap(
 )
 }
 }
+\concept{io}

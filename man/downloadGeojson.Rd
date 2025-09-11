@@ -19,21 +19,24 @@ downloadGeojson(
 \arguments{
 \item{geojsonUrl}{the URL of the geojson resource}
 
-\item{codeCol}{- the name of the column containing the id or code}
+\item{codeCol}{the name of the column containing the id or code}
 
-\item{nameCol}{- the name of the column containing the label (optional - defaults to the same as codeCol)}
+\item{nameCol}{the name of the column containing the label (optional - defaults to the same as codeCol)}
 
-\item{altCodeCol}{- an optional column name containing another code type}
+\item{altCodeCol}{an optional column name containing another code type}
 
-\item{codeType}{- the "type" of the code - optional. defaults to NA}
+\item{codeType}{the "type" of the code - optional. defaults to NA}
 
-\item{simplify}{- do you want to simplify the map}
+\item{simplify}{do you want to simplify the map}
 
-\item{id}{- an id for the map that can be used to retrieve it in the future (through getMap()).}
+\item{id}{an id for the map that can be used to retrieve it in the future (through getMap()).}
 
-\item{license}{- an optional license string}
+\item{license}{an optional license string}
 
-\item{...}{- passed to .cache, param nocache=TRUE to disable caching}
+\item{...}{
+  Named arguments passed on to \code{\link[=.cached]{.cached}}\describe{
+    \item{\code{.nocache}}{an option to defeat the caching which can be set globally as options("cache.disable"=TRUE)}
+}}
 }
 \value{
 the sf object for this geoJson
@@ -41,3 +44,4 @@ the sf object for this geoJson
 \description{
 Download a geojson url, standardise it and cache the result
 }
+\concept{io}

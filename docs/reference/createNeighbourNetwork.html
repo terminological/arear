@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">arear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,15 +61,22 @@
 
 
 <dt id="arg-bridges">bridges<a class="anchor" aria-label="anchor" href="#arg-bridges"></a></dt>
-<dd><p>- a df with the following columns: name start.lat start.long end.lat end.long defining connections between non touching shapes (e.g. bridges / ferries / etc.)</p></dd>
+<dd><p>- a df with the following columns: name start.lat start.long
+end.lat end.long defining connections between non touching shapes (e.g.
+bridges / ferries / etc.)</p></dd>
 
 
 <dt id="arg-queen">queen<a class="anchor" aria-label="anchor" href="#arg-queen"></a></dt>
-<dd><p>- include neighbouring areas that only touch at corners, defaults to false.</p></dd>
+<dd><p>- include neighbouring areas that only touch at corners,
+defaults to false.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>- passed on to .cached() (cache control) - relevant is nocache = TRUE which prevents this from being precalculated</p></dd>
+<dd><p>Named arguments passed on to <code><a href="dot-cached.html">.cached</a></code></p><dl><dt><code>.nocache</code></dt>
+<dd><p>an option to defeat the caching which can be set globally as options("cache.disable"=TRUE)</p></dd>
+
+
+</dl></dd>
 
 </dl></div>
     <div class="section level2">

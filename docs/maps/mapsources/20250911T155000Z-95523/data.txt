@@ -1,0 +1,10 @@
+file: mapsources.json
+file_size: 8483
+pin_hash: 955233102c83f570
+type: json
+title: 'mapsources: a pinned list'
+description: ~
+tags: ~
+urls: ~
+created: 20250911T155000Z
+api_version: 1

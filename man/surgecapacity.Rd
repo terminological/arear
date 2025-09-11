@@ -3,7 +3,7 @@
 \docType{data}
 \name{surgecapacity}
 \alias{surgecapacity}
-\title{Locations of UK general medical hospitals in mid march 2020 with estimates of beds available and maximal surge capacity HDU beds}
+\title{Hospital surge capacity in COVID}
 \format{
 A sf geometry with:
 \describe{
@@ -23,9 +23,13 @@ A sf geometry with:
 surgecapacity
 }
 \description{
-This was manually assembled and curated from various sources in mid march 2020 as the NHS geared up to provide
-additional capacity to cope with the surge in COVID cases. It is not an up to date picture of NHS capacity. It
-does not include mental health or community hospitals. The surge capacity seems to have been calculated quite differently
-in Scotland.
+Locations of UK general medical hospitals in mid march 2020 with estimates of
+beds available and maximal surge capacity HDU beds. This was manually
+assembled and curated from various sources in mid march 2020 as the NHS
+geared up to provide additional capacity to cope with the surge in COVID
+cases. It is not an up to date picture of NHS capacity. It does not include
+mental health or community hospitals. The surge capacity seems to have been
+calculated quite differently in Scotland.
 }
+\concept{datasets}
 \keyword{datasets}

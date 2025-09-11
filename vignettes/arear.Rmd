@@ -30,7 +30,15 @@ projectRoot = tryCatch({
 
 # Background
 
-This library is a collection of functions that I created when working on the COVID-19 pandemic. The main focus of this was integrating geospatial demographic, hospital capacity and COVID data from England, Scotland, Wales and Northern Ireland, all of which were available on different sites and methods. The UK has a wide range of administrative geographic boundaries for different purposes and moving from different scales and resolutions proved necessary. As the geospatial operations are quite time consuming but don't need to be repeated the ability to cache results of geospatial transformations is useful and embedded into these functions.
+This library is a collection of functions that I created when working on the
+COVID-19 pandemic. The main focus of this was integrating geospatial
+demographic, hospital capacity and COVID data from England, Scotland, Wales and
+Northern Ireland, all of which were available on different sites and methods.
+The UK has a wide range of administrative geographic boundaries for different
+purposes and moving from different scales and resolutions proved necessary. As
+the geospatial operations are quite time consuming but don't need to be repeated
+the ability to cache results of geospatial transformations is useful and
+embedded into these functions.
 
 ```{r setup}
 
@@ -51,48 +59,80 @@ ggplot2::theme_set(
 
 # Maps and capacity data
 
-Getting UK map files that relate to standardised geographical codes supplied with the COVID data from the different devolved administrations was wrapped into the following functions. These download, cache and rename the maps to have a consistent naming convention:
+Getting UK map files that relate to standardised geographical codes supplied
+with the COVID data from the different devolved administrations was wrapped into
+the following functions. These download, cache and rename the maps to have a
+consistent naming convention:
 
 ```{r}
 arear::listStandardMaps()
 map = arear::getMap("CTRY19")
 ```
 
-In March 2019, the capacity of the NHS to deal with acutely unwell patients was added to by reconfiguration of clinical areas such as cardiac catheterisation labs, or surgical recovery units, to provide acute respiratory support. This was also increased by addition of capacity from private providers. To model the impact of COVID on regional health services we curated a data set of NHS and non-NHS providers. The curated data lists hospitals, some capacity estimates and their geographical location:
+In March 2019, the capacity of the NHS to deal with acutely unwell patients was
+added to by reconfiguration of clinical areas such as cardiac catheterisation
+labs, or surgical recovery units, to provide acute respiratory support. This was
+also increased by addition of capacity from private providers. To model the
+impact of COVID on regional health services we curated a data set of NHS and
+non-NHS providers. The curated data lists hospitals, some capacity estimates and
+their geographical location:
 
 ```{r}
-nhshospitals = arear::surgecapacity %>% dplyr::filter(sector == "NHS Sector")
-ggplot()+ggplot2::geom_sf(data=map)+ggplot2::geom_sf(data=nhshospitals,ggplot2::aes(colour=tier1),size=0.5)
+nhshospitals = arear::surgecapacity %>% 
+  dplyr::filter(sector == "NHS Sector")
+
+ggplot()+
+  ggplot2::geom_sf(data=map)+
+  ggplot2::geom_sf(data=nhshospitals,ggplot2::aes(colour=tier1),size=0.5)
 ```
 
-A similar set of data is bundled with the library for fine grained demographic estimates for both adults and elderly adults the start of the pandemic, with an associated map shapefile.
+A similar set of data is bundled with the library for fine grained demographic
+estimates for both adults and elderly adults the start of the pandemic, with an
+associated map shapefile.
 
 # Containment
 
-Finding out which hospitals were in which geographic area can be done easily in sf, but getting the library can get the result conveniently as a mapping between code sets. The following allows us to assign hospitals to specific regions and hence work out capacity stats at different levels of geography - In this case at the NHS regional level:
+Finding out which hospitals were in which geographic area can be done easily in
+sf, but getting the library can get the result conveniently as a mapping between
+code sets. The following allows us to assign hospitals to specific regions and
+hence work out capacity stats at different levels of geography - In this case at
+the NHS regional level:
 
 ```{r}
 nhser = arear::getMap("NHSER20")
-hospitalId2nhser = arear::getContainedIn(nhshospitals %>% dplyr::group_by(hospitalId, hospitalName), nhser %>% dplyr::group_by(code,name))
+hospitalId2nhser = arear::getContainedIn(
+  nhshospitals %>% dplyr::group_by(hospitalId, hospitalName), 
+  nhser %>% dplyr::group_by(code,name)
+)
 
-hospitalsByNhser = nhshospitals %>% dplyr::inner_join(hospitalId2nhser,by=c("hospitalId","hospitalName"))
-ggplot()+ggplot2::geom_sf(data=nhser)+ggplot2::geom_sf(data = hospitalsByNhser,ggplot2::aes(colour=name),size=0.5)
+hospitalsByNhser = nhshospitals %>% 
+  dplyr::inner_join(hospitalId2nhser,by=c("hospitalId","hospitalName"))
+
+ggplot()+
+  ggplot2::geom_sf(data=nhser)+
+  ggplot2::geom_sf(data = hospitalsByNhser,ggplot2::aes(colour=name),size=0.5)
 ```
 
 And hence we can estimate capacity at the NHS regional level:
 
 ```{r}
-nhserBeds = hospitalsByNhser %>% tibble::as_tibble() %>% dplyr::group_by(code,name) %>% dplyr::summarise(
-  acuteBeds = sum(acuteBeds),
-  hduBeds = sum(hduBeds)
-)
+nhserBeds = hospitalsByNhser %>% 
+  tibble::as_tibble() %>% 
+  dplyr::group_by(code,name) %>% 
+  dplyr::summarise(
+    acuteBeds = sum(acuteBeds),
+    hduBeds = sum(hduBeds)
+  )
 
 nhserBeds
 ```
 
 # Intersection
 
-Mapping between different levels of granularity needs a many to many weighted mapping. This is essentially an area intersection. Here we see the intersection between Public Health England regions, which were used for the React study amongst others, and NHS regions.
+Mapping between different levels of granularity needs a many to many weighted
+mapping. This is essentially an area intersection. Here we see the intersection
+between Public Health England regions, which were used for the React study
+amongst others, and NHS regions.
 
 ```{r}
 phec = arear::getMap("PHEC16")
@@ -112,26 +152,49 @@ p1+p2+p3
 
 # Areal interpolation
 
-There are other ways of doing this but if all the information you have are the areas and the summary capacity figures you can convert the NHS regional bed capacity figures into PHE centre bed capacity figures using areal interpolation, this version is dplyr friendly and operates on grouped data:
+There are other ways of doing this but if all the information you have are the
+areas and the summary capacity figures you can convert the NHS regional bed
+capacity figures into PHE centre bed capacity figures using areal interpolation,
+this version is dplyr friendly and operates on grouped data:
 
 ```{r}
 
-phecBeds = nhserBeds %>% 
+tmpBedsCount = nhserBeds %>% 
   tidyr::pivot_longer(cols = c(acuteBeds,hduBeds), names_to="type", values_to="beds") %>% 
-  dplyr::group_by(type) %>% 
-  arear::interpolateByArea(inputShape = nhser,by="code", interpolateVar = beds, outputShape = phec %>% dplyr::group_by(name,code))
+  dplyr::group_by(type) 
 
-phecBeds %>% dplyr::ungroup() %>% tidyr::pivot_wider(names_from = type, values_from = beds)
+
+phecBeds = 
+  arear::interpolateByArea(
+    tmpBedsCount,
+    inputShape = nhser, by="code", 
+    interpolateVar = beds, 
+    outputShape = phec %>% dplyr::group_by(name,code)
+  )
+
+phecBeds %>% 
+  dplyr::ungroup() %>% 
+  tidyr::pivot_wider(names_from = type, values_from = beds)
 
 
 ```
 
 # Geography as network
 
-The spread of COVID between different areas depends on the connections between areas. Whilst this has a lot to do with commuting and transport networks, there is an element which is due to geographical proximity. The redistribution of hospitalised cases between different regions may also be driven by nearby capacity. The library makes it easier to represent the geography as a network and in this example we investigate local authority districts (LAD) and  weight the nodes of that network by the number of beds in each LAD. The result is just about recognizably the UK but lying on its side. If you want a more geographical view of the network each node has the SF polygon in it so with some processing this can be converted into a centroid and these co-ordinates used to lay out the graph.
+The spread of COVID between different areas depends on the connections between
+areas. Whilst this has a lot to do with commuting and transport networks, there
+is an element which is due to geographical proximity. The redistribution of
+hospitalised cases between different regions may also be driven by nearby
+capacity. The library makes it easier to represent the geography as a network
+and in this example we investigate local authority districts (LAD) and  weight
+the nodes of that network by the number of beds in each LAD. The result is just
+about recognizably the UK but lying on its side. If you want a more geographical
+view of the network each node has the SF polygon in it so with some processing
+this can be converted into a centroid and these co-ordinates used to lay out the
+graph.
 
 ```{r}
-lad = arear::LAD19
+lad = arear::getMap("LAD19")
 
 tmp = arear::surgecapacity %>% 
   dplyr::group_by(hospitalId, hospitalName, acuteBeds, hduBeds) %>% 
@@ -166,7 +229,8 @@ arear::preview(
       shape = lad,
       poi=nhshospitals, 
       poiLabelGlue = "{hospitalName}",
-      poiPopupGlue = "<b>{hospitalName}</b><ul><li>{trustName}</li><li>hdu: {hduBeds}</li><li>acute: {acuteBeds}</li></ul>"
+      poiPopupGlue = 
+        "<b>{hospitalName}</b><ul><li>{trustName}</li><li>hdu: {hduBeds}</li><li>acute: {acuteBeds}</li></ul>"
 )
 
 ```
@@ -174,7 +238,15 @@ arear::preview(
 
 # Estimating the catchment areas of hospitals.
 
-Prior to any hospital activity data for COVID being available, we developed an algorithm for predicting the catchment areas of a set of hospitals, by looking at both the location of supply of hospital beds and the local demand in terms of population. This is described in detail here - AWAITING FINAL URL. A general aim of the algorithm is to try and distribute supply to demand evenly given geographical constraints, and keeping areas contiguous.
+Prior to any hospital activity data for COVID being available, we developed an
+algorithm for predicting the catchment areas of a set of hospitals, by looking
+at both the location of supply of hospital beds and the local demand in terms of
+population. This is described in detail in the paper: R. J. Challen, G. J.
+Griffith, L. Lacasa, and K. Tsaneva-Atanasova, ‘Algorithmic hospital catchment
+area estimation using label propagation’, BMC Health Services Research, vol. 22,
+no. 1, p. 828, June 2022, (doi: 10.1186/s12913-022-08127-7). A general aim of the
+algorithm is to try and distribute supply to demand evenly given geographical
+constraints, and keeping areas contiguous.
 
 ```{r}
 
@@ -185,7 +257,10 @@ supply = arear::surgecapacity %>%
 
 demand = arear::uk2019demographicsmap() %>% 
   dplyr::filter(code %>% stringr::str_starts("E")) %>% # easy way to get england only.
-  dplyr::left_join(arear::uk2019adultpopulation %>% dplyr::select(-name,-codeType), by="code")
+  dplyr::left_join(
+    arear::uk2019adultpopulation %>% 
+      dplyr::select(-name,-codeType), by="code"
+  )
 
 # devtools::load_all()
 
@@ -213,14 +288,24 @@ ggplot(catchmentMap)+
 
 # Displaying e.g. London as a popout
 
-This is made easier by a function which creates a scaled copy of any mask (defaults to London) in a corner of choice
+This is made easier by a function which creates a scaled copy of any mask
+(defaults to London) in a corner of choice
 
 ```{r}
 
-mapWithPopout = catchmentMap %>% arear::popoutArea(popoutPosition = "NE", popoutScale = 3, nudgeX = 0.25, nudgeY = 0.25)
-# devtools::load_all()
+mapWithPopout = catchmentMap %>% 
+  arear::popoutArea(
+    popoutPosition = "NE", 
+    popoutScale = 3, 
+    nudgeX = 0.25, 
+    nudgeY = 0.25
+  )
+
 ggplot(mapWithPopout)+
-  ggplot2::geom_sf(mapping = ggplot2::aes(fill = bedsPer100K), size=0.1, colour="white")+
+  ggplot2::geom_sf(
+    mapping = ggplot2::aes(fill = bedsPer100K), 
+    size=0.1, colour="white"
+  )+
   ggplot2::scale_fill_viridis_c(limit=c(NA,400), oob=scales::squish)
 
 
@@ -228,10 +313,15 @@ ggplot(mapWithPopout)+
 
 # Facetted plot labelling
 
-It is useful to be able to highlight regions by name on maps according to some criteria (usually the top N regions on a chloropleth). This is useful when combined with faceting and with popouts to highlight areas. The library includes a specialised map drawing function that allows a short label to be drawn on the map and provides a lookup table to get the full name of the feature. This is particularly useful for time-series.
+It is useful to be able to highlight regions by name on maps according to some
+criteria (usually the top N regions on a chloropleth). This is useful when
+combined with faceting and with popouts to highlight areas. The library includes
+a specialised map drawing function that allows a short label to be drawn on the
+map and provides a lookup table to get the full name of the feature. This is
+particularly useful for time-series.
 
 ```{r fig.width=6, fig.height=8}
-# devtools::load_all()
+
 # Investigate the timeseries of cases at 4 date points
 maxDate = as.Date("2021-03-01")
 dateFacets = seq(maxDate,by = -14,length.out = 6)
@@ -239,35 +329,55 @@ dateFacets = seq(maxDate,by = -14,length.out = 6)
 # make sure the data is complete and no missing zero values
 apiTrusts2 = apiTrusts %>% 
   dplyr::filter(date %in% dateFacets) %>%
-  tidyr::complete(tidyr::nesting(area_code,area_type,area_name),date,fill=list(value=0))
+  tidyr::complete(
+    tidyr::nesting(area_code,area_type,area_name),
+    date,
+    fill=list(value=0)
+  )
 
-mapTs = mapWithPopout %>% dplyr::left_join(apiTrusts2, by = c("trustId" = "area_code"))
+mapTs = mapWithPopout %>% 
+  dplyr::left_join(apiTrusts2, by = c("trustId" = "area_code"))
 
 tmp = arear::plotLabelledMap(
   mapTs %>% dplyr::group_by(date), 
   mapping = ggplot2::aes(fill = value/beds*100), 
-  size=0.1, colour="white", # Default styles for map
+  size=0.1, 
+  colour="white", # Default styles for map
   labelMapping = ggplot2::aes(label = trustId, name = area_name),
   labels = 4,
   labelInset = "inset" #this means the labels relevant to the inset are only placed on the inset itself
 )
 
 tmp$plot+
-  ggplot2::scale_fill_viridis_c(option = "magma",limit=c(NA,50),oob = scales::squish,name="admit/100 bed")+
-  ggplot2::theme(legend.title = ggplot2::element_text(size = 6), 
-          legend.text  = ggplot2::element_text(size = 6),
-          legend.key.size = unit(0.5, "lines"),
-          legend.box.margin = ggplot2::margin())+
-  tmp$legend+patchwork::plot_layout(ncol=1,heights = c(4,1))
+  ggplot2::scale_fill_viridis_c(
+    option = "magma",
+    limit=c(NA,50),
+    oob = scales::squish,
+    name="admit/100 bed"
+  )+
+  ggplot2::theme(
+    legend.title = ggplot2::element_text(size = 6), 
+    legend.text  = ggplot2::element_text(size = 6),
+    legend.key.size = unit(0.5, "lines"),
+    legend.box.margin = ggplot2::margin()
+  )+
+  tmp$legend+
+  patchwork::plot_layout(ncol=1,heights = c(4,1))
 
 ```
 
-One part of the response to this is the labeller function, which allows adding the same labels to another map. In this case we create a new popout of the basic LAD19 map and apply the labels from the previous step. The facets from the previous map are preserved.
+One part of the response to this is the labeller function, which allows adding
+the same labels to another map. In this case we create a new popout of the basic
+LAD19 map and apply the labels from the previous step. The facets from the
+previous map are preserved.
 
 ```{r}
 ggplot(
-    arear::popoutArea(lad %>% filter(stringr::str_starts(code,"E")))
-)+geom_sf(size = 0.1)+tmp$labeller()+facet_wrap(vars(date))
+    arear::popoutArea(
+      lad %>% filter(stringr::str_starts(code,"E"))
+    )
+  )+
+  geom_sf(size = 0.1)+tmp$labeller()+facet_wrap(vars(date))
 ```
 
 The library is continuously evolving.

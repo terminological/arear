@@ -2,7 +2,7 @@
 % Please edit documentation in R/load-maps.R
 \name{standardiseMap}
 \alias{standardiseMap}
-\title{Standardise maps to a minimal set of attributes with consistent naming with code, name and codeType columns and an optional altCode column}
+\title{Standardise maps to consistent naming}
 \usage{
 standardiseMap(sf, codeCol, nameCol, altCodeCol, codeType)
 }
@@ -21,5 +21,7 @@ standardiseMap(sf, codeCol, nameCol, altCodeCol, codeType)
 a standardised map
 }
 \description{
-Standardise maps to a minimal set of attributes with consistent naming with code, name and codeType columns and an optional altCode column
+to a minimal set of attributes with consistent naming with code, name and
+codeType columns and an optional altCode column
 }
+\concept{io}

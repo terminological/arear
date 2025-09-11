@@ -19,41 +19,82 @@ plotLabelledMap(
 )
 }
 \arguments{
-\item{data}{A sf object with some data in it. If using facets this should be grouped. (and if it is grouped facetting will be automatically added)}
+\item{data}{A sf object with some data in it. If using facets this should be
+grouped. (and if it is grouped facetting will be automatically added)}
 
-\item{mapping}{the aesthetics as would be passed to geom_sf}
+\item{mapping}{the aesthetics as would be passed to `geom_sf`}
 
-\item{...}{additional formatting parameters as would be passed to geom_sf (defaults to a thin grey line for the edge of the maps.)}
+\item{...}{additional formatting parameters as would be passed to `geom_sf`
+(defaults to a thin grey line for the edge of the maps.)}
 
-\item{labelMapping}{the aesthetics of the label layer. This could include any aesthetics that apply to ggrepel::geom_label_repel other than x,y.. It must include a label aesthetic (which will go on the map) and a name aesthetic (which will go in the lookup table)}
+\item{labelMapping}{the aesthetics of the label layer. This could include any
+aesthetics that apply to `ggrepel::geom_label_repel` other than `x`,`y`..
+It must include a label aesthetic (which will go on the map) and a name
+aesthetic (which will go in the lookup table)}
 
-\item{labelStyle}{any additional formatting parameters that would be passed to ggrepel::geom_label_repel. Defaults to a blue label on a light transparent background which works for dark maps.
-A `list(segment.colour = "cyan", colour="cyan", fill=="#000000A0")` should give a cyan label on a dark transparent background which might work for lighter maps.}
+\item{labelStyle}{any additional formatting parameters that would be passed
+to `ggrepel::geom_label_repel`. Defaults to a blue label on a light
+transparent background which works for dark maps. A
+`list(segment.colour = "cyan", colour="cyan", fill=="#000000A0")`
+should give a cyan label on a dark transparent background which might work
+for lighter maps.}
 
-\item{labelFilter}{(optional) on what criteria should we select labels to display. by default it gives the top N labels as determined by the fill aesthetic. Bottom N can be achieved with `rank(!!labelSort)<=labels`.
-In general though any expression filter can be used on the data but bear in mind it will be interpreted in the context of the grouped data which has first sorted by the labelSort expression.}
+\item{labelFilter}{(optional) on what criteria should we select labels to
+display. by default it gives the top N labels as determined by the fill
+aesthetic. Bottom N can be achieved with `rank(!!labelSort)<=labels`. In
+general though any expression filter can be used on the data but bear in
+mind it will be interpreted in the context of the grouped data which has
+first sorted by the `labelSort` expression.}
 
-\item{labelSort}{(optional) how should we sort the labels before applying the labelFilter. This defaults to the descending order of the same variable that determines the fill of the main map.}
+\item{labelSort}{(optional) how should we sort the labels before applying the
+`labelFilter`. This defaults to the descending order of the same variable
+that determines the fill of the main map.}
 
-\item{labels}{how many labels do you want, per facet. The default 6 is good for a small number of facets. This will be overridden if labelFilter is specified}
+\item{labels}{how many labels do you want, per facet. The default 6 is good
+for a small number of facets. This will be overridden if `labelFilter` is
+specified}
 
 \item{labelSize}{in points.}
 
-\item{tableSize}{the labels and their associated names from all facets will be assembled into a table as a ggplot/patchwork object. This defines the font size (in points) of this table. No other config is allowed.}
+\item{tableSize}{the labels and their associated names from all facets will
+be assembled into a table as a ggplot/patchwork object. This defines the
+font size (in points) of this table. No other config is allowed.}
 
-\item{labelInset}{if a map has an zoomed in inset as produced by `popoutArea()`, for areas which are in both the main map and the inset you may wish to label only the zoomed area in the "inset", only the unzoomed area in the "main" map or "both".}
+\item{labelInset}{if a map has an zoomed in inset as produced by
+`popoutArea()`, for areas which are in both the main map and the inset you
+may wish to label only the zoomed area in the "inset", only the unzoomed
+area in the "main" map or "both".}
 }
 \value{
-a list containing 4 items. Plot and legend may be added together to form a ggplot patchwork. e.g. `p = plotLabelledMap(...)` then `p$plot+ggplot2::scale_fill_viridis_c()+ggplot2::facet_wrap(dplyr::vars(...))+p$legend+patchwork::plot_annotation(taglevels="A")` to actually show the map.
+a list containing 4 items. Plot and legend may be added together to
+  form a ggplot patchwork. e.g. `p = plotLabelledMap(...)` then
+  `p$plot+ggplot2::scale_fill_viridis_c()+ggplot2::facet_wrap(dplyr::vars(...))+p$legend+patchwork::plot_annotation(taglevels="A")`
+  to actually show the map.
 \describe{
-  \item{plot}{a ggplot object showing a chloropleth (usually) which is defined by the main mapping aesthetics, with an overlaid labelling layer defined by the labelMapping aesthetics. This does not include fill or colour scales so you will probably want
-  `plot+ggplot2::scale_fill_viridis_c()` or something similar to define the fill}
-  \item{legend}{a ggplot patchwork containing the lookup table from labels to names (as determined by the names aesthetic)}
-  \item{labelDf}{the filtered dataframe of the labels appearing in the labelling layer. The .x and .y columns are added which show where the label is placed on the main map. the .label and .name show the labels and names respectively}
-  \item{labeller}{A function that returns a layer of the labels, formatted in same way as the main map. the labeller function takes optional xVar and yVar parameter which are columns in the sf object. These define the x and y aesthetics of the labeller and default
-  to the same position as the main map. The labeller function can be used to add a labels layer to a different map, or to a different graph. This might be useful if you want to combine cartograms with points of interest and have them consistently labelled.}
+  \item{plot}{a ggplot object showing a chloropleth (usually) which is
+  defined by the main mapping aesthetics, with an overlaid labelling layer
+  defined by the labelMapping aesthetics. This does not include fill or
+  colour scales so you will probably want `plot+ggplot2::scale_fill_viridis_c()`
+  or something similar to define the fill}
+  \item{legend}{a ggplot patchwork containing the lookup table from labels
+  to names (as determined by the names aesthetic)}
+  \item{labelDf}{the filtered dataframe of the labels appearing in the
+  labelling layer. The .x and .y columns are added which show where the
+  label is placed on the main map. the .label and .name show the labels
+  and names respectively}
+  \item{labeller}{A function that returns a layer of the labels, formatted
+  in same way as the main map. the labeller function takes optional xVar
+  and yVar parameter which are columns in the sf object. These define the
+  x and y aesthetics of the labeller and default to the same position as
+  the main map. The labeller function can be used to add a labels layer to
+  a different map, or to a different graph. This might be useful if you want
+  to combine cartograms with points of interest and have them consistently
+  labelled.}
 }
 }
 \description{
-This can be used to pick out specific highlighted regions based on a filter, label it on a map using a short code, and provide a tabular lookup of label to full name.
+This can be used to pick out specific highlighted regions based on a filter,
+label it on a map using a short code, and provide a tabular lookup of label
+to full name.
 }
+\concept{vis}

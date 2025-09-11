@@ -2,7 +2,7 @@
 % Please edit documentation in R/arear.R
 \name{popoutArea}
 \alias{popoutArea}
-\title{Create a new map with a popout panel to show areas where there is a high density of people for example.}
+\title{Create a magnified pop-out panel of a map}
 \usage{
 popoutArea(
   shape,
@@ -16,19 +16,25 @@ popoutArea(
 \arguments{
 \item{shape}{The original shape}
 
-\item{popoutShape}{The mask shape. This will be summarised before applied.}
+\item{popoutShape}{The mask shape. The outer boundary of this shape will be
+used as a mask to select the original shape}
 
 \item{popoutPosition}{Which corner to place the popout NE,NW,SE or SW}
 
-\item{popoutScale}{A factor to grow the popout area by. This is linear scale so the popout will appear the square of this factor bigger.}
+\item{popoutScale}{A factor to grow the popout area by. This is linear scale
+so the popout will appear the square of this factor bigger.}
 
 \item{nudgeX}{shift the popout panel by a small amount (in coordinate units)}
 
 \item{nudgeY}{shift the popout panel by a small amount (in coordinate units)}
 }
 \value{
-A new map with the content intersecting the popout area duplicated, expanded and placed in the specified corner.
+A new map with the content intersecting the popout area duplicated,
+  expanded and placed in the specified corner.
 }
 \description{
-Defaults work well for London on an England only map.
+Create a new map with a pop-out panel to show areas where there is a high
+density of people for example. Defaults work well for London on an England
+only map.
 }
+\concept{vis}

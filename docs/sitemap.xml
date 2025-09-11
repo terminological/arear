@@ -35,6 +35,10 @@
 <url><loc>https://terminological.github.io/arear/reference/createCatchment.html</loc></url>
 <url><loc>https://terminological.github.io/arear/reference/createNeighbourNetwork.html</loc></url>
 <url><loc>https://terminological.github.io/arear/reference/devonlocality.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/dot-cache_clear.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/dot-cache_delete_stale.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/dot-cache_download.html</loc></url>
+<url><loc>https://terminological.github.io/arear/reference/dot-cached.html</loc></url>
 <url><loc>https://terminological.github.io/arear/reference/downloadGeojson.html</loc></url>
 <url><loc>https://terminological.github.io/arear/reference/downloadMap.html</loc></url>
 <url><loc>https://terminological.github.io/arear/reference/getContainedIn.html</loc></url>

@@ -7,13 +7,15 @@
 saveShapefile(shape, mapId, dir = getwd(), overwrite = FALSE)
 }
 \arguments{
-\item{shape}{- the sf shape}
+\item{shape}{the sf shape}
 
-\item{mapId}{- a mapId - will become the zip filename, and the filename of the zipped .shp file}
+\item{mapId}{a mapId - will become the zip filename, and the filename of
+the zipped .shp file}
 
-\item{dir}{- the directory (defaults to current working directory)}
+\item{dir}{the directory (defaults to current working directory)}
 
-\item{overwrite}{- the save function will not write over existing files unless this is set to true}
+\item{overwrite}{the save function will not write over existing files
+unless this is set to true}
 }
 \value{
 a the filename of the zipped shapefile
@@ -21,3 +23,4 @@ a the filename of the zipped shapefile
 \description{
 save a shapefile to disk in the current working directory
 }
+\concept{io}

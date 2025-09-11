@@ -17,11 +17,17 @@ createNeighbourNetwork(
 
 \item{idVar}{- the column containing the coded identifier of the map}
 
-\item{bridges}{- a df with the following columns: name start.lat start.long end.lat end.long defining connections between non touching shapes (e.g. bridges / ferries / etc.)}
+\item{bridges}{- a df with the following columns: name start.lat start.long
+end.lat end.long defining connections between non touching shapes (e.g.
+bridges / ferries / etc.)}
 
-\item{queen}{- include neighbouring areas that only touch at corners, defaults to false.}
+\item{queen}{- include neighbouring areas that only touch at corners,
+defaults to false.}
 
-\item{...}{- passed on to .cached() (cache control) - relevant is nocache = TRUE which prevents this from being precalculated}
+\item{...}{
+  Named arguments passed on to \code{\link[=.cached]{.cached}}\describe{
+    \item{\code{.nocache}}{an option to defeat the caching which can be set globally as options("cache.disable"=TRUE)}
+}}
 }
 \value{
 an edge list of ids with from and to columns
@@ -29,3 +35,4 @@ an edge list of ids with from and to columns
 \description{
 create a neighbourhood network from touching regions in a shapefile, with additional capability to connect non touching areas where there may be bridges etc.
 }
+\concept{analysis}

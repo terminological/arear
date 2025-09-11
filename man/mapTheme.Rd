@@ -12,3 +12,4 @@ A map theme to remove extraneous clutter
 \examples{
 ggplot2::ggplot()+mapTheme()
 }
+\concept{vis}

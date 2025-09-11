@@ -2,7 +2,7 @@
 % Please edit documentation in R/arear.R
 \name{getContainedIn}
 \alias{getContainedIn}
-\title{Generate a mapping representing how the input points fit into the output shape}
+\title{Generate a mapping table between 2 `sf` dataframes.}
 \usage{
 getContainedIn(
   inputShape,
@@ -15,26 +15,35 @@ getContainedIn(
 \arguments{
 \item{inputShape}{- a sf containing points of interest (or shapes)}
 
-\item{outputShape}{- a sf containing polygons to locate the input in}
+\item{outputShape}{- a sf containing polygons to locate the input in.}
 
-\item{inputVars}{- defines the columns of the input that you want to retain (as a dplyr::vars(...) list). This grouping should uniquely identify the row. If not present will use the current grouping of inputShape.}
+\item{inputVars}{- defines the columns of the input that you want to retain
+(as a dplyr::vars(...) list). This grouping should uniquely identify the
+row. If not present will use the current grouping of inputShape.}
 
-\item{outputVars}{- defines the columns of the output that you want to retain (as a dplyr::vars(...) list). This grouping should uniquely identify the row. If not present will use the current grouping of outputShape.}
+\item{outputVars}{- defines the columns of the output that you want to retain
+(as a dplyr::vars(...) list). This grouping should uniquely identify the
+row. If not present will use the current grouping of outputShape.}
 
 \item{suffix}{- the suffix of any duplicated columns as per dplyr::inner_join()}
 }
 \value{
-- a mapping as a dataframe relating the input id column and output id columns
+- a mapping as a dataframe relating the `inputVars` columns and
+`outputVars` columns
 }
 \description{
-This assumes an id column in input and output shapes and
+This assumes unique keys defined in input and output shapes through column
+grouping and outputs a mapping table between input and output groups. The
+input is related to the output by containment. I.e. the result will be where
+the input is wholly contained within the output shape
 }
 \examples{
 # find the hospitals in a given area.
 mapping = getContainedIn(
-inputShape = arear::surgecapacity,
-outputShape = arear::ukcovidmap(),
-inputVars = dplyr::vars(hospitalId),
-outputVars = dplyr::vars(code)
+  inputShape = arear::surgecapacity,
+  outputShape = arear::ukcovidmap(),
+  inputVars = dplyr::vars(hospitalId),
+  outputVars = dplyr::vars(code)
 )
 }
+\concept{analysis}

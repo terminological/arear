@@ -13,15 +13,18 @@ pin_board = .memoise(
 #'
 #' @return a standard sf map
 #' @export
+#' @concept io
 #'
 #' @examples
 #' \dontrun{
 #' map = getMap("NHSER20")
 #' }
 getMap = function(mapId, sources = .loadSources(...), codeType = mapId, ...) {
-  pinnedIds = pins::pin_list(pin_board())
-  if (mapId %in% pinnedIds) {
-    return(pins::pin_read(pin_board(), mapId))
+  if (!getOption("arear.skip_pins", FALSE)) {
+    pinnedIds = pins::pin_list(pin_board())
+    if (mapId %in% pinnedIds) {
+      return(pins::pin_read(pin_board(), mapId))
+    }
   }
 
   if (!(mapId %in% names(sources))) {
@@ -128,6 +131,7 @@ getMap = function(mapId, sources = .loadSources(...), codeType = mapId, ...) {
 #'
 #' @return a vector of map names
 #' @export
+#' @concept io
 listStandardMaps = function() {
   names(arear::mapsources)
 }
@@ -135,15 +139,16 @@ listStandardMaps = function() {
 #' Download a geojson url, standardise it and cache the result
 #'
 #' @param geojsonUrl the URL of the geojson resource
-#' @param codeCol - the name of the column containing the id or code
-#' @param nameCol - the name of the column containing the label (optional - defaults to the same as codeCol)
-#' @param altCodeCol - an optional column name containing another code type
-#' @param codeType - the "type" of the code - optional. defaults to NA
-#' @param simplify - do you want to simplify the map
-#' @param id - an id for the map that can be used to retrieve it in the future (through getMap()).
-#' @param license - an optional license string
-#' @param ... - passed to .cache, param nocache=TRUE to disable caching
+#' @param codeCol the name of the column containing the id or code
+#' @param nameCol the name of the column containing the label (optional - defaults to the same as codeCol)
+#' @param altCodeCol an optional column name containing another code type
+#' @param codeType the "type" of the code - optional. defaults to NA
+#' @param simplify do you want to simplify the map
+#' @param id an id for the map that can be used to retrieve it in the future (through getMap()).
+#' @param license an optional license string
+#' @inheritDotParams .cached .nocache
 #'
+#' @concept io
 #' @return the sf object for this geoJson
 #' @export
 downloadGeojson = function(
@@ -238,18 +243,26 @@ downloadGeojson = function(
 #'
 #' to standard code, name, altCode and codeType columns
 #'
-#' @param zipUrl - the URL of the zipped shapefile
-#' @param mapName - the layer name or map name - this is the "xyz" of a zip file containing "xyz.shp". If you are getting multiple layers it is OK to repeatedly call this within the same session as the download is stored, see wd option.
-#' @param codeCol - the name of the column containing the id or code
-#' @param nameCol - the name of the column containing the label (optional - defaults to the same as codeCol)
-#' @param altCodeCol - an optional column name containing another code type
-#' @param codeType - the "type" of the code - optional. defaults to NA
-#' @param simplify - do you want to simplify the map
-#' @param wd - an optional working directory (defaults to `getOption("arear.download.dir", tempdir())`)
-#' @param id - an optional id for the map that can be used to retrieve it later (through getMap()) - defaults to either the mapName or if not present the name of the zip file.
-#' @param license - an optional license string
-#' @param ... - passed to .cache, param nocache=TRUE to disable caching
+#' @param zipUrl the URL of the zipped shapefile
+#' @param mapName the layer name or map name - this is the "xyz" of a zip file
+#'   containing "xyz.shp". If you are getting multiple layers it is OK to
+#'   repeatedly call this within the same session as the download is stored, see
+#'   wd option.
+#' @param codeCol the name of the column containing the id or code
+#' @param nameCol the name of the column containing the label (optional -
+#'   defaults to the same as codeCol)
+#' @param altCodeCol an optional column name containing another code type
+#' @param codeType the "type" of the code - optional. defaults to NA
+#' @param simplify do you want to simplify the map
+#' @param wd an optional working directory (defaults to
+#'   `getOption("arear.download.dir", tempdir())`)
+#' @param id an optional id for the map that can be used to retrieve it later
+#'   (through getMap()) - defaults to either the mapName or if not present the
+#'   name of the zip file.
+#' @param license an optional license string
+#' @inheritDotParams .cached .nocache
 #'
+#' @concept io
 #' @return a sf object containing the map
 #' @export
 #'
@@ -370,7 +383,10 @@ downloadMap = function(
 }
 
 
-#' Standardise maps to a minimal set of attributes with consistent naming with code, name and codeType columns and an optional altCode column
+#' Standardise maps to consistent naming
+#'
+#' to a minimal set of attributes with consistent naming with code, name and
+#' codeType columns and an optional altCode column
 #'
 #' @param sf - a non standard map
 #' @param codeCol - a column name containing the unique code or id for the map
@@ -378,6 +394,7 @@ downloadMap = function(
 #' @param altCodeCol - an alternative code column
 #' @param codeType - a fixed value for the codeType
 #'
+#' @concept io
 #' @return a standardised map
 #' @export
 standardiseMap = function(sf, codeCol, nameCol, altCodeCol, codeType) {
@@ -439,11 +456,14 @@ standardiseMap = function(sf, codeCol, nameCol, altCodeCol, codeType) {
 
 #' save a shapefile to disk in the current working directory
 #'
-#' @param shape - the sf shape
-#' @param mapId - a mapId - will become the zip filename, and the filename of the zipped .shp file
-#' @param dir - the directory (defaults to current working directory)
-#' @param overwrite - the save function will not write over existing files unless this is set to true
+#' @param shape the sf shape
+#' @param mapId a mapId - will become the zip filename, and the filename of
+#'   the zipped .shp file
+#' @param dir the directory (defaults to current working directory)
+#' @param overwrite the save function will not write over existing files
+#'   unless this is set to true
 #'
+#' @concept io
 #' @return a the filename of the zipped shapefile
 #' @export
 saveShapefile = function(shape, mapId, dir = getwd(), overwrite = FALSE) {

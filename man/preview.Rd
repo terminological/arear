@@ -32,3 +32,4 @@ htmlwidget
 \description{
 Preview a map with POI using leaflet
 }
+\concept{vis}

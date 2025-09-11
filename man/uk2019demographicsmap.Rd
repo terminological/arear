@@ -2,7 +2,7 @@
 % Please edit documentation in R/data.R
 \name{uk2019demographicsmap}
 \alias{uk2019demographicsmap}
-\title{Shape file related to the mid year 2019 small area estimates for England, Wales, Scotland, and Northern Ireland}
+\title{Small area demographics map}
 \source{
 \describe{
   \item{England and Wales}{https://geoportal.statistics.gov.uk/datasets/lower-layer-super-output-areas-december-2011-boundaries-ew-bgc}
@@ -23,9 +23,14 @@ A 41730 line data frame:
 }
 }
 \description{
-There are 10 regions (mostly in Scotland) where the demographics estimates don't align with this map. This is
-a small number of people
+Shape file related to the mid year 2019 small area estimates for England,
+Wales, Scotland, and Northern Ireland. see [uk2019demographics()]
 }
 \details{
-Data available under open government licence: http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+There are 10 regions (mostly in Scotland) where the demographics estimates
+don't align with this map. This is a small number of people.
+
+Data available under open government licence:
+http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
 }
+\concept{datasets}

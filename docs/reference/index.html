@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">arear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,7 +32,130 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="geographic-analysis">Geographic analysis<a class="anchor" aria-label="anchor" href="#geographic-analysis"></a></h2>
+
+
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="catchment.html">catchment()</a></code>
+
+        </dt>
+        <dd>Create and cache a catchment area map</dd>
+      </dl><dl><dt>
+
+          <code><a href="createNeighbourNetwork.html">createNeighbourNetwork()</a></code>
+
+        </dt>
+        <dd>create a neighbourhood network from touching regions in a shapefile, with additional capability to connect non touching areas where there may be bridges etc.</dd>
+      </dl><dl><dt>
+
+          <code><a href="getContainedIn.html">getContainedIn()</a></code>
+
+        </dt>
+        <dd>Generate a mapping table between 2 `sf` dataframes.</dd>
+      </dl><dl><dt>
+
+          <code><a href="getIntersection.html">getIntersection()</a></code>
+
+        </dt>
+        <dd>Intersection of 2 shapes</dd>
+      </dl><dl><dt>
+
+          <code><a href="interpolateByArea.html">interpolateByArea()</a></code>
+
+        </dt>
+        <dd>interpolate a variable from one set of shapes to another</dd>
+      </dl></div><div class="section level2">
+      <h2 id="visualisations">Visualisations<a class="anchor" aria-label="anchor" href="#visualisations"></a></h2>
+
+
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="mapTheme.html">mapTheme()</a></code>
+
+        </dt>
+        <dd>A map theme to remove extraneous clutter</dd>
+      </dl><dl><dt>
+
+          <code><a href="plotLabelledMap.html">plotLabelledMap()</a></code>
+
+        </dt>
+        <dd>Create a map, usually as a chloropleth, with selected areas labelled.</dd>
+      </dl><dl><dt>
+
+          <code><a href="popoutArea.html">popoutArea()</a></code>
+
+        </dt>
+        <dd>Create a magnified pop-out panel of a map</dd>
+      </dl><dl><dt>
+
+          <code><a href="preview.html">preview()</a></code>
+
+        </dt>
+        <dd>Preview a map with POI using leaflet</dd>
+      </dl></div><div class="section level2">
+      <h2 id="loading-and-saving">Loading and saving<a class="anchor" aria-label="anchor" href="#loading-and-saving"></a></h2>
+
+
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="downloadGeojson.html">downloadGeojson()</a></code>
+
+        </dt>
+        <dd>Download a geojson url, standardise it and cache the result</dd>
+      </dl><dl><dt>
+
+          <code><a href="downloadMap.html">downloadMap()</a></code>
+
+        </dt>
+        <dd>Download a map, unpack it, and rename columns.</dd>
+      </dl><dl><dt>
+
+          <code><a href="getMap.html">getMap()</a></code>
+
+        </dt>
+        <dd>Gets maps for which the metadata is known.</dd>
+      </dl><dl><dt>
+
+          <code><a href="listStandardMaps.html">listStandardMaps()</a></code>
+
+        </dt>
+        <dd>List the standard maps available to download</dd>
+      </dl><dl><dt>
+
+          <code><a href="saveShapefile.html">saveShapefile()</a></code>
+
+        </dt>
+        <dd>save a shapefile to disk in the current working directory</dd>
+      </dl><dl><dt>
+
+          <code><a href="standardiseMap.html">standardiseMap()</a></code>
+
+        </dt>
+        <dd>Standardise maps to consistent naming</dd>
+      </dl></div><div class="section level2">
+      <h2 id="data-documentation">Data Documentation<a class="anchor" aria-label="anchor" href="#data-documentation"></a></h2>
 
 
 
@@ -47,73 +170,7 @@
           <code><a href="apiTrusts.html">apiTrusts</a></code>
 
         </dt>
-        <dd>NHS trust admissions data from the legacy COVID api from 2021</dd>
-      </dl><dl><dt>
-
-          <code><a href="cache_clear.html">cache_clear()</a></code>
-
-        </dt>
-        <dd>Clear data from the passthrough cache for complex or long running operations</dd>
-      </dl><dl><dt>
-
-          <code><a href="catchment.html">catchment()</a></code>
-
-        </dt>
-        <dd>Create a catchment area map and cache the result</dd>
-      </dl><dl><dt>
-
-          <code><a href="createCatchment.html">createCatchment()</a></code>
-
-        </dt>
-        <dd>Create a catchment area map</dd>
-      </dl><dl><dt>
-
-          <code><a href="createNeighbourNetwork.html">createNeighbourNetwork()</a></code>
-
-        </dt>
-        <dd>create a neighbourhood network from touching regions in a shapefile, with additional capability to connect non touching areas where there may be bridges etc.</dd>
-      </dl><dl><dt>
-
-          <code><a href="downloadGeojson.html">downloadGeojson()</a></code>
-
-        </dt>
-        <dd>Download a geojson url, standardise it and cache the result</dd>
-      </dl><dl><dt>
-
-          <code><a href="downloadMap.html">downloadMap()</a></code>
-
-        </dt>
-        <dd>Download a map, unpack it, and rename columns.</dd>
-      </dl><dl><dt>
-
-          <code><a href="getContainedIn.html">getContainedIn()</a></code>
-
-        </dt>
-        <dd>Generate a mapping representing how the input points fit into the output shape</dd>
-      </dl><dl><dt>
-
-          <code><a href="getIntersection.html">getIntersection()</a></code>
-
-        </dt>
-        <dd>Intersection of 2 shapes</dd>
-      </dl><dl><dt>
-
-          <code><a href="getMap.html">getMap()</a></code>
-
-        </dt>
-        <dd>Gets maps for which the metadata is known.</dd>
-      </dl><dl><dt>
-
-          <code><a href="interpolateByArea.html">interpolateByArea()</a></code>
-
-        </dt>
-        <dd>interpolate a variable from one set of shapes to another</dd>
-      </dl><dl><dt>
-
-          <code><a href="listStandardMaps.html">listStandardMaps()</a></code>
-
-        </dt>
-        <dd>List the standard maps available to download</dd>
+        <dd>NHS trust admissions data from the legacy COVID API from 2021</dd>
       </dl><dl><dt>
 
           <code><a href="londonShape.html">londonShape</a></code>
@@ -122,52 +179,16 @@
         <dd>An outline of the London NHSER region for use as a mask</dd>
       </dl><dl><dt>
 
-          <code><a href="mapTheme.html">mapTheme()</a></code>
-
-        </dt>
-        <dd>A map theme to remove extraneous clutter</dd>
-      </dl><dl><dt>
-
           <code><a href="mapsources.html">mapsources</a></code>
 
         </dt>
         <dd>Locations of UK and international shapefiles relevant to COVID</dd>
       </dl><dl><dt>
 
-          <code><a href="plotLabelledMap.html">plotLabelledMap()</a></code>
-
-        </dt>
-        <dd>Create a map, usually as a chloropleth, with selected areas labelled.</dd>
-      </dl><dl><dt>
-
-          <code><a href="popoutArea.html">popoutArea()</a></code>
-
-        </dt>
-        <dd>Create a new map with a popout panel to show areas where there is a high density of people for example.</dd>
-      </dl><dl><dt>
-
-          <code><a href="preview.html">preview()</a></code>
-
-        </dt>
-        <dd>Preview a map with POI using leaflet</dd>
-      </dl><dl><dt>
-
-          <code><a href="saveShapefile.html">saveShapefile()</a></code>
-
-        </dt>
-        <dd>save a shapefile to disk in the current working directory</dd>
-      </dl><dl><dt>
-
-          <code><a href="standardiseMap.html">standardiseMap()</a></code>
-
-        </dt>
-        <dd>Standardise maps to a minimal set of attributes with consistent naming with code, name and codeType columns and an optional altCode column</dd>
-      </dl><dl><dt>
-
           <code><a href="surgecapacity.html">surgecapacity</a></code>
 
         </dt>
-        <dd>Locations of UK general medical hospitals in mid march 2020 with estimates of beds available and maximal surge capacity HDU beds</dd>
+        <dd>Hospital surge capacity in COVID</dd>
       </dl><dl><dt>
 
           <code><a href="testdata.html">testdata</a></code>
@@ -191,7 +212,7 @@
           <code><a href="uk2019demographicsmap.html">uk2019demographicsmap()</a></code>
 
         </dt>
-        <dd>Shape file related to the mid year 2019 small area estimates for England, Wales, Scotland, and Northern Ireland</dd>
+        <dd>Small area demographics map</dd>
       </dl><dl><dt>
 
           <code><a href="uk2019retiredpopulation.html">uk2019retiredpopulation</a></code>
@@ -209,9 +230,33 @@
           <code><a href="ukcovidmap.html">ukcovidmap()</a></code>
 
         </dt>
-        <dd>Shape file related to the detailed level for PHE coronavirus statistical reporting in England, Wales, Scotland, and Northern Ireland on the coronavirus.gov.uk tracker. The legacy is the level at which detailed data was reported in the first wave, prior to the API and was aggregated by https://github.com/tomwhite/covid-19-uk-data</dd>
+        <dd>COVID reporting map</dd>
+      </dl></div><div class="section level2">
+      <h2 id="others">Others<a class="anchor" aria-label="anchor" href="#others"></a></h2>
+
+
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="cache_clear.html">cache_clear()</a></code>
+
+        </dt>
+        <dd>Clear data from the passthrough cache for complex or long running operations</dd>
+      </dl><dl><dt>
+
+          <code><a href="createCatchment.html">createCatchment()</a></code>
+
+        </dt>
+        <dd>Create a catchment area map</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

@@ -24,7 +24,12 @@ A 41740 line data frame:
 uk2019adultpopulation
 }
 \description{
-Small area single digit estimates are aggregated to include only over 18s, and combining gender
-Data available under open government licence: http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+Small area single digit estimates are aggregated to include only over 18s,
+and combining gender
 }
+\details{
+Data available under open government licence:
+http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+}
+\concept{datasets}
 \keyword{datasets}

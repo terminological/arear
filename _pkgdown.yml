@@ -1,4 +1,21 @@
+destination: docs
 url: https://terminological.github.io/arear
 template:
   bootstrap: 5
+reference:
+- title: Geographic analysis
+  contents:
+  - has_concept("analysis")
+- title: Visualisations
+  contents:
+  - has_concept("vis")
+- title: Loading and saving
+- contents:
+  - has_concept("io")
+- title: Data Documentation
+- contents:
+  - has_concept("datasets")
+- title: Others
+  contents:
+  - lacks_concepts(c("io","datasets","analysis","vis"))
 

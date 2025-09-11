@@ -16,25 +16,35 @@ interpolateByArea(
 )
 }
 \arguments{
-\item{inputDf}{- in input data frame containing the variable(s) of interest to interpolate. Stratification of the variable can be achieved by grouping}
+\item{inputDf}{- in input data frame containing the variable(s) of interest
+to interpolate. Stratification of the variable can be achieved by grouping}
 
 \item{inputShape}{- an input sf map,}
 
-\item{by}{- the columns to use to join the inputDf to the map provided in inputShape. This is in the format of a dplyr join specification.}
+\item{by}{- the columns to use to join the inputDf to the map provided in
+inputShape. This is in the format of a dplyr join specification.}
 
 \item{interpolateVar}{- the column that we want to do areal interpolation on,}
 
-\item{outputShape}{- an output map which may be grouped by the desired output,}
+\item{outputShape}{- an output map which may be grouped by the desired
+output,}
 
-\item{inputVars}{- a list of columns from the inputDf (as a dplyr::vars(...) list) that define the stratification of inputDf and are desired in the output. Defaults to the grouping of inputDf}
+\item{inputVars}{- a list of columns from the inputDf (as a
+`dplyr::vars(...)` list) that define the stratification of inputDf and are
+desired in the output. Defaults to the grouping of inputDf}
 
-\item{outputVars}{- a list of columns from the outputShape (as a dplyr::vars(...) list) that we want preserved in output, or defined as a grouping of outputShape}
+\item{outputVars}{- a list of columns from the outputShape (as a
+`dplyr::vars(...)` list) that we want preserved in output, or defined as a
+grouping of outputShape}
 
-\item{aggregateFn}{- a function that will be applied to area weighted components of interpolateVar - defaults to sum}
+\item{aggregateFn}{- a function that will be applied to area weighted
+components of interpolateVar - defaults to sum}
 }
 \value{
-a dataframe containing the grouping columns, the outputIdVar and the interpolated value of interpolateVar
+a dataframe containing the grouping columns in `inputVars` and
+  `outputVars`, and the interpolated value of `interpolateVar`
 }
 \description{
 interpolate a variable from one set of shapes to another
 }
+\concept{analysis}

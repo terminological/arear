@@ -2,10 +2,10 @@ arear
 ================
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/terminological/arear/workflows/R-CMD-check/badge.svg)](https://github.com/terminological/arear/actions)
 [![DOI](https://zenodo.org/badge/340773310.svg)](https://zenodo.org/badge/latestdoi/340773310)
 [![arear status badge](https://terminological.r-universe.dev/badges/arear)](https://terminological.r-universe.dev)
 [![R-CMD-check](https://github.com/terminological/arear/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/terminological/arear/actions/workflows/R-CMD-check.yaml)
+[![EPSRC badge](https://img.shields.io/badge/EPSRC%20grant-EP%2FY028392%2F1-05acb5)](https://gow.epsrc.ukri.org/NGBOViewGrant.aspx?GrantRef=EP/Y028392/1)
 <!-- badges: end -->
 
 This package provides a suite of geo-spatial functions that were useful during
@@ -17,7 +17,7 @@ geographies, at different levels of detail that were involved in COVID-19
 reporting. For mapping community case data to hospital admissions data the
 library provides an algorithmic hospital catchment area estimation based on
 label propagation, the methods for which are described in detail in the paper
-["Algortihmic hospital catchment area estimation using label
+["Algorithmic hospital catchment area estimation using label
 propagation"](https://bmchealthservres.biomedcentral.com/articles/10.1186/s12913-022-08127-7).
 Many of the operations in the package involve time consuming calculations, which
 only generally need to be performed once, so the package incorporates a
@@ -60,7 +60,7 @@ options(repos = c(
   terminological = 'https://terminological.r-universe.dev',
   CRAN = 'https://cloud.r-project.org'))
 
-# Download and install rmaven in R
+# Download and install arear in R
 install.packages('arear')
 ```
 

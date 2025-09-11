@@ -21,4 +21,5 @@ ukconnections
 geographical location of bridges / ferries UK connections.
 picked from https://developers.google.com/maps/documentation/javascript/examples/event-click-latlng#maps_event_click_latlng-html
 }
+\concept{datasets}
 \keyword{datasets}

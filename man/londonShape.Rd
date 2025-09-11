@@ -19,6 +19,8 @@ A sf geometry with 1 row:
 londonShape
 }
 \description{
-Data available under open government licence: http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+Data available under open government licence:
+http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
 }
+\concept{datasets}
 \keyword{datasets}

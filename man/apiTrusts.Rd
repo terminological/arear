@@ -3,7 +3,7 @@
 \docType{data}
 \name{apiTrusts}
 \alias{apiTrusts}
-\title{NHS trust admissions data from the legacy COVID api from 2021}
+\title{NHS trust admissions data from the legacy COVID API from 2021}
 \format{
 A 72928 line data frame:
 \describe{
@@ -20,6 +20,7 @@ A 72928 line data frame:
 apiTrusts
 }
 \description{
-NHS trust admissions data from the legacy COVID api from 2021
+NHS trust admissions data from the legacy COVID API from 2021
 }
+\concept{datasets}
 \keyword{datasets}
