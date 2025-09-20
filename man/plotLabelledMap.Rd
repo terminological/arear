@@ -10,8 +10,7 @@ plotLabelledMap(
   ...,
   labelMapping,
   labelStyle = list(),
-  labelFilter = rank(-!!labelSort) <= labels,
-  labelSort = str2lang(rlang::as_label(mapping$fill)),
+  labelSort = NULL,
   labels = 6,
   labelSize = 6,
   tableSize = 6,
@@ -20,7 +19,7 @@ plotLabelledMap(
 }
 \arguments{
 \item{data}{A sf object with some data in it. If using facets this should be
-grouped. (and if it is grouped facetting will be automatically added)}
+grouped. (and if it is grouped faceting will be automatically added)}
 
 \item{mapping}{the aesthetics as would be passed to `geom_sf`}
 
@@ -39,16 +38,10 @@ transparent background which works for dark maps. A
 should give a cyan label on a dark transparent background which might work
 for lighter maps.}
 
-\item{labelFilter}{(optional) on what criteria should we select labels to
-display. by default it gives the top N labels as determined by the fill
-aesthetic. Bottom N can be achieved with `rank(!!labelSort)<=labels`. In
-general though any expression filter can be used on the data but bear in
-mind it will be interpreted in the context of the grouped data which has
-first sorted by the `labelSort` expression.}
-
-\item{labelSort}{(optional) how should we sort the labels before applying the
-`labelFilter`. This defaults to the descending order of the same variable
-that determines the fill of the main map.}
+\item{labelSort}{(optional) how should we sort the labels . This defaults to
+the descending order of the same variable that determines the fill of the
+main map. This should be a simple expression that you might use for
+`dplyr::arrange` and can include `desc` for descending.}
 
 \item{labels}{how many labels do you want, per facet. The default 6 is good
 for a small number of facets. This will be overridden if `labelFilter` is
@@ -56,14 +49,14 @@ specified}
 
 \item{labelSize}{in points.}
 
-\item{tableSize}{the labels and their associated names from all facets will
+\item{tableSize}{the labels and the other data from all facets will
 be assembled into a table as a ggplot/patchwork object. This defines the
 font size (in points) of this table. No other config is allowed.}
 
 \item{labelInset}{if a map has an zoomed in inset as produced by
 `popoutArea()`, for areas which are in both the main map and the inset you
 may wish to label only the zoomed area in the "inset", only the unzoomed
-area in the "main" map or "both".}
+area in the "main" map or "both" (the default).}
 }
 \value{
 a list containing 4 items. Plot and legend may be added together to
@@ -73,11 +66,12 @@ a list containing 4 items. Plot and legend may be added together to
 \describe{
   \item{plot}{a ggplot object showing a chloropleth (usually) which is
   defined by the main mapping aesthetics, with an overlaid labelling layer
-  defined by the labelMapping aesthetics. This does not include fill or
+  defined by the `labelMapping` label aesthetic. This does not include fill or
   colour scales so you will probably want `plot+ggplot2::scale_fill_viridis_c()`
-  or something similar to define the fill}
+  or something similar to define the fill}. If the input data is grouped this
+  plot will be facetted by group.
   \item{legend}{a ggplot patchwork containing the lookup table from labels
-  to names (as determined by the names aesthetic)}
+  to other data (as determined by the `labelMapping` aesthetics)}
   \item{labelDf}{the filtered dataframe of the labels appearing in the
   labelling layer. The .x and .y columns are added which show where the
   label is placed on the main map. the .label and .name show the labels
@@ -96,5 +90,26 @@ a list containing 4 items. Plot and legend may be added together to
 This can be used to pick out specific highlighted regions based on a filter,
 label it on a map using a short code, and provide a tabular lookup of label
 to full name.
+}
+\examples{
+# create some test data:
+tmp = dplyr::bind_rows(lapply(1:4,
+  function(i) testdata$diamond11x11 \%>\%
+    dplyr::mutate(set = sprintf("set \%d",i), value = runif(x)
+))) \%>\% dplyr::group_by(set) \%>\%
+  dplyr::mutate(name = sprintf("\%s-\%s", letters[x+6], letters[y+6]))
+
+ggplot2::ggplot(tmp)+ggplot2::geom_sf(ggplot2::aes(fill = value))+
+  ggplot2::facet_wrap(~set)
+
+p = plotLabelledMap(
+  data = tmp,
+  mapping = ggplot2::aes(fill = value),
+  labelMapping = ggplot2::aes(label=name,percent=sprintf("\%1.1f\%\%",value*100)),
+  labels = 2
+)
+
+p$plot+p$legend
+
 }
 \concept{vis}

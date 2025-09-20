@@ -52,6 +52,7 @@ by the demandShape topology. These are used to add in bridges}
 \item{...}{
   Named arguments passed on to \code{\link[=.cached]{.cached}}\describe{
     \item{\code{.nocache}}{an option to defeat the caching which can be set globally as options("cache.disable"=TRUE)}
+\item{\code{.stale}}{the length of time in days to keep cached data before considering it as stale. can also be set by options("cache.stale")}
 }}
 }
 \value{

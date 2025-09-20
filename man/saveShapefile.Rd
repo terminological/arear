@@ -2,7 +2,7 @@
 % Please edit documentation in R/load-maps.R
 \name{saveShapefile}
 \alias{saveShapefile}
-\title{save a shapefile to disk in the current working directory}
+\title{Save a `sf` as a shapefile to disk}
 \usage{
 saveShapefile(shape, mapId, dir = getwd(), overwrite = FALSE)
 }
@@ -10,7 +10,7 @@ saveShapefile(shape, mapId, dir = getwd(), overwrite = FALSE)
 \item{shape}{the sf shape}
 
 \item{mapId}{a mapId - will become the zip filename, and the filename of
-the zipped .shp file}
+the zipped `.shp` file}
 
 \item{dir}{the directory (defaults to current working directory)}
 
@@ -21,6 +21,18 @@ unless this is set to true}
 a the filename of the zipped shapefile
 }
 \description{
-save a shapefile to disk in the current working directory
+Save a `sf` as a shapefile to disk
+}
+\examples{
+if (interactive()) {
+  svc = "https://services1.arcgis.com/ESMARspQHYMw9BZ9/ArcGIS/rest/services"
+  fs = sprintf("\%s/\%s",svc,"Countries_December_2024_Boundaries_UK_BUC/FeatureServer")
+  layer = sprintf("\%s/\%s",fs,"0")
+  map = downloadGeojson(layer)
+  map \%>\% dplyr::glimpse()
+  map2 = map \%>\% standardiseMap(codeCol = CTRY24CD, nameCol = CTRY24NM)
+  map2 \%>\% dplyr::glimpse()
+  saveShapefile(map2, "ctry24", dir = tempdir())
+}
 }
 \concept{io}

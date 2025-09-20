@@ -1,8 +1,8 @@
 .forceGeos = function(expr) {
   sfState = sf::sf_use_s2()
-  sf::sf_use_s2(FALSE)
-  out = expr
-  sf::sf_use_s2(sfState)
+  suppressMessages(sf::sf_use_s2(FALSE))
+  out = eval(expr, envir = rlang::caller_env())
+  suppressMessages(sf::sf_use_s2(sfState))
   return(out)
 }
 
@@ -303,20 +303,44 @@ interpolateByArea = function(
   })
 }
 
-#' create a neighbourhood network from touching regions in a shapefile, with additional capability to connect non touching areas where there may be bridges etc.
+#' Create a neighbourhood network from touching regions in a map
 #'
-#' @param shape - a sf object, if not present will be loaded from cache
-#' @param idVar - the column containing the coded identifier of the map
-#' @param bridges - a df with the following columns: name start.lat start.long
-#'   end.lat end.long defining connections between non touching shapes (e.g.
+#' A network of neighbouring map regions including connections due to bridges
+#' airports or ferry links, defined in the bridges input.
+#'
+#' @param shape a `sf` object
+#' @param idVar the column containing the coded identifier of the map
+#' @param bridges a df with the following columns: `name` `start.lat` `start.long`
+#'   `end.lat` `end.long` defining connections between non touching shapes (e.g.
 #'   bridges / ferries / etc.)
 #' @param queen - include neighbouring areas that only touch at corners,
 #'   defaults to false.
-#' @inheritDotParams .cached .nocache
+#' @inheritDotParams .cached .nocache .stale
 #' @return an edge list of ids with from and to columns
 #'
 #' @concept analysis
 #' @export
+#' @examples
+#'
+#' edges = createNeighbourNetwork(
+#'   shape = arear::testdata$grid11x11,
+#'   idVar = "id"
+#' )
+#'
+#' # in regular grid each cell has 4 neighbours except the edges and corners
+#' # we loose 1 per edge
+#'
+#' nrow(edges) == 11*11*4-4*11
+#'
+#' queens = createNeighbourNetwork(
+#'   shape = arear::testdata$grid11x11,
+#'   idVar = "id",
+#'   queen = TRUE
+#' )
+#'
+#' # each cell has 8 queen neighbours
+#' # except edge pieces which have 3 less, and corners which have 5 less.
+#' nrow(queens) == 11*11*8 - 4*9*3 - 4*5
 createNeighbourNetwork = function(
   shape,
   idVar = "code",
@@ -330,7 +354,7 @@ createNeighbourNetwork = function(
     {
       .forceGeos({
         shape = shape %>%
-          dplyr::mutate(tmp_id = dplyr::row_number(), .id = !!idVar)
+          dplyr::mutate(tmp_id = 1:nrow(shape), .id = !!idVar)
         bridgeStart = bridges %>%
           sf::st_as_sf(coords = c("start.long", "start.lat"), crs = 4326) %>%
           arear::getContainedIn(
@@ -455,7 +479,10 @@ preview = function(
 #' @concept vis
 #'
 #' @examples
-#' ggplot2::ggplot()+mapTheme()
+#'
+#' ggplot2::ggplot(arear::testdata$gridDemand)+
+#'   ggplot2::geom_sf(ggplot2::aes(fill=demand))+
+#'   mapTheme()
 mapTheme = function() {
   return(
     ggplot2::theme(
@@ -492,6 +519,18 @@ mapTheme = function() {
 
 #' @concept vis
 #' @export
+#' @examples
+#' tmp = popoutArea(
+#'   arear::testdata$diamond11x11 %>% dplyr::mutate(value = x+y),
+#'   arear::testdata$offsetBox,
+#'   popoutPosition = "NE",
+#'   popoutScale = 1.25
+#' )
+#'
+#' ggplot2::ggplot(tmp)+
+#'   ggplot2::geom_sf(ggplot2::aes(fill=value))+
+#'   ggplot2::scale_fill_gradient2()+
+#'   ggplot2::geom_sf(data = arear::testdata$offsetBox, alpha=0)
 popoutArea = function(
   shape,
   popoutShape = arear::londonShape,
@@ -632,7 +671,7 @@ popoutArea = function(
 #' to full name.
 #'
 #' @param data A sf object with some data in it. If using facets this should be
-#'   grouped. (and if it is grouped facetting will be automatically added)
+#'   grouped. (and if it is grouped faceting will be automatically added)
 #' @param mapping the aesthetics as would be passed to `geom_sf`
 #' @param ... additional formatting parameters as would be passed to `geom_sf`
 #'   (defaults to a thin grey line for the edge of the maps.)
@@ -646,26 +685,21 @@ popoutArea = function(
 #'   `list(segment.colour = "cyan", colour="cyan", fill=="#000000A0")`
 #'   should give a cyan label on a dark transparent background which might work
 #'   for lighter maps.
-#' @param labelFilter (optional) on what criteria should we select labels to
-#'   display. by default it gives the top N labels as determined by the fill
-#'   aesthetic. Bottom N can be achieved with `rank(!!labelSort)<=labels`. In
-#'   general though any expression filter can be used on the data but bear in
-#'   mind it will be interpreted in the context of the grouped data which has
-#'   first sorted by the `labelSort` expression.
-#' @param labelSort (optional) how should we sort the labels before applying the
-#'   `labelFilter`. This defaults to the descending order of the same variable
-#'   that determines the fill of the main map.
+#' @param labelSort (optional) how should we sort the labels . This defaults to
+#'   the descending order of the same variable that determines the fill of the
+#'   main map. This should be a simple expression that you might use for
+#'   `dplyr::arrange` and can include `desc` for descending.
 #' @param labels how many labels do you want, per facet. The default 6 is good
 #'   for a small number of facets. This will be overridden if `labelFilter` is
 #'   specified
 #' @param labelSize in points.
-#' @param tableSize the labels and their associated names from all facets will
+#' @param tableSize the labels and the other data from all facets will
 #'   be assembled into a table as a ggplot/patchwork object. This defines the
 #'   font size (in points) of this table. No other config is allowed.
 #' @param labelInset if a map has an zoomed in inset as produced by
 #'   `popoutArea()`, for areas which are in both the main map and the inset you
 #'   may wish to label only the zoomed area in the "inset", only the unzoomed
-#'   area in the "main" map or "both".
+#'   area in the "main" map or "both" (the default).
 #'
 #' @return a list containing 4 items. Plot and legend may be added together to
 #'   form a ggplot patchwork. e.g. `p = plotLabelledMap(...)` then
@@ -674,11 +708,12 @@ popoutArea = function(
 #' \describe{
 #'   \item{plot}{a ggplot object showing a chloropleth (usually) which is
 #'   defined by the main mapping aesthetics, with an overlaid labelling layer
-#'   defined by the labelMapping aesthetics. This does not include fill or
+#'   defined by the `labelMapping` label aesthetic. This does not include fill or
 #'   colour scales so you will probably want `plot+ggplot2::scale_fill_viridis_c()`
-#'   or something similar to define the fill}
+#'   or something similar to define the fill}. If the input data is grouped this
+#'   plot will be facetted by group.
 #'   \item{legend}{a ggplot patchwork containing the lookup table from labels
-#'   to names (as determined by the names aesthetic)}
+#'   to other data (as determined by the `labelMapping` aesthetics)}
 #'   \item{labelDf}{the filtered dataframe of the labels appearing in the
 #'   labelling layer. The .x and .y columns are added which show where the
 #'   label is placed on the main map. the .label and .name show the labels
@@ -695,14 +730,34 @@ popoutArea = function(
 #'
 #' @concept vis
 #' @export
+#'
+#' @examples
+#' # create some test data:
+#' tmp = dplyr::bind_rows(lapply(1:4,
+#'   function(i) testdata$diamond11x11 %>%
+#'     dplyr::mutate(set = sprintf("set %d",i), value = runif(x)
+#' ))) %>% dplyr::group_by(set) %>%
+#'   dplyr::mutate(name = sprintf("%s-%s", letters[x+6], letters[y+6]))
+#'
+#' ggplot2::ggplot(tmp)+ggplot2::geom_sf(ggplot2::aes(fill = value))+
+#'   ggplot2::facet_wrap(~set)
+#'
+#' p = plotLabelledMap(
+#'   data = tmp,
+#'   mapping = ggplot2::aes(fill = value),
+#'   labelMapping = ggplot2::aes(label=name,percent=sprintf("%1.1f%%",value*100)),
+#'   labels = 2
+#' )
+#'
+#' p$plot+p$legend
+#'
 plotLabelledMap = function(
   data,
   mapping,
   ...,
   labelMapping,
   labelStyle = list(),
-  labelFilter = rank(-!!labelSort) <= labels,
-  labelSort = str2lang(rlang::as_label(mapping$fill)),
+  labelSort = NULL,
   labels = 6,
   labelSize = 6,
   tableSize = 6,
@@ -710,9 +765,14 @@ plotLabelledMap = function(
 ) {
   . = .label = .name = .x = .y = inset = label = NULL # keep R CMD check happy
 
-  labelFilter = rlang::enexpr(labelFilter)
-  labelSort = rlang::enexpr(labelSort)
-  labelInset = match.arg(labelInset)
+  if (!is.null(labelSort)) {
+    labelSort = rlang::enquo(labelSort)
+  } else {
+    labelSort = rlang::expr(dplyr::desc(!!mapping$fill))
+  }
+  if (!rlang::is_quosure(labelSort)) {
+    labelInset = match.arg(labelInset)
+  }
 
   labelStyle = utils::modifyList(
     list(
@@ -739,9 +799,6 @@ plotLabelledMap = function(
   if (!exists("label", labelMapping)) {
     stop("label aesthetic must be defined in labelMapping.")
   }
-  if (!exists("name", labelMapping)) {
-    stop("name aesthetic must be defined in labelMapping.")
-  }
 
   p2a = ggplot2::ggplot()
   p2a = p2a +
@@ -752,24 +809,35 @@ plotLabelledMap = function(
       data = data %>% dplyr::mutate(inset = FALSE)
     }
 
-    data = data %>%
-      dplyr::mutate(
-        .label = !!labelMapping$label,
-        .name = !!labelMapping$name
-      )
+    data$.index_id = 1:nrow(data)
 
-    labelIndex = data %>%
+    # Complex. We need to consider only unique labels and rank them according to
+    # the sorting specification allowing equal ranks.
+    selected_data = data %>%
       tibble::as_tibble() %>%
       dplyr::group_by(!!!grps) %>%
       dplyr::filter(inset == FALSE) %>%
-      dplyr::filter(!!labelFilter) %>%
-      dplyr::select(!!!grps, .label, .name) %>%
-      dplyr::distinct()
+      dplyr::arrange(!!labelSort) %>%
+      dplyr::mutate(rank = !!labelSort) %>%
+      dplyr::transmute(!!!labelMapping, rank) %>%
+      dplyr::group_by(!!!grps, label) %>%
+      # deduplicates by label
+      dplyr::filter(dplyr::row_number() == 1) %>%
+      dplyr::group_by(!!!grps) %>%
+      dplyr::arrange(!!!grps, rank) %>%
+      # the nth ran allowing for uqal ranks
+      dplyr::filter(rank <= dplyr::nth(sort(rank), labels)) %>%
+      dplyr::select(-rank)
+
+    # browser()
 
     mapLabs =
       data %>%
-      dplyr::semi_join(labelIndex, by = colnames(labelIndex)) %>%
-      dplyr::arrange(dplyr::desc(!!labelSort)) %>%
+      dplyr::transmute(!!!labelMapping, inset) %>%
+      dplyr::semi_join(
+        selected_data %>% dplyr::select(!!!grps, label),
+        by = dplyr::join_by(!!!grps, label)
+      ) %>%
       dplyr::ungroup() %>%
       sf::st_centroid() %>%
       dplyr::mutate(
@@ -780,13 +848,13 @@ plotLabelledMap = function(
 
     if (labelInset == "inset") {
       mapLabs = mapLabs %>%
-        dplyr::group_by(!!!grps, .label, .name) %>%
+        dplyr::group_by(!!!grps, label) %>%
         dplyr::filter(dplyr::n() == 1 | inset == TRUE)
     }
 
     if (labelInset == "main") {
       mapLabs = mapLabs %>%
-        dplyr::group_by(!!!grps, .label, .name) %>%
+        dplyr::group_by(!!!grps, label) %>%
         dplyr::filter(dplyr::n() == 1 | inset == FALSE)
     }
 
@@ -800,10 +868,10 @@ plotLabelledMap = function(
         c(
           list(
             data = mapLabs,
-            mapping = utils::modifyList(
-              labelMapping,
-              ggplot2::aes(x = !!xVar, y = !!yVar, label = .label)
-            ),
+            #utils::modifyList(
+            #labelMapping,
+            mapping = ggplot2::aes(x = !!xVar, y = !!yVar, label = label),
+            #)
             inherit.aes = FALSE
           ),
           labelStyle
@@ -813,11 +881,11 @@ plotLabelledMap = function(
 
     p2b = p2a + labeller(.x, .y)
 
-    p2 = labelIndex %>%
+    p2 = selected_data %>%
       dplyr::ungroup() %>%
-      dplyr::select(label = .label, name = .name) %>%
+      dplyr::select(-c(!!!grps)) %>%
+      dplyr::rename(key = label) %>%
       dplyr::distinct() %>%
-      dplyr::arrange(label) %>%
       .gg_simple_table(pts = tableSize)
   } else {
     p2b = p2a

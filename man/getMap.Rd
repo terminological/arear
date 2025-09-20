@@ -4,26 +4,52 @@
 \alias{getMap}
 \title{Gets maps for which the metadata is known.}
 \usage{
-getMap(mapId, sources = .loadSources(...), codeType = mapId, ...)
+getMap(mapId = names(sources)[1], sources = arear::mapsources, ...)
 }
 \arguments{
-\item{mapId}{- a name of a map}
+\item{mapId}{either: a name of a default map}
 
-\item{sources}{- a list of map sources - see `getOption("arear.mapsources",arear::mapsources)``}
+\item{sources}{or: a named list of map sources. Each map source entry
+must be a named list containing the following information:
 
-\item{codeType}{- defaults to mapId, the codeType of the map}
+- `url`: the download URL of the map
+- `mapName`: either `geojson` or for shapes the layer name containing the map.
+  if not given the first shape file layer will be used.
+- `simplify` (opt: boolean) do you want the map to be simplified
+- `source`: (opt) the URL that best represents the source of the map
+- `license`: (opt) the license of the map
+- `nameCol`: (opt) the column containing the name
+- `codeCol`: (opt) the column containing the id code
+- `altCodeCol`: (opt) alternative code columns
 
-\item{...}{- passed to .cache, param `nocache=TRUE` to disable caching}
+see `arear::mapsources` for example}
+
+\item{...}{
+  Named arguments passed on to \code{\link[=standardiseMap]{standardiseMap}}\describe{
+    \item{\code{codeCol}}{the name of the column containing the id or code}
+\item{\code{nameCol}}{the name of the column containing the label (optional -
+defaults to the same as codeCol)}
+\item{\code{altCodeCol}}{an optional column name containing another code type}
+\item{\code{codeType}}{the "type" of the code - optional. defaults to NA}
+\item{\code{...}}{not used.}
+}
+  Named arguments passed on to \code{\link[=.cached]{.cached}}\describe{
+    \item{\code{.nocache}}{an option to defeat the caching which can be set globally as options("cache.disable"=TRUE)}
+\item{\code{.stale}}{the length of time in days to keep cached data before considering it as stale. can also be set by options("cache.stale")}
+}}
 }
 \value{
 a standard sf map
 }
 \description{
-If a map needs to be downloaded as a shapefile then it is stored temporarily. The location of this download directory can be set as option("arear.download.dir" = "~/.)
+If a map needs to be downloaded as a shapefile then it is stored temporarily.
+The location of this download directory can be set as
+option("arear.download.dir" = "~/.)
 }
 \examples{
-\dontrun{
-map = getMap("NHSER20")
+if (interactive()) {
+  map = getMap("NHSER20")
+  map \%>\% dplyr::glimpse()
 }
 }
 \concept{io}

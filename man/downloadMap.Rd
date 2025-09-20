@@ -2,68 +2,36 @@
 % Please edit documentation in R/load-maps.R
 \name{downloadMap}
 \alias{downloadMap}
-\title{Download a map, unpack it, and rename columns.}
+\title{Download a shape file map}
 \usage{
-downloadMap(
-  zipUrl,
-  mapName = NULL,
-  codeCol = "code",
-  nameCol = "name",
-  altCodeCol = NULL,
-  codeType = NA_character_,
-  simplify = FALSE,
-  wd = getOption("arear.download.dir", tempdir()),
-  id = NULL,
-  license = "unknown",
-  ...
-)
+downloadMap(zipUrl, mapName = NULL, simplify = FALSE, ...)
 }
 \arguments{
-\item{zipUrl}{the URL of the zipped shapefile}
+\item{zipUrl}{the URL of the zipped shape file}
 
-\item{mapName}{the layer name or map name - this is the "xyz" of a zip file
-containing "xyz.shp". If you are getting multiple layers it is OK to
-repeatedly call this within the same session as the download is stored, see
-wd option.}
+\item{mapName}{(optional) the layer name or map name - this is `"xyz"` if a
+zip file contains `"xyz.shp"`. Usually there is one `.shp` file in a  zip
+file, and by default it will be picked if this is not set.}
 
-\item{codeCol}{the name of the column containing the id or code}
-
-\item{nameCol}{the name of the column containing the label (optional -
-defaults to the same as codeCol)}
-
-\item{altCodeCol}{an optional column name containing another code type}
-
-\item{codeType}{the "type" of the code - optional. defaults to NA}
-
-\item{simplify}{do you want to simplify the map}
-
-\item{wd}{an optional working directory (defaults to
-`getOption("arear.download.dir", tempdir())`)}
-
-\item{id}{an optional id for the map that can be used to retrieve it later
-(through getMap()) - defaults to either the mapName or if not present the
-name of the zip file.}
-
-\item{license}{an optional license string}
+\item{simplify}{do you want to simplify the map?}
 
 \item{...}{
   Named arguments passed on to \code{\link[=.cached]{.cached}}\describe{
     \item{\code{.nocache}}{an option to defeat the caching which can be set globally as options("cache.disable"=TRUE)}
+\item{\code{.stale}}{the length of time in days to keep cached data before considering it as stale. can also be set by options("cache.stale")}
 }}
 }
 \value{
-a sf object containing the map
+a `sf` object containing the map
 }
 \description{
-to standard code, name, altCode and codeType columns
+This function downloads and caches a zipped shape file map, unpacks it, finds
+the correct shape file layer optionally simplifies it and converts it to `sf`.
 }
 \examples{
 \dontrun{
 downloadMap(
-  zipUrl="https://bit.ly/3A9TnR1",
-  mapName="NHS_England_Regions__April_2020__Boundaries_EN_BGC",
-  codeCol="nhser20cd",
-  nameCol="nhser20nm"
+  zipUrl="https://bit.ly/3A9TnR1"
 )
 }
 }

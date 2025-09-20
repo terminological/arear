@@ -37,4 +37,17 @@ Create a new map with a pop-out panel to show areas where there is a high
 density of people for example. Defaults work well for London on an England
 only map.
 }
+\examples{
+tmp = popoutArea(
+  arear::testdata$diamond11x11 \%>\% dplyr::mutate(value = x+y),
+  arear::testdata$offsetBox,
+  popoutPosition = "NE",
+  popoutScale = 1.25
+)
+
+ggplot2::ggplot(tmp)+
+  ggplot2::geom_sf(ggplot2::aes(fill=value))+
+  ggplot2::scale_fill_gradient2()+
+  ggplot2::geom_sf(data = arear::testdata$offsetBox, alpha=0)
+}
 \concept{vis}

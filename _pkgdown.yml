@@ -12,6 +12,9 @@ reference:
 - title: Loading and saving
 - contents:
   - has_concept("io")
+- title: Working wirh arcgis feature servers
+- contents:
+  - has_concept("arcgis")
 - title: Data Documentation
 - contents:
   - has_concept("datasets")

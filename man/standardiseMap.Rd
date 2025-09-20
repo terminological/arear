@@ -2,26 +2,51 @@
 % Please edit documentation in R/load-maps.R
 \name{standardiseMap}
 \alias{standardiseMap}
-\title{Standardise maps to consistent naming}
+\title{Standardise maps}
 \usage{
-standardiseMap(sf, codeCol, nameCol, altCodeCol, codeType)
+standardiseMap(
+  sf,
+  codeCol = "code",
+  nameCol = "name",
+  altCodeCol = NULL,
+  codeType = NA_character_,
+  ...
+)
 }
 \arguments{
-\item{sf}{- a non standard map}
+\item{sf}{a non standard map}
 
-\item{codeCol}{- a column name containing the unique code or id for the map}
+\item{codeCol}{the name of the column containing the id or code}
 
-\item{nameCol}{- the name column}
+\item{nameCol}{the name of the column containing the label (optional -
+defaults to the same as codeCol)}
 
-\item{altCodeCol}{- an alternative code column}
+\item{altCodeCol}{an optional column name containing another code type}
 
-\item{codeType}{- a fixed value for the codeType}
+\item{codeType}{the "type" of the code - optional. defaults to NA}
+
+\item{...}{not used.}
 }
 \value{
-a standardised map
+a standardised map with exactly the following columns: `code`, `codeType`,
+  `name`, `altCode`, `geometry` and `area`
 }
 \description{
-to a minimal set of attributes with consistent naming with code, name and
-codeType columns and an optional altCode column
+This function renames a `sf` with a minimal set of attributes with consistent
+naming with `code`, `name` and `codeType` columns and an optional `altCode`
+column. Renames all columns to be lower case, and makes sure the `area` column
+is calculated. It also loses any `Z` or `M` layers.
+}
+\examples{
+# example code
+if (interactive()) {
+  svc = "https://services1.arcgis.com/ESMARspQHYMw9BZ9/ArcGIS/rest/services"
+  fs = sprintf("\%s/\%s",svc,"Countries_December_2024_Boundaries_UK_BUC/FeatureServer")
+  layer = sprintf("\%s/\%s",fs,"0")
+  map = downloadGeojson(layer)
+  map \%>\% dplyr::glimpse()
+  map2 = map \%>\% standardiseMap(codeCol = CTRY24CD, nameCol = CTRY24NM)
+  map2 \%>\% dplyr::glimpse()
+}
 }
 \concept{io}

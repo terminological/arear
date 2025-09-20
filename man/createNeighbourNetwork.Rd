@@ -2,7 +2,7 @@
 % Please edit documentation in R/arear.R
 \name{createNeighbourNetwork}
 \alias{createNeighbourNetwork}
-\title{create a neighbourhood network from touching regions in a shapefile, with additional capability to connect non touching areas where there may be bridges etc.}
+\title{Create a neighbourhood network from touching regions in a map}
 \usage{
 createNeighbourNetwork(
   shape,
@@ -13,12 +13,12 @@ createNeighbourNetwork(
 )
 }
 \arguments{
-\item{shape}{- a sf object, if not present will be loaded from cache}
+\item{shape}{a `sf` object}
 
-\item{idVar}{- the column containing the coded identifier of the map}
+\item{idVar}{the column containing the coded identifier of the map}
 
-\item{bridges}{- a df with the following columns: name start.lat start.long
-end.lat end.long defining connections between non touching shapes (e.g.
+\item{bridges}{a df with the following columns: `name` `start.lat` `start.long`
+`end.lat` `end.long` defining connections between non touching shapes (e.g.
 bridges / ferries / etc.)}
 
 \item{queen}{- include neighbouring areas that only touch at corners,
@@ -27,12 +27,36 @@ defaults to false.}
 \item{...}{
   Named arguments passed on to \code{\link[=.cached]{.cached}}\describe{
     \item{\code{.nocache}}{an option to defeat the caching which can be set globally as options("cache.disable"=TRUE)}
+\item{\code{.stale}}{the length of time in days to keep cached data before considering it as stale. can also be set by options("cache.stale")}
 }}
 }
 \value{
 an edge list of ids with from and to columns
 }
 \description{
-create a neighbourhood network from touching regions in a shapefile, with additional capability to connect non touching areas where there may be bridges etc.
+A network of neighbouring map regions including connections due to bridges
+airports or ferry links, defined in the bridges input.
+}
+\examples{
+
+edges = createNeighbourNetwork(
+  shape = arear::testdata$grid11x11,
+  idVar = "id"
+)
+
+# in regular grid each cell has 4 neighbours except the edges and corners
+# we loose 1 per edge
+
+nrow(edges) == 11*11*4-4*11
+
+queens = createNeighbourNetwork(
+  shape = arear::testdata$grid11x11,
+  idVar = "id",
+  queen = TRUE
+)
+
+# each cell has 8 queen neighbours
+# except edge pieces which have 3 less, and corners which have 5 less.
+nrow(queens) == 11*11*8 - 4*9*3 - 4*5
 }
 \concept{analysis}

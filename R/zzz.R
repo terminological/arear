@@ -47,3 +47,8 @@ NULL
 #' @inherit .cache_clear
 #' @export
 cache_clear = .cache_clear
+
+
+pin_board = .singleton(
+  pins::board_url("https://terminological.github.io/arear/maps/")
+)

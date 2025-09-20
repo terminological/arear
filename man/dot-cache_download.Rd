@@ -16,7 +16,33 @@
 \arguments{
 \item{url}{the url to download}
 
-\item{...}{passed to `utils::download.file()`}
+\item{...}{
+  Named arguments passed on to \code{\link[utils:download.file]{utils::download.file}}\describe{
+    \item{\code{method}}{Method to be used for downloading files.  Current
+    download methods are \code{"internal"}, \code{"libcurl"},
+    \code{"wget"}, \code{"curl"} and \code{"wininet"} (Windows
+    only), and there is a value \code{"auto"}: see \sQuote{Details} and
+    \sQuote{Note}.
+
+    The method can also be set through the option
+    \code{"download.file.method"}: see \code{\link{options}()}.
+  }
+\item{\code{quiet}}{If \code{TRUE}, suppress status messages (if any), and
+    the progress bar.}
+\item{\code{mode}}{character.  The mode with which to write the file.  Useful
+    values are \code{"w"}, \code{"wb"} (binary), \code{"a"} (append) and
+    \code{"ab"}.  Not used for methods \code{"wget"} and \code{"curl"}.
+    See also \sQuote{Details}, notably about using \code{"wb"} for Windows.
+  }
+\item{\code{cacheOK}}{logical.  Is a server-side cached value acceptable?}
+\item{\code{extra}}{character vector of additional command-line arguments for
+    the \code{"wget"} and \code{"curl"} methods.}
+\item{\code{headers}}{named character vector of additional HTTP headers to
+    use in HTTP[S] requests.  It is ignored for non-HTTP[S] URLs.  The
+    \code{User-Agent} header taken from the \code{HTTPUserAgent} option
+    (see \code{\link{options}}) is automatically used as the first header.}
+\item{\code{...}}{allow additional arguments to be passed, unused.}
+}}
 
 \item{.nocache}{if set to TRUE all caching is disabled}
 

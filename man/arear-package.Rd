@@ -11,8 +11,8 @@ Geospatial function collection from the COVID-19 pandemic. The main focus of thi
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://terminological.github.io/arear/index.html}
-  \item \url{https://github.com/terminological/arear}
+  \item \url{https://terminological.github.io/arear}
+  \item \url{https://github.com/terminological/arear,}
   \item Report bugs at \url{https://github.com/terminological/arear/issues}
 }
 

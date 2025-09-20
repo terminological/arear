@@ -12,4 +12,8 @@ a vector of map names
 \description{
 List the standard maps available to download
 }
+\examples{
+# example code
+listStandardMaps()
+}
 \concept{io}

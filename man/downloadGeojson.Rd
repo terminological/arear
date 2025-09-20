@@ -2,46 +2,48 @@
 % Please edit documentation in R/load-maps.R
 \name{downloadGeojson}
 \alias{downloadGeojson}
-\title{Download a geojson url, standardise it and cache the result}
+\title{Download a geojson url, optionally simplifies and cache the result}
 \usage{
-downloadGeojson(
-  geojsonUrl,
-  codeCol = "code",
-  nameCol = "name",
-  altCodeCol = NULL,
-  codeType = NA_character_,
-  simplify = FALSE,
-  id,
-  license = "unknown",
-  ...
-)
+downloadGeojson(geojsonUrl, simplify = FALSE, ...)
 }
 \arguments{
-\item{geojsonUrl}{the URL of the geojson resource}
-
-\item{codeCol}{the name of the column containing the id or code}
-
-\item{nameCol}{the name of the column containing the label (optional - defaults to the same as codeCol)}
-
-\item{altCodeCol}{an optional column name containing another code type}
-
-\item{codeType}{the "type" of the code - optional. defaults to NA}
+\item{geojsonUrl}{the URL of the geojson resource or ESRI feature service layer}
 
 \item{simplify}{do you want to simplify the map}
 
-\item{id}{an id for the map that can be used to retrieve it in the future (through getMap()).}
-
-\item{license}{an optional license string}
-
 \item{...}{
+  Named arguments passed on to \code{\link[=featureServerLayerQuery]{featureServerLayerQuery}}\describe{
+    \item{\code{where}}{an SQL query (defaults to whole map)}
+\item{\code{select}}{the columns to return (see featureServerLayerInfo())}
+\item{\code{limit}}{maximum rows to return}
+\item{\code{crs}}{the coordinate reference system}
+\item{\code{queryParams}}{additional query parameters passed to the request to the
+feature server}
+\item{\code{...}}{
+  Named arguments passed on to \code{\link[=.cache_post]{.cache_post}}\describe{
+    \item{\code{body}}{a named list of POST data}
+\item{\code{as}}{how the response is delivered?}
+}}
+}
   Named arguments passed on to \code{\link[=.cached]{.cached}}\describe{
     \item{\code{.nocache}}{an option to defeat the caching which can be set globally as options("cache.disable"=TRUE)}
+\item{\code{.stale}}{the length of time in days to keep cached data before considering it as stale. can also be set by options("cache.stale")}
 }}
 }
 \value{
-the sf object for this geoJson
+the `sf` object for this geoJson
 }
 \description{
-Download a geojson url, standardise it and cache the result
+Download a geojson url, optionally simplifies and cache the result
+}
+\examples{
+# The ONS UK country files:
+if (interactive()) {
+  svc = "https://services1.arcgis.com/ESMARspQHYMw9BZ9/ArcGIS/rest/services"
+  fs = sprintf("\%s/\%s",svc,"Countries_December_2024_Boundaries_UK_BUC/FeatureServer")
+  layer = sprintf("\%s/\%s",fs,"0")
+  map = downloadGeojson(layer)
+  map \%>\% dplyr::glimpse()
+}
 }
 \concept{io}

@@ -9,7 +9,7 @@ makes sure it is reused."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">arear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,7 +61,43 @@ makes sure it is reused.</p>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>passed to `utils::download.file()`</p></dd>
+<dd><p>Named arguments passed on to <code><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">utils::download.file</a></code></p><dl><dt><code>method</code></dt>
+<dd><p>Method to be used for downloading files.  Current
+    download methods are <code>"internal"</code>, <code>"libcurl"</code>,
+    <code>"wget"</code>, <code>"curl"</code> and <code>"wininet"</code> (Windows
+    only), and there is a value <code>"auto"</code>: see ‘Details’ and
+    ‘Note’.</p>
+<p>The method can also be set through the option
+    <code>"download.file.method"</code>: see <code><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a>()</code>.</p></dd>
+
+<dt><code>quiet</code></dt>
+<dd><p>If <code>TRUE</code>, suppress status messages (if any), and
+    the progress bar.</p></dd>
+
+<dt><code>mode</code></dt>
+<dd><p>character.  The mode with which to write the file.  Useful
+    values are <code>"w"</code>, <code>"wb"</code> (binary), <code>"a"</code> (append) and
+    <code>"ab"</code>.  Not used for methods <code>"wget"</code> and <code>"curl"</code>.
+    See also ‘Details’, notably about using <code>"wb"</code> for Windows.</p></dd>
+
+<dt><code>cacheOK</code></dt>
+<dd><p>logical.  Is a server-side cached value acceptable?</p></dd>
+
+<dt><code>extra</code></dt>
+<dd><p>character vector of additional command-line arguments for
+    the <code>"wget"</code> and <code>"curl"</code> methods.</p></dd>
+
+<dt><code>headers</code></dt>
+<dd><p>named character vector of additional HTTP headers to
+    use in HTTP[S] requests.  It is ignored for non-HTTP[S] URLs.  The
+    <code>User-Agent</code> header taken from the <code>HTTPUserAgent</code> option
+    (see <code><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></code>) is automatically used as the first header.</p></dd>
+
+<dt><code>...</code></dt>
+<dd><p>allow additional arguments to be passed, unused.</p></dd>
+
+
+</dl></dd>
 
 
 <dt id="arg--nocache">.nocache<a class="anchor" aria-label="anchor" href="#arg--nocache"></a></dt>

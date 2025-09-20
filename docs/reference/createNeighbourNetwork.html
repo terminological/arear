@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">arear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,16 +53,16 @@
 
 
 <dl><dt id="arg-shape">shape<a class="anchor" aria-label="anchor" href="#arg-shape"></a></dt>
-<dd><p>- a sf object, if not present will be loaded from cache</p></dd>
+<dd><p>a `sf` object</p></dd>
 
 
 <dt id="arg-idvar">idVar<a class="anchor" aria-label="anchor" href="#arg-idvar"></a></dt>
-<dd><p>- the column containing the coded identifier of the map</p></dd>
+<dd><p>the column containing the coded identifier of the map</p></dd>
 
 
 <dt id="arg-bridges">bridges<a class="anchor" aria-label="anchor" href="#arg-bridges"></a></dt>
-<dd><p>- a df with the following columns: name start.lat start.long
-end.lat end.long defining connections between non touching shapes (e.g.
+<dd><p>a df with the following columns: `name` `start.lat` `start.long`
+`end.lat` `end.long` defining connections between non touching shapes (e.g.
 bridges / ferries / etc.)</p></dd>
 
 
@@ -74,6 +74,9 @@ defaults to false.</p></dd>
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Named arguments passed on to <code><a href="dot-cached.html">.cached</a></code></p><dl><dt><code>.nocache</code></dt>
 <dd><p>an option to defeat the caching which can be set globally as options("cache.disable"=TRUE)</p></dd>
+
+<dt><code>.stale</code></dt>
+<dd><p>the length of time in days to keep cached data before considering it as stale. can also be set by options("cache.stale")</p></dd>
 
 
 </dl></dd>

@@ -361,7 +361,7 @@ createCatchment = function(
 #' Create and cache a catchment area map
 #'
 #' @inherit createCatchment
-#' @inheritDotParams .cached .nocache
+#' @inheritDotParams .cached .nocache .stale
 #' @concept analysis
 #' @export
 catchment = function(

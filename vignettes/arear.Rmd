@@ -13,8 +13,6 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
-
-
 # normally I would be using the `here` package
 # however this does not work when building vignettes in github actions. Something to do with R-CMD-check moving the vignettes out of the source tree.
 # here::i_am("vignettes/arear.Rmd")

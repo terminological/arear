@@ -10,6 +10,9 @@ mapTheme()
 A map theme to remove extraneous clutter
 }
 \examples{
-ggplot2::ggplot()+mapTheme()
+
+ggplot2::ggplot(arear::testdata$gridDemand)+
+  ggplot2::geom_sf(ggplot2::aes(fill=demand))+
+  mapTheme()
 }
 \concept{vis}

@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">arear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -96,9 +96,9 @@
 <span><span class="va">map</span> <span class="op">=</span> <span class="fu">arear</span><span class="fu">::</span><span class="fu"><a href="reference/getMap.html">getMap</a></span><span class="op">(</span><span class="st">"CTRY19"</span><span class="op">)</span></span>
 <span><span class="va">nhshospitals</span> <span class="op">=</span> <span class="fu">arear</span><span class="fu">::</span><span class="va"><a href="reference/surgecapacity.html">surgecapacity</a></span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">sector</span> <span class="op">==</span> <span class="st">"NHS Sector"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">map</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">nhshospitals</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour<span class="op">=</span><span class="va">tier1</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
+<span><span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu">geom_sf</span><span class="op">(</span>data<span class="op">=</span><span class="va">map</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu">geom_sf</span><span class="op">(</span>data<span class="op">=</span><span class="va">nhshospitals</span>, <span class="fu">aes</span><span class="op">(</span>colour<span class="op">=</span><span class="va">tier1</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu">arear</span><span class="fu">::</span><span class="fu"><a href="reference/mapTheme.html">mapTheme</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
