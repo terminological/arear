@@ -67,4 +67,4 @@ if (interactive()) {
   cat(nrow(sf_lsoa))
 }
 }
-\concept{argis}
+\concept{arcgis}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/arcgis.R
 \name{arcgisServiceInfo}
 \alias{arcgisServiceInfo}
-\title{Get feature service information from an argis rest service}
+\title{Get feature service information from an arcgis rest service}
 \usage{
 arcgisServiceInfo(url, ...)
 }
@@ -21,9 +21,10 @@ arcgisServiceInfo(url, ...)
 a dataframe of available feature and map services
 }
 \description{
-Get feature service information from an argis rest service
+Get feature service information from an arcgis rest service
 }
 \examples{
 url = "https://services1.arcgis.com/ESMARspQHYMw9BZ9/ArcGIS/rest/services"
 arcgisServiceInfo(url)
 }
+\concept{arcgis}

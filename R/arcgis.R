@@ -43,13 +43,15 @@
   return(url)
 }
 
-#' Get feature service information from an argis rest service
+#' Get feature service information from an arcgis rest service
 #'
 #' @param url the base rest service url
 #' @inheritDotParams .cache_download
 #'
 #' @returns a dataframe of available feature and map services
 #' @export
+#'
+#' @concept arcgis
 #'
 #' @examples
 #' url = "https://services1.arcgis.com/ESMARspQHYMw9BZ9/ArcGIS/rest/services"
@@ -76,6 +78,8 @@ arcgisServiceInfo = function(url, ...) {
 #' @inheritDotParams .cache_download
 #'
 #' @returns a dataframe of layers
+#'
+#' @concept arcgis
 #' @export
 #'
 #' @examples
@@ -99,6 +103,8 @@ featureServerInfo = function(url, ...) {
 #'
 #' @returns a dataframe of field names for the selected layer
 #' @export
+#'
+#' @concept arcgis
 #'
 #' @examples
 #' svc = "https://services1.arcgis.com/ESMARspQHYMw9BZ9/ArcGIS/rest/services"
@@ -131,7 +137,7 @@ featureServerLayerInfo = function(url, ...) {
 #'
 #' @returns a `sf` of the query result
 #' @export
-#' @concept argis
+#' @concept arcgis
 #'
 #' @examples
 #' svc = "https://services1.arcgis.com/ESMARspQHYMw9BZ9/ArcGIS/rest/services"

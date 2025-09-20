@@ -29,3 +29,4 @@ fs = sprintf("\%s/\%s",svc,"Countries_December_2024_Boundaries_UK_BUC/FeatureSer
 url = sprintf("\%s/\%s",fs,"0")
 featureServerInfo(fs)
 }
+\concept{arcgis}

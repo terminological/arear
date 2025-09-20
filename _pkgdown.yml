@@ -20,5 +20,5 @@ reference:
   - has_concept("datasets")
 - title: Others
   contents:
-  - lacks_concepts(c("io","datasets","analysis","vis"))
+  - lacks_concepts(c("io","datasets","analysis","vis","arcgis"))
 
