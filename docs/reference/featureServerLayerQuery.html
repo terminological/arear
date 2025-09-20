@@ -9,7 +9,7 @@ handles multipart transfers."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">arear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,7 +71,7 @@ first feature layer will be used)</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Named arguments passed on to <code><a href="dot-cache_post.html">.cache_post</a></code></p><dl><dt><code>data</code></dt>
+<dd><p>Named arguments passed on to <code><a href="dot-cache_post.html">.cache_post</a></code></p><dl><dt><code>body</code></dt>
 <dd><p>a named list of POST data</p></dd>
 
 <dt><code>as</code></dt>
@@ -115,24 +115,17 @@ feature server</p></dd>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">sf2</span><span class="op">$</span><span class="va">CTRY24CD</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> E92000001</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Download the first 4000 LSOAs. There are lots of LSOAs and this</span></span></span>
-<span class="r-in"><span><span class="co"># query has to be paginated. This also shows the limit feature</span></span></span>
-<span class="r-in"><span><span class="co"># and the verbose output of the cache.</span></span></span>
-<span class="r-in"><span><span class="va">lsoa</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%s/%s"</span>,<span class="va">svc</span>,<span class="st">"LSOA_DEC_2021_EW_NC_v3/FeatureServer/0"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_options.html" class="external-link">with_options</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>cache.verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>, <span class="op">{</span></span></span>
-<span class="r-in"><span>  <span class="va">sf_lsoa</span> <span class="op">=</span> <span class="fu">featureServerLayerQuery</span><span class="op">(</span><span class="va">lsoa</span>, limit <span class="op">=</span> <span class="fl">4000</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> using cached item: /home/vp22681/.cache/arear/c86c8dac7ce4ffdd29e23e9e7ff38b58-0f05c8e5d638ad8ee76576828a4a5a82-query.Rdata</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rows: 1000</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> using cached item: /home/vp22681/.cache/arear/c86c8dac7ce4ffdd29e23e9e7ff38b58-3870fdbf0d9434284effb1bb3a2fed0c-query.Rdata</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rows: 2000</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> using cached item: /home/vp22681/.cache/arear/c86c8dac7ce4ffdd29e23e9e7ff38b58-eac29ae06c1a64d6ffa66826ecf0f476-query.Rdata</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rows: 3000</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> using cached item: /home/vp22681/.cache/arear/c86c8dac7ce4ffdd29e23e9e7ff38b58-36b86d1d85a9c19020c5948e89a74d03-query.Rdata</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rows: 4000</span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="co"># Download the first 4000 LSOAs. There are lots of LSOAs and this</span></span></span>
+<span class="r-in"><span>  <span class="co"># query has to be paginated. This also shows the limit feature</span></span></span>
+<span class="r-in"><span>  <span class="co"># and the verbose output of the cache.</span></span></span>
+<span class="r-in"><span>  <span class="va">lsoa</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%s/%s"</span>,<span class="va">svc</span>,<span class="st">"LSOA_DEC_2021_EW_NC_v3/FeatureServer/0"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_options.html" class="external-link">with_options</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>cache.verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>, <span class="op">{</span></span></span>
+<span class="r-in"><span>    <span class="va">sf_lsoa</span> <span class="op">=</span> <span class="fu">featureServerLayerQuery</span><span class="op">(</span><span class="va">lsoa</span>, limit <span class="op">=</span> <span class="fl">4000</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">}</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">sf_lsoa</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4000</span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">sf_lsoa</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

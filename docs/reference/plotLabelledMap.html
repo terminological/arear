@@ -11,7 +11,7 @@ to full name."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">arear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,8 +51,7 @@ to full name.</p>
 <span>  <span class="va">...</span>,</span>
 <span>  <span class="va">labelMapping</span>,</span>
 <span>  labelStyle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  labelFilter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rank.html" class="external-link">rank</a></span><span class="op">(</span><span class="op">-</span><span class="op">!</span><span class="op">!</span><span class="va">labelSort</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="va">labels</span>,</span>
-<span>  labelSort <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/parse.html" class="external-link">str2lang</a></span><span class="op">(</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/as_label.html" class="external-link">as_label</a></span><span class="op">(</span><span class="va">mapping</span><span class="op">$</span><span class="va">fill</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  labelSort <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  labels <span class="op">=</span> <span class="fl">6</span>,</span>
 <span>  labelSize <span class="op">=</span> <span class="fl">6</span>,</span>
 <span>  tableSize <span class="op">=</span> <span class="fl">6</span>,</span>
@@ -66,7 +65,7 @@ to full name.</p>
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>A sf object with some data in it. If using facets this should be
-grouped. (and if it is grouped facetting will be automatically added)</p></dd>
+grouped. (and if it is grouped faceting will be automatically added)</p></dd>
 
 
 <dt id="arg-mapping">mapping<a class="anchor" aria-label="anchor" href="#arg-mapping"></a></dt>
@@ -94,19 +93,11 @@ should give a cyan label on a dark transparent background which might work
 for lighter maps.</p></dd>
 
 
-<dt id="arg-labelfilter">labelFilter<a class="anchor" aria-label="anchor" href="#arg-labelfilter"></a></dt>
-<dd><p>(optional) on what criteria should we select labels to
-display. by default it gives the top N labels as determined by the fill
-aesthetic. Bottom N can be achieved with `rank(!!labelSort)&lt;=labels`. In
-general though any expression filter can be used on the data but bear in
-mind it will be interpreted in the context of the grouped data which has
-first sorted by the `labelSort` expression.</p></dd>
-
-
 <dt id="arg-labelsort">labelSort<a class="anchor" aria-label="anchor" href="#arg-labelsort"></a></dt>
-<dd><p>(optional) how should we sort the labels before applying the
-`labelFilter`. This defaults to the descending order of the same variable
-that determines the fill of the main map.</p></dd>
+<dd><p>(optional) how should we sort the labels . This defaults to
+the descending order of the same variable that determines the fill of the
+main map. This should be a simple expression that you might use for
+`dplyr::arrange` and can include `desc` for descending.</p></dd>
 
 
 <dt id="arg-labels">labels<a class="anchor" aria-label="anchor" href="#arg-labels"></a></dt>
@@ -120,7 +111,7 @@ specified</p></dd>
 
 
 <dt id="arg-tablesize">tableSize<a class="anchor" aria-label="anchor" href="#arg-tablesize"></a></dt>
-<dd><p>the labels and their associated names from all facets will
+<dd><p>the labels and the other data from all facets will
 be assembled into a table as a ggplot/patchwork object. This defines the
 font size (in points) of this table. No other config is allowed.</p></dd>
 
@@ -129,7 +120,7 @@ font size (in points) of this table. No other config is allowed.</p></dd>
 <dd><p>if a map has an zoomed in inset as produced by
 `popoutArea()`, for areas which are in both the main map and the inset you
 may wish to label only the zoomed area in the "inset", only the unzoomed
-area in the "main" map or "both".</p></dd>
+area in the "main" map or "both" (the default).</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -140,13 +131,14 @@ area in the "main" map or "both".</p></dd>
   to actually show the map.</p><dl><dt>plot</dt>
 <dd><p>a ggplot object showing a chloropleth (usually) which is
   defined by the main mapping aesthetics, with an overlaid labelling layer
-  defined by the labelMapping aesthetics. This does not include fill or
+  defined by the `labelMapping` label aesthetic. This does not include fill or
   colour scales so you will probably want `plot+ggplot2::scale_fill_viridis_c()`
   or something similar to define the fill</p></dd>
-
+. If the input data is grouped this
+  plot will be facetted by group.
   <dt>legend</dt>
 <dd><p>a ggplot patchwork containing the lookup table from labels
-  to names (as determined by the names aesthetic)</p></dd>
+  to other data (as determined by the `labelMapping` aesthetics)</p></dd>
 
   <dt>labelDf</dt>
 <dd><p>the filtered dataframe of the labels appearing in the
@@ -167,6 +159,33 @@ area in the "main" map or "both".</p></dd>
 
 </dl></div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># create some test data:</span></span></span>
+<span class="r-in"><span><span class="va">tmp</span> <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>,</span></span>
+<span class="r-in"><span>  <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="va">testdata</span><span class="op">$</span><span class="va">diamond11x11</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>set <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"set %d"</span>,<span class="va">i</span><span class="op">)</span>, value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">set</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%s-%s"</span>, <span class="va">letters</span><span class="op">[</span><span class="va">x</span><span class="op">+</span><span class="fl">6</span><span class="op">]</span>, <span class="va">letters</span><span class="op">[</span><span class="va">y</span><span class="op">+</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span><span class="op">+</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">set</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plotLabelledMap-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">p</span> <span class="op">=</span> <span class="fu">plotLabelledMap</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="va">tmp</span>,</span></span>
+<span class="r-in"><span>  mapping <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">value</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  labelMapping <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>label<span class="op">=</span><span class="va">name</span>,percent<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%1.1f%%"</span>,<span class="va">value</span><span class="op">*</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  labels <span class="op">=</span> <span class="fl">2</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>st_centroid assumes attributes are constant over geometries</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>st_centroid does not give correct centroids for longitude/latitude data</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">p</span><span class="op">$</span><span class="va">plot</span><span class="op">+</span><span class="va">p</span><span class="op">$</span><span class="va">legend</span></span></span>
+<span class="r-plt img"><img src="plotLabelledMap-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

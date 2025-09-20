@@ -1,6 +1,6 @@
 Package: arear
 Title: Geospatial Convenience Functions and a Supply Demand Catchment Area Generator
-Version: 0.3.0
+Version: 0.4.0
 Authors@R: 
     person(given = "Robert",
            family = "Challen",
