@@ -281,7 +281,11 @@
       .cache_message("caching item: ", path)
       saveRDS(res, file = path)
     } else {
-      warning("POST failed with status: ", status, ", returning raw response.")
+      warning(
+        "POST failed with status: ",
+        httr::status_code(res),
+        ", returning raw response."
+      )
       return(res)
     }
   }
